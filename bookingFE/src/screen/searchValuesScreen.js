@@ -35,9 +35,12 @@ export default function SearchValuesScreen() {
           </TouchableOpacity>
 
         </View>
-        <View style={{ padding: 12, borderRadius: 200, backgroundColor: themeColor.btColor }}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Slider')}
+          style={{ padding: 12, borderRadius: 200, backgroundColor: themeColor.btColor }}
+        >
           <Icon.Sliders height={20} width={20} strokeWidth="2.5" stroke="white" />
-        </View>
+        </TouchableOpacity>
       </View>
 
       {/*main*/}
