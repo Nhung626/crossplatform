@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import React, { useState } from 'react'
-import { categories } from '../../constains'
+import { categories } from '../constains'
 import { themeColor } from '../theme'
 
 export default function SortHotel() {
   const [activeCategory, setActiveCategory] = useState(null);
 
   return (
-    <View style={{ paddingBottom: 10, backgroundColor: '#8db4ad' }}>
+    <View style={{ paddingBottom: 10, backgroundColor: themeColor.bgColor }}>
       <View
         style={{
           flexDirection: 'row',
@@ -50,12 +50,12 @@ const styles = {
     paddingVertical: 5,
     borderRadius: 999,
     borderWidth: 2,
-    borderColor: themeColor.bgColor(1),
+    borderColor: themeColor.btColor,
 
   },
 
   activeButton: {
-    backgroundColor: themeColor.bgColor(1), // Thay đổi màu sắc cho lớp active
+    backgroundColor: themeColor.btColor, // Thay đổi màu sắc cho lớp active
   },
   text: {
     fontSize: 14,
@@ -66,6 +66,6 @@ const styles = {
     color: 'white', // Thay đổi màu sắc cho lớp active
   },
   inactiveButton: {
-    backgroundColor: '#8db4ad', // Thay đổi màu sắc cho lớp inactive
+    backgroundColor: themeColor.bgColor, // Thay đổi màu sắc cho lớp inactive
   },
 };
