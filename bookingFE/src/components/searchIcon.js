@@ -14,12 +14,12 @@ export default function SearchIcon() {
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <TouchableOpacity onPress={() => navigation.goBack()}
                         style={{ padding: 4, marginVertical: 30 }}>
-                        <Icon.ArrowLeft strokeWidth={3} stroke={'white'} height={30} width={30} style={{ backgroundColor: themeColor.bgColor(1), borderRadius: 100 }} />
+                        <Icon.ArrowLeft strokeWidth={2} stroke={'white'} height={30} width={30} style={{ backgroundColor: themeColor.bgColor, borderRadius: 100 }} />
                     </TouchableOpacity>
                     <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
                 </View>
 
-                <View style={{ borderWidth: 5, borderColor: themeColor.bdColor(1) }}>
+                <View style={{ borderWidth: 5, borderColor: themeColor.btColor }}>
                     <TouchableOpacity style={styles.searchContainer}
                         onPress={() => navigation.navigate('Map')}>
                         <Icon.Search height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
@@ -37,7 +37,7 @@ export default function SearchIcon() {
                         <Text style={styles.searchText}> Số lượng người</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor(1) }}
+                        style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor }}
                     >
                         <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Tìm</Text>
                     </TouchableOpacity>
