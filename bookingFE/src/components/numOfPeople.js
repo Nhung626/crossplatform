@@ -13,7 +13,9 @@ export default function NumOfPeople() {
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <TouchableOpacity onPress={() => navigation.goBack()}
                         style={{ padding: 4, marginVertical: 30 }}>
-                        <Icon.ArrowLeft strokeWidth={3} stroke={'white'} height={30} width={30} style={{ backgroundColor: themeColor.bgColor(1), borderRadius: 100 }} />
+                        <Icon.ArrowLeft
+                            strokeWidth={3} stroke={'white'} height={30} width={30}
+                            style={{ backgroundColor: themeColor.bgColor, borderRadius: 100 }} />
                     </TouchableOpacity>
                     <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
                 </View>
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
     },
     Icon: {
         borderRadius: 100,
-        backgroundColor: themeColor.bgColor(1)
+        backgroundColor: themeColor.bgColor
     },
     sizeIcon: {
         height: 10,
