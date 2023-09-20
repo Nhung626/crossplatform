@@ -15,7 +15,6 @@ export default function HotelCard({ item }) {
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 4 }}>
                         <Image source={require('../assets/images/fullStar.png')} style={{ height: 16, width: 16 }} />
                     </View>
-
                 </View>
             </View>
 
