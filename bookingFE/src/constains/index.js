@@ -53,16 +53,16 @@ export const featured = {
     hotelsData: [
         {
             id: 1,
-            name: 'heloo1',
+            name: 'HUCE Howard',
             image: require('../assets/images/pizza.png'),
             description: 'Hot and spicy pizzas',
-            lng: -85.5324269,
-            lat: 38.2145602,
+            lng: 105.84369620566989,
+            lat: 21.003473736700617,
             address: '434 second street',
             stars: 4,
             reviews: '4.4k',
             category: 'Fast Food',
-            price: 10,
+            prices: 10,
             dishes: [
                 {
                     id: 1,
@@ -101,6 +101,8 @@ export const featured = {
             stars: 4,
             reviews: '4.4k',
             category: 'Fast Food',
+            prices: 10,
+
             dishes: [
                 {
                     id: 1,
@@ -137,6 +139,8 @@ export const featured = {
             stars: 4,
             reviews: '4.4k',
             category: 'Fast Food',
+            prices: 10,
+
             dishes: [
                 {
                     id: 1,
