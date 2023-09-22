@@ -38,7 +38,7 @@ export default function Themphong() {
 
         <TouchableOpacity 
         onPress={handleImagePick}
-        style={[styles.buttonThem, {backgroundColor:'#DE5223',width:100,height:50}]} >
+        style={[styles.buttonThem, {backgroundColor:'#FFAC8E',width:100,height:50}]} >
 
         <Text style={[styles.textInput,{fontSize:15, color:'#fff',textAlign:'center',alignSelf: 'center',paddingTop:13}]}>
         Nhập ảnh 
@@ -109,7 +109,7 @@ export default function Themphong() {
       />
       <TouchableOpacity 
       onPress={handleAddHotel}
-      style={[styles.buttonThem, {backgroundColor:'#DE5223'}]}>
+      style={[styles.buttonThem, {backgroundColor:'#FFAC8E'}]}>
 
       <Text style={[styles.textInput,{fontSize:20, color:'#fff',textAlign:'center',alignSelf: 'center',paddingTop:5}]}>
       Thêm phòng

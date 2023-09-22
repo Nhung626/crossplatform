@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginTop: 10,
     borderWidth: 1,
-    borderRadius:5,
+    borderRadius:10,
     paddingHorizontal: 10,
     paddingVertical: 3,
   },
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   createAccountButton: {
     marginTop: 5,
     backgroundColor: '#DE5223',
-    borderRadius: 10,
+    borderRadius: 4,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
