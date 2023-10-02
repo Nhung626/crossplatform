@@ -22,9 +22,6 @@ public class Category {
     private String description;
     @Column(name = "price")
     private float price;
-    @Column(name = "state")
-    private String state;
-
     @ManyToOne
     @JoinColumn(name = "provider_id")
     private Provider provider;

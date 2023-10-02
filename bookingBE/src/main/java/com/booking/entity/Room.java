@@ -20,6 +20,8 @@ public class Room {
     private Long roomId;
     @Column(name = "room_number")
     private String roomNumber;
+    @Column(name = "state")
+    private String state;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
