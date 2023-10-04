@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StatusBar, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { themeColor } from '../theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { Select, CheckIcon, NativeBaseProvider } from 'native-base'
 export default function HotelScreen() {
     const { params: { id, name, imageHotel, imageStar, location, description, address, reviewPoint, reviews, stars, hotelsData, lng, lat } } = useRoute();
     console.log('hotel: ', name);
     const navigation = useNavigation();
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('option1'); // Đặt giá trị mặc định của mục đã chọn
+
+    const [service, setService] = React.useState("");
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -20,10 +25,10 @@ export default function HotelScreen() {
                 <View style={{ position: 'relative' }}>
                     <Image style={{ width: '', height: 256 }} source={imageHotel} />
                     <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-                        <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor(1), borderRadius: 100 }} onPress={() => navigation.goBack()}>
+                        <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>
                             <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
                         </TouchableOpacity>
-                        <View style={{ padding: 8, backgroundColor: themeColor.bgColor(1), borderRadius: 100 }}>
+                        <View style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }}>
                             <Icon.Heart height={30} width={30} strokeWidth="2" stroke="white" style={{ marginHorizontal: 10 }} fill='white' />
                         </View>
                     </View>
@@ -47,17 +52,21 @@ export default function HotelScreen() {
                             </View>
 
                         </View>
-                        <View style={{ padding: 10, borderRadius: 10, backgroundColor: themeColor.bgColor(1) }}>
+                        <View style={{ padding: 10, borderRadius: 10, backgroundColor: themeColor.bgColor }}>
                             <Text style={{ fontWeight: 'bold', color: 'white' }}>{reviewPoint}</Text>
                         </View>
 
 
                     </View>
-
                     {/*Vị trí */}
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, marginVertical: 10 }}> Vị trí chỗ nghỉ</Text>
-                    <Text>{address}</Text>
-                    <Text>{location}</Text>
+
+                    <View style={{ marginHorizontal: 10 }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 20, marginVertical: 10 }}> Vị trí chỗ nghỉ</Text>
+                        <Text>{address}</Text>
+                        <Text>{location}</Text>
+                    </View>
+
+
 
                 </View>
                 <View style={{ backgroundColor: 'white', paddingBottom: 144 }}>
@@ -85,13 +94,31 @@ export default function HotelScreen() {
                                     </View>
                                 </View>
                                 <Text style={{ color: 'gray' }}> Giá cho 1 đêm </Text>
-                                <Text style={{ color: themeColor.bdColor(1), fontSize: 12, flexWrap: 'wrap', fontWeight: 'bold', fontSize: 18 }}>VND {hotel.price}</Text>
+                                <Text style={{ color: themeColor.bgColor, fontSize: 12, flexWrap: 'wrap', fontWeight: 'bold', fontSize: 18 }}>VND {hotel.price}</Text>
                                 <Text style={{}}> { }</Text>
-                                <TouchableOpacity style={{ width: '50%', backgroundColor: themeColor.bgColor(1), alignItems: 'center', marginHorizontal: 20, borderRadius: 100, padding: 16, paddingVertical: 12 }}>
-                                    <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                                        Chọn
+                                <TouchableOpacity onPress={() => setIsOpen(!isOpen)}
+                                    style={{ width: '50%', backgroundColor: themeColor.bgColor, alignItems: 'center', marginHorizontal: 20, borderRadius: 100, padding: 16, paddingVertical: 12 }}>
+                                    <Text>
+                                        {isOpen ? "Chọn" : "Show"}
+
                                     </Text>
+
                                 </TouchableOpacity>
+                                <NativeBaseProvider>
+                                    <Select selectedValue={service} minWidth={200} accessibilityLabel='Chọn phòng'
+                                        placeholder='Chọn phòng' _selectedItem={{
+                                            bg: "teal.600",
+                                            endIcon: <CheckIcon size="5" />
+                                        }} mt={1} onValueChange={itemValue => setService(itemValue)}>
+                                        <Select.Item label="UX Research" value="ux" />
+                                        <Select.Item label="Web Development" value="web" />
+                                        <Select.Item label="Cross Platform Development" value="cross" />
+                                        <Select.Item label="UI Designing" value="ui" />
+                                        <Select.Item label="Backend Development" value="backend" />
+                                    </Select>
+                                </NativeBaseProvider>
+
+
 
                             </View>
 
