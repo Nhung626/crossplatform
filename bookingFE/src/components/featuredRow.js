@@ -31,7 +31,7 @@ export default function FeaturedRow({
             reviewPoint,
             reviews,
             address
-        })}>
+        })} style={{ marginHorizontal: 10 }}>
             <View style={{
                 borderBottomWidth: 1,
                 borderBottomColor: 'gray',
