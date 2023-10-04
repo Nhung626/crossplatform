@@ -55,9 +55,10 @@ export default function SearchValuesScreen() {
         {/* featured */}
         <View >
           {
-            [featured, featured, featured].map((item) => {
+            [featured, featured, featured].map((item, index) => {
               return (
                 <FeaturedRow
+                  key={index.toString()}  // Thêm key vào đây
                   name={item.name}
                   imageHotel={item.imageHotel}
                   imageStar={item.imageStar}
