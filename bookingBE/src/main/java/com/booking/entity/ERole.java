@@ -1,7 +1,7 @@
 package com.booking.entity;
 
 public enum ERole {
-    ROLE_USER,
+    ROLE_CUSTOMER,
     ROLE_PROVIDER,
     ROLE_ADMIN
 }

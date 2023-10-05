@@ -27,7 +27,7 @@ public class CustomerServiceImp implements CustomerService {
         User user = new User().builder()
                 .email(userDto.getEmail())
                 .password(encoder.encode(userDto.getPassword()))
-                .role(ERole.ROLE_USER).build();
+                .role(ERole.ROLE_CUSTOMER).build();
         userRepository.save(user);
         Customer customer = new Customer().builder()
                 .user(user).build();

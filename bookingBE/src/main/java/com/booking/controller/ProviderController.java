@@ -10,6 +10,8 @@ import com.booking.service.interfaces.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,14 +49,15 @@ public class ProviderController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.generateJwtToken(authentication);
-                
+
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-         String role = roles.get(0);
+        String role = roles.get(0);
         return ResponseEntity.ok(new JwtUserResponse().builder()
-                .token(jwt).role(role)
+                .token(jwt).role(role).type("Bearer")
+                .id(userDetails.getId())
                 .email(userDetails.getEmail())
                 .build());
     }
