@@ -80,13 +80,7 @@ export default function Themphong() {
         onChangeText={(text) => setBedrooms(text)}
         keyboardType="numeric"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Số phòng tắm"
-        value={bathrooms}
-        onChangeText={(text) => setBathrooms(text)}
-        keyboardType="numeric"
-      />
+      
       <TextInput
         style={styles.input}
         placeholder="Tình trạng phòng (Còn/Hết/Đang sử chữa)"
@@ -105,6 +99,13 @@ export default function Themphong() {
         placeholder="Số lượng"
         value={quantity}
         onChangeText={(text) => setQuantity(text)}
+        keyboardType="numeric"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Mô tả thêm"
+        value={bathrooms}
+        onChangeText={(text) => setAddRooms(text)}
         keyboardType="numeric"
       />
       <TouchableOpacity 

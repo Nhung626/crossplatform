@@ -51,10 +51,17 @@ function Thongtin() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Mật khẩu"
+        placeholder="CCCD/CMT/Hộ chiếu"
         value={textInputValue}
         onChangeText={handleInputChange}
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Số điện thoại"
+        value={textInputValue}
+        onChangeText={handleInputChange}
+      />
+      
       <TouchableOpacity style={styles.button}>
       <Text style={styles.buttonText}>Lưu thông tin</Text>
       </TouchableOpacity>
@@ -114,19 +121,21 @@ function CustomDrawerItem({ label, focused }) {
 function CreateroomScreen() {
   return (
     <Drawer.Navigator 
-  useLegacyImplementation
+//   useLegacyImplementation không hỗ trợ trên vs code dùng ở máy vì bản củ không hỗ trợ,tải về thì xóa dòng này đi
   drawerContent={(props) => <CustomDrawerContent {...props} />}
 >
-  <Drawer.Screen
-    name="Thông tin người sử dụng"
-    component={Thongtin}
-    options={{ drawerLabel: ({ focused }) => <CustomDrawerItem label="Thông tin người sử dụng" focused={focused} /> }}
-  />
   <Drawer.Screen
     name="Quản lý phòng"
     component={Themphong}
     options={{ drawerLabel: ({ focused }) => <CustomDrawerItem label="Quản lý phòng" focused={focused} /> }}
   />
+
+  <Drawer.Screen
+    name="Thông tin người sử dụng"
+    component={Thongtin}
+    options={{ drawerLabel: ({ focused }) => <CustomDrawerItem label="Thông tin người sử dụng" focused={focused} /> }}
+  />
+  
   <Drawer.Screen
     name="Quản lý cho thuê"
     component={QLThue}

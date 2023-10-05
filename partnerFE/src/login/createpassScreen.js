@@ -1,23 +1,34 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-;
 
 const CreatePassScreen = () => {
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
+  const handleConfirmPasswordChange = (text) => {
+    setConfirmPassword(text);
+  };
+
+  const handleNextButtonPress = () => {
+    // Xử lý sự kiện tiếp theo khi bấm nút
+    if (password === confirmPassword) {
+      // Mật khẩu và xác nhận mật khẩu khớp nhau
+    } else {
+      // Mật khẩu và xác nhận mật khẩu không khớp
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Bây giờ, hãy thiết lập mật khẩu của bạn!</Text>
       </View>
-
       <Text style={styles.label}>Mật khẩu</Text>
       <View style={styles.inputBox}>
         <Icon name="lock" size={20} color="#235D9F" style={styles.icon} />
@@ -37,12 +48,28 @@ const CreatePassScreen = () => {
         </TouchableOpacity>
       </View>
 
+      <Text style={styles.label}>Nhập lại mật khẩu</Text>
+      <View style={styles.inputBox}>
+        <Icon name="lock" size={20} color="#235D9F" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nhập lại mật khẩu"
+          secureTextEntry={!isPasswordVisible}
+          onChangeText={handleConfirmPasswordChange}
+          value={confirmPassword}
+        />
+        <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
+          <Icon
+            name={isPasswordVisible ? 'eye' : 'eye-slash'}
+            size={20}
+            color="black"
+          />
+        </TouchableOpacity>
+      </View>
+
       <Button style={[styles.button, { backgroundColor: '#DE5223' }]}
         title="Tiếp theo"
-        
-        onPress={() => {
-          // Xử lý sự kiện tiếp theo khi bấm nút
-        }}
+        onPress={handleNextButtonPress}
       />
     </ScrollView>
   );
@@ -67,7 +94,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     fontSize: 16,
     fontWeight: 'antialiased',
-    marginBottom:10,
+    marginBottom: 10,
   },
   inputBox: {
     flexDirection: 'row',
@@ -77,18 +104,16 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 16,
   },
-  button:{
-    backgroundColor:"#DE5223",
+  button: {
+    backgroundColor: "#DE5223",
   },
   icon: {
     padding: 10,
   },
   input: {
-    
     height: 40,
     flex: 1,
     paddingHorizontal: 10,
-    
   },
 });
 
