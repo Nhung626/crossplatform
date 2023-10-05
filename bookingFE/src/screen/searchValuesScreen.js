@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as Icon from "react-native-feather";
 import { themeColor } from '../theme';
-import Categories from '../components/sortHotel';
+import SortHotel from '../components/sortHotel';
 import FeaturedRow from '../components/featuredRow';
 import { featured } from '../constains';
 import { useNavigation } from '@react-navigation/native';
@@ -43,6 +43,7 @@ export default function SearchValuesScreen() {
         </TouchableOpacity>
       </View>
 
+
       {/*main*/}
       <ScrollView
         contentContainerStyle={{
@@ -51,7 +52,7 @@ export default function SearchValuesScreen() {
         }}>
         {/*Categories*/}
 
-        <Categories />
+        <SortHotel />
         {/* featured */}
         <View >
           {

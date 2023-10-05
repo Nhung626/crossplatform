@@ -5,6 +5,11 @@ import { themeColor } from '../theme'
 
 export default function SortHotel() {
   const [activeCategory, setActiveCategory] = useState(null);
+  const handleCategoryPress = (categoryId) => {
+    // Nếu categoryId đã được chọn trước đó, thì đặt về null
+    // Ngược lại, đặt activeCategory bằng categoryId
+    setActiveCategory((prev) => (prev === categoryId ? null : categoryId));
+  };
 
   return (
     <ScrollView
@@ -23,13 +28,12 @@ export default function SortHotel() {
             categories.map((category) => {
               let isActive = category.id === activeCategory;
               let btnClass = isActive ? styles.activeButton : styles.inactiveButton;
-              let textClass = isActive ? styles.activeText : styles.inactiveText;
               return (
                 <View key={category.id} style={{
                   marginBottom: 2, marginRight: 5
                 }}>
                   <TouchableOpacity
-                    onPress={() => setActiveCategory(category.id)}
+                    onPress={() => handleCategoryPress(category.id)}
 
                     style={[styles.button, btnClass]} >
 
