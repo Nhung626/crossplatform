@@ -8,7 +8,9 @@ export default function SearchScreen() {
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
                 <View>
+                    <Text>
 
+                    </Text>
                 </View>
             </View>
         </SafeAreaView>

@@ -9,6 +9,7 @@ import SearchScreen from './src/screen/searchScreen';
 import SearchIcon from './src/components/searchIcon';
 import NumOfPeople from './src/components/numOfPeople';
 import SlidersScreen from './src/screen/slidersScreen';
+import Calendar from './src/components/calendarPicker';
 
 
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ export default function Navigations() {
                 <Stack.Screen name="SearchIcon" component={SearchIcon} options={{ presentation: 'modal' }} />
                 <Stack.Screen name="NumOfPeople" component={NumOfPeople} />
                 <Stack.Screen name="Slider" component={SlidersScreen} />
+                <Stack.Screen name="Calendar" component={Calendar} />
 
 
 
