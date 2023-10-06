@@ -30,14 +30,89 @@ export const categories = [
         name: 'Gần nhất',
         image: require('../assets/images/pizzaIcon.png'),
     },
-
-
-
-
-
 ]
 
+export const filterCategory = [
+    {
+        id: 1,
+        title: 'Xếp hạng chỗ nghỉ',
+        categories: [
+            {
+                id: 1,
+                filter: 'Không xếp hạng'
+            },
+            {
+                id: 2,
+                filter: '1 sao'
+            },
+            {
+                id: 3,
+                filter: '2 sao'
+            },
+            {
+                id: 4,
+                filter: '3 sao'
+            },
+            {
+                id: 5,
+                filter: '4 sao'
+            },
+            {
+                id: 6,
+                filter: '5 sao'
+            },
 
+        ]
+    },
+    {
+        id: 2,
+        title: 'Số phòng ngủ',
+        categories: [
+            {
+                id: 1,
+                filter: '1 phòng hoặc nhiều hơn'
+            },
+            {
+                id: 2,
+                filter: '2 phòng hoặc nhiều hơn'
+            },
+            {
+                id: 3,
+                filter: '3 phòng hoặc nhiều hơn'
+            },
+            {
+                id: 4,
+                filter: '4 phòng hoặc nhiều hơn'
+            }
+        ]
+    },
+    {
+        id: 3,
+        title: 'Điểm đánh giá',
+        categories: [
+            {
+                id: 1,
+                filter: 'Tàm tạm: 5 điểm trở lên'
+            },
+            {
+                id: 2,
+                filter: 'Dễ chịu: 6 điểm trở lên'
+            },
+            {
+                id: 3,
+                filter: 'Tốt: 7 điểm trở lên'
+            },
+            {
+                id: 4,
+                filter: 'Rất tốt: 8 điểm trở lên'
+            },
+            {
+                id: 5,
+                filter: 'Tuyệt hảo: 9 điểm trở lên'
+            }
+        ]
+    }
+]
 export const featured = {
     id: 1,
     name: 'Royal Penthouse Duplex Nguyễn Xiển',

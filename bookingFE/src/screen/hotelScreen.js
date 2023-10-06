@@ -4,7 +4,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { themeColor } from '../theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Select, CheckIcon, NativeBaseProvider } from 'native-base'
 export default function HotelScreen() {
     const { params: { id, name, imageHotel, imageStar, location, description, address, reviewPoint, reviews, stars, hotelsData, lng, lat } } = useRoute();
     console.log('hotel: ', name);
@@ -104,19 +103,7 @@ export default function HotelScreen() {
                                     </Text>
 
                                 </TouchableOpacity>
-                                <NativeBaseProvider>
-                                    <Select selectedValue={service} minWidth={200} accessibilityLabel='Chọn phòng'
-                                        placeholder='Chọn phòng' _selectedItem={{
-                                            bg: "teal.600",
-                                            endIcon: <CheckIcon size="5" />
-                                        }} mt={1} onValueChange={itemValue => setService(itemValue)}>
-                                        <Select.Item label="UX Research" value="ux" />
-                                        <Select.Item label="Web Development" value="web" />
-                                        <Select.Item label="Cross Platform Development" value="cross" />
-                                        <Select.Item label="UI Designing" value="ui" />
-                                        <Select.Item label="Backend Development" value="backend" />
-                                     </Select>
-                                </NativeBaseProvider>
+
 
 
 

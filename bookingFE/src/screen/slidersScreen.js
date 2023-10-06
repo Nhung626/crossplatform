@@ -5,7 +5,6 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColor } from '../theme';
 import { useNavigation } from '@react-navigation/native';
-import CheckBox from '@react-native-community/checkbox';
 export default function SlidersScreen() {
 
   const navigation = useNavigation();
@@ -81,11 +80,7 @@ export default function SlidersScreen() {
         <Text style={styles.textTitle}> Xếp hạng chỗ nghỉ </Text>
         <View style={styles.chooseContainer}>
           <Text>Không xếp hạng</Text>
-          <CheckBox
-            disabled={false}
-            value={isSelected}
-            onValueChange={(newValue) => setSelection(newValue)}
-          />
+
         </View>
         <View>
           <Text>1 Sao</Text>
