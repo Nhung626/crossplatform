@@ -1,11 +1,15 @@
 import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native'
 import React from 'react'
 import { themeColor } from '../theme'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Icon from "react-native-feather"
 import { SafeAreaView } from 'react-native-safe-area-context'
+
 export default function SearchIcon() {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount } = route.params ?? {};
+
     return (
         <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
             <StatusBar style='dark' />
@@ -28,13 +32,34 @@ export default function SearchIcon() {
                     <TouchableOpacity style={styles.searchContainer}
                         onPress={() => navigation.navigate('Calendar')}>
                         <Icon.Calendar height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
-                        <Text style={styles.searchText}> Thời gian đặt phòng</Text>
+
+                        <Text style={styles.searchText}>
+                            {startDate ? (
+                                <>
+                                    <Text > {startDayOfWeek}, {startDate}</Text>
+                                    <Text>  - </Text>
+                                    <Text >{endDayOfWeek}, {endDate}</Text>
+                                </>
+                            ) : (
+                                'Thời gian đặt phòng'
+                            )}
+                        </Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.searchContainer}
                         onPress={() => navigation.navigate('NumOfPeople')}>
                         <Icon.User height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
-                        <Text style={styles.searchText}> Số lượng người</Text>
+                        <Text style={styles.searchText}>
+                            {roomCount ? (
+                                <>
+                                    <Text> {roomCount} Phòng </Text>
+                                    <Text> • </Text>
+                                    <Text> {peopleCount} Người</Text>
+                                </>
+                            ) : (
+                                'Số lượng phòng và người'
+                            )}
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor }}

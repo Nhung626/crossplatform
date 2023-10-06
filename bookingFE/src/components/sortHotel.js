@@ -21,6 +21,7 @@ export default function SortHotel() {
             flexDirection: 'row',
             flexWrap: 'wrap', // Cho phép các phần tử xuống dòng khi không còn không gian ngang
             justifyContent: 'flex-start',
+            marginHorizontal: 10
           }}
         >
 

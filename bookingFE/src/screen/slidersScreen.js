@@ -1,16 +1,19 @@
-import React, { useState, useRef } from 'react'
-import { View, Text, Button, StyleSheet, TouchableWithoutFeedback, FlatList, StatusBar, Modal, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Icon from 'react-native-feather';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColor } from '../theme';
 import { useNavigation } from '@react-navigation/native';
-
+import CheckBox from '@react-native-community/checkbox';
 export default function SlidersScreen() {
 
   const navigation = useNavigation();
   const initialSliderValues = [100000, 3000000];
   const [sliderValues, setSliderValues] = useState(initialSliderValues);
+  const [isSelected, setSelection] = useState(false);
+
+
   const handleSliderChange = (values) => {
     setSliderValues(values);
   };
@@ -50,7 +53,7 @@ export default function SlidersScreen() {
         </TouchableOpacity>
       </View>
       <View style={{ alignItems: 'center' }}>
-        <Text style={{ marginTop: 10, paddingLeft: 10 }}>Ngân sách của bạn (cho 1 đêm)</Text>
+        <Text style={styles.textTitle}>Ngân sách của bạn (cho 1 đêm)</Text>
         <View style={styles.textContainer}>
           <Text>
             VND {formatValue(sliderValues[0])} - VND {formatValue(sliderValues[1])}
@@ -71,6 +74,34 @@ export default function SlidersScreen() {
             backgroundColor: themeColor.btColor, // Đây là màu hồng
           }}
         />
+
+
+      </View>
+      <View style={{ marginHorizontal: 10, marginVertical: 20, borderBottomWidth: 0.6, borderBottomColor: 'gray' }}>
+        <Text style={styles.textTitle}> Xếp hạng chỗ nghỉ </Text>
+        <View style={styles.chooseContainer}>
+          <Text>Không xếp hạng</Text>
+          <CheckBox
+            disabled={false}
+            value={isSelected}
+            onValueChange={(newValue) => setSelection(newValue)}
+          />
+        </View>
+        <View>
+          <Text>1 Sao</Text>
+        </View>
+        <View>
+          <Text>2 Sao</Text>
+        </View>
+        <View>
+          <Text>3 Sao</Text>
+        </View>
+        <View>
+          <Text>4 Sao</Text>
+        </View>
+        <View>
+          <Text>5 Sao</Text>
+        </View>
       </View>
     </SafeAreaView>
 
@@ -101,4 +132,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
+  chooseContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  textTitle: {
+    fontSize: 18,
+    fontWeight: '500',
+    marginVertical: 20
+  }
 })
