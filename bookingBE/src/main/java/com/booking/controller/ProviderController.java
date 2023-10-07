@@ -36,10 +36,10 @@ public class ProviderController {
     @Autowired
     JwtUtil jwtUtil;
 
-    @PostMapping(value = "/auth/signup")
-    public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createuserDto) throws IOException {
-        providerService.addProvider(createuserDto);
-        return ResponseEntity.status(200).build();
+    @PostMapping(value = "/auth/sign-up")
+    public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createUserDto) throws IOException {
+        providerService.addProvider(createUserDto);
+        return ResponseEntity.ok("success");
     }
 
     @PostMapping(value = "/auth/login")

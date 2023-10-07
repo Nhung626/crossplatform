@@ -35,9 +35,9 @@ public class CustomerController {
     @Autowired
     JwtUtil jwtUtil;
 
-    @PostMapping(value = "/auth/signup")
-    public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createuserDto) throws IOException {
-        customerService.addCustomer(createuserDto);
+    @PostMapping(value = "/auth/sign-up")
+    public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createUserDto) throws IOException {
+        customerService.addCustomer(createUserDto);
         return ResponseEntity.status(200).build();
     }
 
