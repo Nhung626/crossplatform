@@ -9,7 +9,7 @@ export default function SearchScreen() {
             <View style={{ flexDirection: 'row', marginHorizontal: 20 }}>
                 <View>
                     <Text>
-
+                        ,
                     </Text>
                 </View>
             </View>
