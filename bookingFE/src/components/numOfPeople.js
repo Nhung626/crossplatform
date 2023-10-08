@@ -35,10 +35,10 @@ export default function NumOfPeople() {
                             strokeWidth={3} stroke={'white'} height={30} width={30}
                             style={{ backgroundColor: themeColor.bgColor, borderRadius: 100 }} />
                     </TouchableOpacity>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
+                    <Text style={{ fontWeight: '500', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
                 </View>
                 <View style={styles.countContainer}>
-                    <Text style={styles.text}>Phòng</Text>
+                    <Text style={styles.text}>Số phòng</Text>
                     <View style={styles.count}
                     >
                         <TouchableOpacity
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
     },
     text: {
-        fontWeight: 'bold',
+        fontWeight: '400',
         fontSize: 16
     },
     Icon: {
