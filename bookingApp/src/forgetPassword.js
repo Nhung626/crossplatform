@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native"; // Import TouchableOpacity
 
 function ForgetPassword({ navigation }) {
-  const [email, setEmail] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
+  const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [step, setStep] = useState(1);
 
   const handleSendVerificationCode = () => {
     if (isValidEmail(email)) {
       setStep(2);
     } else {
-      alert('Email không hợp lệ. Vui lòng kiểm tra lại.');
+      alert("Email không hợp lệ. Vui lòng kiểm tra lại.");
     }
   };
 
   const handleNextStep = () => {
     if (verificationCode) {
-      navigation.navigate('NewPassword');
+      navigation.navigate("NewPassword");
     } else {
-      alert('Mã xác nhận không hợp lệ. Vui lòng kiểm tra lại.');
+      alert("Mã xác nhận không hợp lệ. Vui lòng kiểm tra lại.");
     }
   };
 
@@ -73,42 +79,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    justifyContent: 'center',
-    backgroundColor:'#8db4ab'
+    justifyContent: "center",
+    backgroundColor: "#8db4ab",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     paddingHorizontal: 10,
-    marginTop:10,
+    marginTop: 10,
     marginBottom: 10,
-    borderRadius:10,
+    borderRadius: 10,
   },
   customButton: {
-    width: '80%',
+    width: "80%",
     height: 40,
     borderRadius: 40,
-    backgroundColor: '#fff',
-    marginLeft:35,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#fff",
+    marginLeft: 35,
+    justifyContent: "center",
+    alignItems: "center",
     marginVertical: 20,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
