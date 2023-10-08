@@ -9,7 +9,7 @@ import { featured } from '../constains'
 
 export default function MapScreen() {
     const navigation = useNavigation();
-    const hotels = featured.hotelsData[0]
+    const hotels = featured.find(item => item.id === 1);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
 
@@ -29,9 +29,7 @@ export default function MapScreen() {
                         latitude: hotels.lat,
                         longitude: hotels.lng
                     }}
-                    title={`VND: ${hotels.prices.toString()}`} // Hiển thị cả tên và giá trị
-                    description={hotels.name} // Chuyển số thành chuỗi
-
+                    title={hotels.name}
                     pinColor={themeColor.btColor}
                 ></Marker>
 
