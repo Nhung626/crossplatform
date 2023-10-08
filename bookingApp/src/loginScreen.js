@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 const LoginScreen = () => {
@@ -12,21 +12,25 @@ const LoginScreen = () => {
   };
   
   return (
-    <View style={styles.container}>
+    <ImageBackground style={styles.container}
+    source={require('../assets/nen1.png')}
+    >
       <Text style={styles.header}>
         Đăng nhập để dễ dàng truy cập thông tin chuyến đi
       </Text>
+
       <View style={styles.button}>
+        <View style={{justifyContent:'center',marginTop:20,}}>
         <TouchableOpacity style={styles.buttonGG}>
           <View style={styles.buttonContent}>
-            <Icon name="google" size={20} color="#black" />
+            <Icon name="google" size={20} color="#fff" />
             <Text style={styles.textGG}>Tiếp tục bằng tài khoản Google</Text>
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.buttonFB}>
           <View style={styles.buttonContent}>
-            <Icon name="facebook" size={20} color="black" />
+            <Icon name="facebook" size={20} color="#fff" />
             <Text style={styles.textFB}>Tiếp tục bằng tài khoản Facebook</Text>
           </View>
         </TouchableOpacity>
@@ -35,8 +39,9 @@ const LoginScreen = () => {
         style={styles.buttonEmail}>
           <Text style={styles.textEmail}>Tiếp tục với Email</Text>
         </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -45,58 +50,62 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff', // Thêm màu nền cho container
+    backgroundColor: '#ffffff', 
   },
   header: {
     fontSize: 25,
     fontWeight: 'bold',
-    marginTop: -350,
-    marginBottom:40,
+    marginTop: -150,
+    marginBottom:60,
+    color:'#fff'
   },
+
   buttonGG: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
     marginTop: 10, // Dịch lên
-    borderColor: 'black',
-    borderWidth: 1,
+    borderWidth:1,
+    borderColor:'#fff',
     marginBottom: 10,
+    
   },
   buttonFB: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
-    marginTop: 10, // Dịch lên
-    borderColor: 'black',
-    borderWidth: 1,
+    marginTop: 10, 
+    borderWidth:1,
+    borderColor:'#fff',
     marginBottom: 10,
+    
   },
   buttonEmail: {
-    marginTop: 10, // Dịch lên
+    marginTop: 10, 
     backgroundColor: '#0057F7',
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
+    
   },
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    fontWeight:'bold'
   },
   textGG: {
     textAlign: 'center',
-    color: '#040008',
     marginLeft: 10,
+    color:'#fff'
   },
   textFB: {
     textAlign: 'center',
-    color: '#040008',
     marginLeft: 10,
+    color:'#fff'
   },
   textEmail: {
     textAlign: 'center',

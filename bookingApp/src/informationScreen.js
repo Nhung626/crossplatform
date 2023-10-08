@@ -3,7 +3,11 @@ import { View, Text, StyleSheet, TextInput, Button, ScrollView, ImageBackground 
 
 const InformationScreen = () => {
   return (
-    <View style={styles.container}>
+    <ImageBackground 
+    style={styles.container}
+    source={require('../assets/nen5.png')}>
+    
+    
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.information}>Thông tin khách hàng</Text>
 
@@ -45,7 +49,7 @@ const InformationScreen = () => {
 
         <Button title="Lưu thông tin" onPress={() => {}} />
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -54,7 +58,7 @@ const styles = StyleSheet.create({
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor:'#DAFFF1',
+
 },
 
   information: {
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
   paddingHorizontal: 10,
   marginBottom: 20,
   color: '#002929',
+  borderRadius:10,
 },
 inputdate:{
   marginLeft:40,
@@ -86,6 +91,8 @@ inputdate:{
   paddingHorizontal: 10,
   marginBottom: 20,
   color: '#002929',
+  borderTopLeftRadius:10,
+  borderBottomLeftRadius:10,
 },
 
 inputsex:{
@@ -97,6 +104,8 @@ inputsex:{
   paddingHorizontal: 10,
   marginBottom: 20,
   color: '#002929',
+  borderTopRightRadius: 10, // Đặt borderRadius cho góc trên cùng bên phải
+  borderBottomRightRadius: 10,
 },
 });
 

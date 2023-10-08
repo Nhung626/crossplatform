@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, ImageBackground,Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const StartScreen = () => {
@@ -23,7 +23,7 @@ const StartScreen = () => {
     };
 
     try {
-      const response = await fetch('http://172.20.10.10:8080/api/v1/provider/auth/login', {
+      const response = await fetch('http://192.168.1.8:3306/api/v1/provider/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,17 +52,24 @@ const StartScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../assets/signup.png')}
+      source={require('../assets/nen6.png')}
       style={styles.container}
     >
       <ScrollView style={styles.view1}>
+       
         <View style={styles.overlay}>
+        {/* <Image style={[styles.logo,width = 10,]}
+    source={require('../assets/reservar-01.png')} />  */}
           <View style={styles.headerContainer}>
+            <Image style={styles.logo} source={require('../assets/reservar-01.png')} />
             <Text style={styles.header}>Chào mừng bạn</Text>
           </View>
+
+
+        <View style={styles.Tp}> 
           <View style={styles.content}>
             <View style={styles.inputBoxemail}>
-              <Text style={styles.labelemail}>Tài khoản</Text>
+              <Text style={[styles.labelemail]}>Tài khoản</Text>
               <TextInput
                 style={styles.inputemail}
                 onChangeText={(text) => setEmail(text)}
@@ -70,6 +77,7 @@ const StartScreen = () => {
                 placeholder="Nhập tài khoản"
                 keyboardType="email-address"
                 autoCapitalize="none"
+                placeholderTextColor='#fff'
               />
             </View>
             <View style={styles.inputBoxpass}>
@@ -79,14 +87,15 @@ const StartScreen = () => {
                 onChangeText={(text) => setPassword(text)}
                 value={password}
                 placeholder="Nhập mật khẩu"
-                secureTextEntry
+                secureTextEntry ="none"
+                placeholderTextColor='#fff'
               />
             </View>
             <View style={styles.forget}>
               <TouchableOpacity onPress={handleForgetPassword}>
                 <Text style={styles.cmt}>
                   <Text>Bạn quên mật khẩu?</Text>
-                  <Text> | </Text>
+                  <Text style={{color:'black'}}> | </Text>
                   <Text style={styles.link}>Lấy lại mật khẩu</Text>
                 </Text>
               </TouchableOpacity>
@@ -95,31 +104,31 @@ const StartScreen = () => {
               <Text>Đăng nhập</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        
         <View style={styles.forget}>
           <TouchableOpacity onPress={handleForgetPassword}></TouchableOpacity>
         </View>
         <View style={styles.register}>
           <TouchableOpacity onPress={handleRegister}>
-            <Text>
-              Bạn không có tài khoản?
-              <Text style={styles.link}> Đăng ký</Text>
+            <Text style={{fontWeight:'bold',color:'#fff'}}>
+             Bạn không có tài khoản? 
+              <Text style={{color:'black'}}> | </Text>
+              <Text style={styles.link}>Đăng ký</Text>
             </Text>
           </TouchableOpacity>
         </View>
+      </View>
+      </View>
       </ScrollView>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#ecae7d',
-    justifyContent: 'center',
-    alignItems: 'center',
-    resizeMode: 'cover',
-    height: '100%',
-    width: '100%',
+  container: {  
+    flex:1,
+    resizeMode:'cover',
+    
   },
   view1: {
     width: '100%',
@@ -128,27 +137,50 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
+  
+  Tp:{
+    marginTop:80,
+    marginLeft:20,
+    justifyContent:'center',
+    // borderWidth:1,
+    borderColor:'#fff',
+    width:'90%',
+    height:500,
+    borderRadius:20,
+    
+  },
   headerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  logo:{
+    width:200,
+    height:200,
+    marginTop:60,
+    
+    },
   header: {
     fontSize: 24,
-    color: '#fff',
-    marginTop: 50,
+    color: '#FFE4D6',
+    marginTop: 10,
+    marginBottom:-20,
+    fontWeight:'bold'
   },
   content: {
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
+
   inputBoxemail: {
     marginVertical: 10,
     width: 310,
     borderBottomWidth: 1,
     borderBottomColor: '#fff',
     borderColor: 'transparent',
+    justifyContent:'center'
   },
   inputBoxpass: {
     marginVertical: 10,
@@ -157,20 +189,18 @@ const styles = StyleSheet.create({
     borderBottomColor: '#fff',
     borderColor: 'transparent',
   },
-  labelemail: {
-    marginTop: 120,
-    color: 'black',
-    fontSize: 16,
-    marginBottom: 5,
+  labelemail:{
+    color:'#fff'
   },
   inputemail: {
     width: '100%',
     height: 50,
     fontSize: 16,
     color: '#fff',
+
   },
   labelpass: {
-    color: 'black',
+    color: '#fff',
     fontSize: 16,
     marginBottom: 5,
   },
@@ -189,13 +219,16 @@ const styles = StyleSheet.create({
   link: {
     textDecorationLine: 'underline',
     color: '#fff',
+    fontWeight:'bold'
   },
   cmt: {
     marginTop: -170,
+    color:'#fff',
+    fontWeight:'bold'
   },
   button: {
     marginTop: -140,
-    width: '100%',
+    width: '80%',
     height: 40,
     borderRadius: 40,
     backgroundColor: '#fff',
@@ -205,10 +238,10 @@ const styles = StyleSheet.create({
     marginBottom: -120,
   },
   register: {
-    marginTop: -60,
+    marginTop: -50,
     alignItems: 'center',
     fontSize: 14,
-    marginBottom: 200,
+    marginBottom: 90,
   },
 });
 

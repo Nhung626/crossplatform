@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { View,ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity, ImageBackground,Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 function SignupScreen() {
@@ -13,48 +13,47 @@ function SignupScreen() {
       alert('Mật khẩu và xác nhận mật khẩu không khớp.');
       return;
     }
-
+  
     const userData = {
       email: email,
       password: password,
     };
-
+  
     try {
-      const response = await fetch('http://172.20.10.10:8080/api/v1/provider/auth/signup', {
+      const response = await fetch('http://192.168.1.8:3306/api/v1/provider/auth/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
       });
-
-      if (!response.ok) {
-        throw new Error('Lỗi khi nhận phản hồi từ API');
-      }
-      //const data = await response.json();
-
-      if (response.ok) {  
+      // const data = await response.json();
+      if (response.ok) {
+        // Đăng ký thành công
         navigation.navigate('SignupSuccess');
       } else {
-        alert('Đăng ký thất bại. Vui lòng thử lại sau.');
+        const errorData = await response.json(); // Lấy thông tin lỗi từ phản hồi
+        alert(`Đăng ký thất bại: ${errorData.message}`);
       }
     } catch (error) {
       console.error('Lỗi khi gửi yêu cầu đăng ký:', error);
       alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
     }
-    
   };
-
+  
   return (
     <ImageBackground
-      source={require('../assets/signup.png')}
+      source={require('../assets/nen4.png')}
       style={styles.container}
     >
+    <ScrollView>
       <View style={styles.header}>
+      <Image style={[styles.logo]}
+    source={require('../assets/reservar-01.png')} />  
         <Text style={styles.headerText}>Đăng ký</Text>
       </View>
 
-      <Text style={styles.label}>Nhập email:</Text>
+      <Text style={styles.label}>Nhập tài khoản</Text>
       <TextInput
         style={styles.input}
         onChangeText={(text) => setEmail(text)}
@@ -62,7 +61,7 @@ function SignupScreen() {
         placeholder="Email của bạn"
       />
 
-      <Text style={styles.label}>Nhập mật khẩu:</Text>
+      <Text style={styles.label}>Nhập mật khẩu</Text>
       <TextInput
         style={styles.input}
         onChangeText={(text) => setPassword(text)}
@@ -71,7 +70,7 @@ function SignupScreen() {
         secureTextEntry={true}
       />
 
-      <Text style={styles.label}>Nhập lại mật khẩu:</Text>
+      <Text style={styles.label}>Nhập lại mật khẩu</Text>
       <TextInput
         style={styles.input}
         onChangeText={(text) => setConfirmPassword(text)}
@@ -81,8 +80,12 @@ function SignupScreen() {
       />
 
       <TouchableOpacity style={styles.button1}>
-        <Button title="Đăng ký" onPress={handleSignup} />
+        <Button onPress={handleSignup}
+           title="Đăng ký"
+           color='black'
+        />
       </TouchableOpacity>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -94,6 +97,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 30,
+  },
+  logo:{
+    width:200,
+    height:200,
+    marginTop:20,
+    
   },
   headerText: {
     fontWeight: 'bold',
@@ -116,6 +125,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 16,
     color: 'black', 
+    borderRadius:10,
   },
   button1: {
     width: '100%',
@@ -125,6 +135,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 20,
+    
   },
 });
 
