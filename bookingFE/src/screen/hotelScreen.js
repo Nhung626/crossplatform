@@ -5,19 +5,25 @@ import { themeColor } from '../theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HotelScreen() {
-    const { params: { id, name, imageHotel, imageStar, location, description, address, reviewPoint, reviews, stars, hotelsData, lng, lat } } = useRoute();
+    const { params: { id, name, imageHotel, imageStar, location, address, reviewPoint, reviews, stars, hotelsData, lng, lat } } = useRoute();
     console.log('hotel: ', name);
     const navigation = useNavigation();
 
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('option1'); // Đặt giá trị mặc định của mục đã chọn
+    const [selectedRooms, setSelectedRooms] = useState([]);
+    const handleSelectRoom = (room) => {
+        if (!selectedRooms.includes(room.id)) {
+            // Nếu phòng chưa được chọn, thêm vào danh sách
+            setSelectedRooms([...selectedRooms, room.id]);
 
-    const [service, setService] = React.useState("");
+            // Chuyển đến màn hình thanh toán và truyền thông tin phòng
+            navigation.navigate('PaymentScreen', { selectedRoom: room });
+        }
+    };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView>
 
-            <StatusBar style='dark' />
+            <StatusBar style='light' backgroundColor={themeColor.bgColor} />
 
             {/* Header bar */}
             <ScrollView>
@@ -71,46 +77,47 @@ export default function HotelScreen() {
                 <View style={{ backgroundColor: 'white', paddingBottom: 144 }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 24, marginVertical: 16, paddingHorizontal: 16 }}> Thông tin các phòng</Text>
                     {/* Hiển thị các thông tin khác của khách sạn */}
-                    {hotelsData && hotelsData.map((hotel) => (
-                        <View key={hotel.id} style={{
+
+                    {hotelsData.map((room) => (
+                        <View key={room.id} style={{
                             flexDirection: 'row', alignItems: 'center', marginLeft: 10, marginRight: 10,
-                            marginBottom: 10
+                            marginBottom: 10, borderBottomWidth: 0.6, borderBottomColor: 'gray', paddingBottom: 10
                         }}>
                             <View>
-                                <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={hotel.image} />
+                                <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={room.image} />
                                 {/* Hiển thị các thông tin khác của mỗi phòng */}
                             </View>
                             <View style={{ marginLeft: 10 }}>
                                 <View style={{ width: 210 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap', marginBottom: 5 }}>{hotel.name}</Text>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap', marginBottom: 5 }}>{room.name}</Text>
                                     <View style={{ flexDirection: 'row' }}>
                                         <Icon.MapPin color='gray' width={15} height={15} style={{ marginHorizontal: 5 }} />
                                         <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                            <Text style={{ color: 'gray', fontSize: 12, flexWrap: 'wrap' }}>{hotel.address}</Text>
-
+                                            <Text style={{ color: 'gray', fontSize: 12, flexWrap: 'wrap' }}>{room.address}</Text>
                                         </View>
-
                                     </View>
                                 </View>
                                 <Text style={{ color: 'gray' }}> Giá cho 1 đêm </Text>
-                                <Text style={{ color: themeColor.bgColor, fontSize: 12, flexWrap: 'wrap', fontWeight: 'bold', fontSize: 18 }}>VND {hotel.price}</Text>
+                                <Text style={{ color: themeColor.bgColor, fontSize: 12, flexWrap: 'wrap', fontWeight: 'bold', fontSize: 18 }}>VND {room.prices}</Text>
                                 <Text style={{}}> { }</Text>
-                                <TouchableOpacity onPress={() => setIsOpen(!isOpen)}
-                                    style={{ width: '50%', backgroundColor: themeColor.bgColor, alignItems: 'center', marginHorizontal: 20, borderRadius: 100, padding: 16, paddingVertical: 12 }}>
-                                    <Text>
-                                        {isOpen ? "Chọn" : "Show"}
 
-                                    </Text>
-
+                                <TouchableOpacity
+                                    onPress={() => handleSelectRoom(room)}
+                                    style={{
+                                        width: '50%',
+                                        backgroundColor: themeColor.bgColor,
+                                        alignItems: 'center',
+                                        marginHorizontal: 20,
+                                        borderRadius: 100,
+                                        padding: 16,
+                                        paddingVertical: 12,
+                                    }}
+                                >
+                                    <Text>Chọn</Text>
                                 </TouchableOpacity>
 
-
-
-
                             </View>
-
                         </View>
-
                     ))}
                 </View>
 
