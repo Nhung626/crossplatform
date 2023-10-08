@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   datePickerContainer: {
     position: "absolute",
     right: 170,
-    bottom: 465,
+    bottom: 473,
   },
   datePicker: {
     backgroundColor: "#fff",
