@@ -12,9 +12,9 @@ import { useNavigation } from '@react-navigation/native';
 export default function SearchValuesScreen() {
   const navigation = useNavigation();
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView style={{ backgroundColor: themeColor.bgColor }}>
 
-      <StatusBar style='dark' />
+      <StatusBar style='light' backgroundColor={themeColor.bgColor} />
       {/*search bar*/}
 
       <View style={{
@@ -39,7 +39,7 @@ export default function SearchValuesScreen() {
           onPress={() => navigation.navigate('Slider')}
           style={{ padding: 12, borderRadius: 200, backgroundColor: themeColor.btColor }}
         >
-          <Icon.Sliders height={20} width={20} strokeWidth="2.5" stroke="white" />
+          <Icon.Sliders height={20} width={20} strokeWidth="2.5" stroke='white' />
         </TouchableOpacity>
       </View>
 
@@ -47,16 +47,16 @@ export default function SearchValuesScreen() {
       {/*main*/}
       <ScrollView
         contentContainerStyle={{
-          paddingBottom: 120,
+          paddingBottom: 90,
 
         }}>
         {/*Categories*/}
 
         <SortHotel />
         {/* featured */}
-        <View >
+        <View style={{ backgroundColor: 'white' }}>
           {
-            [featured, featured, featured].map((item, index) => {
+            featured.map((item, index) => {
               return (
                 <FeaturedRow
                   key={index.toString()}  // Thêm key vào đây
