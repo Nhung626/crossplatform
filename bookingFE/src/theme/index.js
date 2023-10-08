@@ -1,8 +1,8 @@
 
 
 export const themeColor = {
-    bgColor: '#06B6D4',
-    btColor: '#F9A8D4'
+    bgColor: '#29b4ca',
+    btColor: '#a0e2ec'
 
 
 }
