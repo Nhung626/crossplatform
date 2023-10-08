@@ -6,8 +6,6 @@ import { themeColor } from '../theme'
 export default function SortHotel() {
   const [activeCategory, setActiveCategory] = useState(null);
   const handleCategoryPress = (categoryId) => {
-    // Nếu categoryId đã được chọn trước đó, thì đặt về null
-    // Ngược lại, đặt activeCategory bằng categoryId
     setActiveCategory((prev) => (prev === categoryId ? null : categoryId));
   };
 
@@ -19,7 +17,7 @@ export default function SortHotel() {
         <View
           style={{
             flexDirection: 'row',
-            flexWrap: 'wrap', // Cho phép các phần tử xuống dòng khi không còn không gian ngang
+            flexWrap: 'wrap',
             justifyContent: 'flex-start',
             marginHorizontal: 10
           }}
