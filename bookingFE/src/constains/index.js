@@ -113,133 +113,223 @@ export const filterCategory = [
         ]
     }
 ]
-export const featured = {
-    id: 1,
-    name: 'Royal Penthouse Duplex Nguyễn Xiển',
-    imageHotel: require('../assets/images/pizza.png'),
-    imageStar: require('../assets/images/fullStar.png'),
-    location: 'Quận Thanh Xuân - cách trung tâm 7km',
-    description: 'Căn Hộ 3 Phòng Ngủ: ',
-    address: '434 second street',
-    reviewPoint: 10,
-    reviews: 5,
-    stars: 5,
+export const featured = [
+    {
+        id: 1,
+        name: 'Royal Penthouse Duplex Nguyễn Xiển',
+        imageHotel: require('../assets/images/hotelImages/hotels/hotel6.png'),
+        imageStar: require('../assets/images/fullStar.png'),
+        location: 'Quận Thanh Xuân - cách trung tâm 7km',
+        description: 'Căn Hộ 3 Phòng Ngủ: ',
+        address: '434 second street',
+        reviewPoint: 10,
+        reviews: 5,
+        stars: 5,
+        lng: 105.84369620566989,
+        lat: 21.003473736700617,
 
-    hotelsData: [
-        {
-            id: 1,
-            name: 'HUCE Howard',
-            image: require('../assets/images/pizza.png'),
-            description: 'Hot and spicy pizzas',
-            lng: 105.84369620566989,
-            lat: 21.003473736700617,
-            address: '434 second street',
-            stars: 4,
-            reviews: '4.4k',
-            category: 'Fast Food',
-            prices: 10,
-            dishes: [
-                {
-                    id: 1,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    location: 'Quận Thanh Xuân - cách trung tâm 7km',
+        hotelsData: [
+            {
+                id: 1,
+                name: 'HUCE Howard',
+                image: require('../assets/images/hotelImages/hotels/rooms/room1.png'),
+                description: 'Hot and spicy pizzas',
+                lng: 105.84369620566989,
+                lat: 21.003473736700617,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 2,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room2.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 3,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room3.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            }
+        ]
+    },
+    {
+        id: 2,
+        name: 'Royal Penthouse Duplex Giải Phóng',
+        imageHotel: require('../assets/images/hotelImages/hotels/hotel2.png'),
+        imageStar: require('../assets/images/fullStar.png'),
+        location: 'Quận Thanh Xuân - cách trung tâm 7km',
+        description: 'Căn Hộ 3 Phòng Ngủ: ',
+        address: '434 second street',
+        reviewPoint: 10,
+        reviews: 5,
+        stars: 5,
 
+        hotelsData: [
+            {
+                id: 1,
+                name: 'HUCE Howard',
+                image: require('../assets/images/hotelImages/hotels/rooms/room1.png'),
+                description: 'Hot and spicy pizzas',
+                lng: 105.84369620566989,
+                lat: 21.003473736700617,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 2,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room2.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 3,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room3.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            }
+        ]
+    },
+    {
+        id: 3,
+        name: 'Royal Penthouse Duplex Giải Phóng',
+        imageHotel: require('../assets/images/hotelImages/hotels/hotel3.png'),
+        imageStar: require('../assets/images/fullStar.png'),
+        location: 'Quận Thanh Xuân - cách trung tâm 7km',
+        description: 'Căn Hộ 3 Phòng Ngủ: ',
+        address: '434 second street',
+        reviewPoint: 10,
+        reviews: 5,
+        stars: 5,
 
-                    image: require('../assets/images/pizzaDish.png')
-                },
-                {
-                    id: 2,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-                {
-                    id: 3,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-            ]
+        hotelsData: [
+            {
+                id: 1,
+                name: 'HUCE Howard',
+                image: require('../assets/images/hotelImages/hotels/rooms/room1.png'),
+                description: 'Hot and spicy pizzas',
+                lng: 105.84369620566989,
+                lat: 21.003473736700617,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 2,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room2.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 3,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room3.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            }
+        ]
+    },
+    {
+        id: 4,
+        name: 'Royal Penthouse Duplex Giải Phóng',
+        imageHotel: require('../assets/images/hotelImages/hotels/hotel4.png'),
+        imageStar: require('../assets/images/fullStar.png'),
+        location: 'Quận Thanh Xuân - cách trung tâm 7km',
+        description: 'Căn Hộ 3 Phòng Ngủ: ',
+        address: '434 second street',
+        reviewPoint: 10,
+        reviews: 5,
+        stars: 5,
 
-        },
-        {
-            id: 2,
-            name: 'Papa Johns',
-            image: require('../assets/images/pizza.png'),
-            description: 'Hot and spicy pizzas',
-            lng: -85.5324269,
-            lat: 38.2145602,
-            address: '434 second street',
-            stars: 4,
-            reviews: '4.4k',
-            category: 'Fast Food',
-            prices: 10,
-
-            dishes: [
-                {
-                    id: 1,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-                {
-                    id: 2,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-                {
-                    id: 3,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-            ]
-
-        },
-        {
-            id: 3,
-            name: 'Papa Johns',
-            image: require('../assets/images/pizza.png'),
-            description: 'Hot and spicy pizzas',
-            lng: -85.5324269,
-            lat: 38.2145602,
-            address: '434 second street',
-            stars: 4,
-            reviews: '4.4k',
-            category: 'Fast Food',
-            prices: 10,
-
-            dishes: [
-                {
-                    id: 1,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-                {
-                    id: 2,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-                {
-                    id: 3,
-                    name: 'pizza',
-                    description: 'cheezy garlic pizza',
-                    price: 10,
-                    image: require('../assets/images/pizzaDish.png')
-                },
-            ]
-
-        }
-    ]
-}
+        hotelsData: [
+            {
+                id: 1,
+                name: 'HUCE Howard',
+                image: require('../assets/images/hotelImages/hotels/rooms/room1.png'),
+                description: 'Hot and spicy pizzas',
+                lng: 105.84369620566989,
+                lat: 21.003473736700617,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 2,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room2.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            },
+            {
+                id: 3,
+                name: 'Papa Johns',
+                image: require('../assets/images/hotelImages/hotels/rooms/room3.png'),
+                description: 'Hot and spicy pizzas',
+                lng: -85.5324269,
+                lat: 38.2145602,
+                address: '434 second street',
+                stars: 4,
+                reviews: '4.4k',
+                category: 'Fast Food',
+                prices: 10,
+            }
+        ]
+    },
+]
