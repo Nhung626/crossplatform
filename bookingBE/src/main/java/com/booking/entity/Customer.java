@@ -3,6 +3,7 @@ package com.booking.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +32,8 @@ public class Customer {
     private String address;
     @Column(name = "code")
     private String customerCode;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     private Set<Order> orders = new HashSet<>();

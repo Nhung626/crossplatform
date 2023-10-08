@@ -42,6 +42,7 @@ public class CustomerServiceImp implements CustomerService {
         customer.setAddress(updateCustomerDto.getAddress());
         customer.setPhoneNumber(updateCustomerDto.getPhoneNumber());
         customer.setCustomerCode(updateCustomerDto.getCustomerCode());
+        customer.setDateOfBirth(updateCustomerDto.getDateOfBirth());
         customerRepository.save(customer);
     }
 

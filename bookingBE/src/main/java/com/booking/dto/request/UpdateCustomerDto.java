@@ -1,6 +1,8 @@
 package com.booking.dto.request;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Setter
 @Getter
 @Builder
@@ -12,5 +14,7 @@ public class UpdateCustomerDto {
     private String phoneNumber;
     private String address;
     private String customerCode;
+    private LocalDate dateOfBirth;
+
 
 }
