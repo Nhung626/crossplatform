@@ -57,7 +57,7 @@ export default function SearchIcon() {
                                     <Text> {peopleCount} Người</Text>
                                 </>
                             ) : (
-                                'Số lượng phòng và người'
+                                'Chọn phòng và khách'
                             )}
                         </Text>
                     </TouchableOpacity>
