@@ -1,17 +1,43 @@
-import React from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
 const CreateAccount = () => {
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [isAccountExist, setIsAccountExist] = useState(false);
 
-const navigation = useNavigation();
-const handleCreatenameScreen =() =>{
-    navigation.navigate('CreatenameScreen');
-};
-const handleLoginScreen = () => {
-    // Chuyển hướng đến màn hình 'StartScreen'
-    navigation.navigate('LoginScreen');
+  
+  const handleCreatepassScreen = async () => {
+    const user ={
+        email: email,   
+    };
+
+    try {
+      const response = await fetch('http://172.20.10.10:3000/api/v1/customer/auth/sign-up', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      // if (!response.ok) 
+      // {
+        if (!response.ok) {
+          setIsAccountExist(true);
+          alert("Tài khoản đã tồn tại!");
+          
+        } else {
+          setIsAccountExist(false);
+          navigation.navigate('CreatepassScreen');
+        }
+        
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu đăng nhập:", error);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+    }
   };
 
   return (
@@ -35,24 +61,21 @@ const handleLoginScreen = () => {
         inputContainerStyle={styles.inputContainer}
         placeholder="Nhập địa chỉ email"
         inputStyle={styles.input}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
       />
-      <TouchableOpacity style={styles.createAccountButton}>
-        <Text onPress={handleCreatenameScreen}
-        style={styles.createAccountButtonText}>
-        Tạo tài khoản</Text>
+      <TouchableOpacity style={styles.createAccountButton} onPress={handleCreatepassScreen}>
+        <Text style={styles.createAccountButtonText}>Kiểm tra tài khoản</Text>
       </TouchableOpacity>
 
-        <View style={styles.login}>
-            
-              <View style={styles.cmt}>
+      <View style={styles.login}>
+        <View style={styles.cmt}>
           <Text>Bạn đã có tài khoản?</Text>
-          <TouchableOpacity onPress={handleLoginScreen} style={styles.link}>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.link}>
             <Text style={styles.textlink}>Đăng nhập ở đây</Text>
           </TouchableOpacity>
         </View>
-
-        </View>
-
+      </View>
     </ScrollView>
   );
 };
@@ -68,34 +91,33 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 25,
-    fontWeight: 'antialiased',
+    fontWeight: 'bold',
     marginBottom: 30,
   },
   text: {
     color: '#6D7376',
-    fontWeight: 'antialiased',
-    fontSize:16,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   label: {
     marginTop: 24,
     fontSize: 16,
-    fontWeight: 'antialiased',
+    fontWeight: 'bold',
   },
   inputContainer: {
-    width:'100%',
+    width: '100%',
     height: 50,
-    marginLeft:-7,
+    marginLeft: -7,
     marginBottom: 5,
     marginTop: 10,
     borderWidth: 1,
-    borderRadius:5,
+    borderRadius: 5,
     paddingHorizontal: 10,
     paddingVertical: 3,
   },
   input: {
     height: 40,
     color: '#CFD4E2',
-    
   },
   icon: {
     marginRight: 10,
@@ -109,30 +131,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    
   },
   createAccountButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  login:{
-    fontWeight: 'antialiased',
-    marginLeft:10,
-    color:'#CFD4E2',
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  login: {
+    fontWeight: 'bold',
+    marginLeft: 10,
+    color: '#CFD4E2',
   },
   link: {
     color: '#53BCF8',
     marginLeft: 5,
   },
-  textlink:{
-   color: '#235D9F', 
-   fontWeight: 'bold'
+  textlink: {
+    color: '#235D9F',
+    fontWeight: 'bold',
   },
-  cmt:{
-    marginTop:30,
-    flexDirection:'row',
-    fontWeight: 'antialiased',
+  cmt: {
+    marginTop: 30,
+    flexDirection: 'row',
+    fontWeight: 'bold',
   },
 });
 

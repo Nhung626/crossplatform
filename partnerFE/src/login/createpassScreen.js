@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const CreatePassScreen = () => {
+const CreatepassScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -11,16 +15,40 @@ const CreatePassScreen = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const handleConfirmPasswordChange = (text) => {
-    setConfirmPassword(text);
-  };
+  const handleNextButtonPress = async () => {
+    if (!password) {
+      alert("Vui lòng nhập mật khẩu.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert('Mật khẩu không trùng khớp');
+      return;
+    }
+    const user = {
+      password: password,
+    };
+    try {
+      const response = await fetch('http://172.20.10.10:3000/api/v1/customer/auth/sign-up', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      }
+      );
 
-  const handleNextButtonPress = () => {
-    // Xử lý sự kiện tiếp theo khi bấm nút
-    if (password === confirmPassword) {
-      // Mật khẩu và xác nhận mật khẩu khớp nhau
-    } else {
-      // Mật khẩu và xác nhận mật khẩu không khớp
+      
+        if (response.ok) {
+          setIsAccountExist(false);
+          navigation.navigate('CreateroomScreen');
+        } else {
+          setIsAccountExist(true);
+          console.log("Tài khoản đã tồn tại!");
+      
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu đăng nhập:", error);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     }
   };
 
@@ -55,7 +83,7 @@ const CreatePassScreen = () => {
           style={styles.input}
           placeholder="Nhập lại mật khẩu"
           secureTextEntry={!isPasswordVisible}
-          onChangeText={handleConfirmPasswordChange}
+          onChangeText={(text) => setConfirmPassword(text)}
           value={confirmPassword}
         />
         <TouchableOpacity onPress={togglePasswordVisibility} style={styles.icon}>
@@ -67,10 +95,12 @@ const CreatePassScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Button style={[styles.button, { backgroundColor: '#DE5223' }]}
-        title="Tiếp theo"
+      <TouchableOpacity
         onPress={handleNextButtonPress}
-      />
+        style={[styles.button, { backgroundColor: '#DE5223' }]}
+      >
+        <Text style={styles.buttontext}> Tiếp theo </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -87,13 +117,13 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 24,
-    fontWeight: 'antialiased',
+    fontWeight: 'bold',
     marginBottom: 30,
   },
   label: {
     marginTop: 24,
     fontSize: 16,
-    fontWeight: 'antialiased',
+    fontWeight: 'bold',
     marginBottom: 10,
   },
   inputBox: {
@@ -106,6 +136,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#DE5223",
+    borderWidth: 1,
+    borderRadius: 10,
+    width: 200,
+    height: 50,
+    marginLeft: 70,
+  },
+  buttontext: {
+    fontWeight: 'bold',
+    paddingTop: 15,
+    paddingLeft: 60,
   },
   icon: {
     padding: 10,
@@ -117,4 +157,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePassScreen;
+export default CreatepassScreen;

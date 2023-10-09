@@ -1,14 +1,43 @@
-import React from 'react';
-import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+// import config from '.../api-config';
 
+// const apiUrl = `${config.apiHost}:${config.apiPort}`;
 const LoginScreen = () => {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleCreateroomScreen = () => {
-    navigation.navigate('CreateroomScreen');
+  const handleLogin = async () => {
+    try {
+      const data = {
+        email: email,
+        password: password,
+      };
+
+      const response = await fetch('http://172.20.10.10:3000/api/v1/customer/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        // Đăng nhập thành công, bạn có thể xử lý phản hồi ở đây
+        // Ví dụ: chuyển hướng người dùng đến màn hình chính
+        navigation.navigate('CreateroomScreen');
+      } else {
+        // Đăng nhập thất bại, hiển thị thông báo lỗi
+        Alert.alert('Lỗi', 'Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.');
+      }
+    } catch (error) {
+      console.error('Lỗi khi thực hiện đăng nhập:', error);
+    }
   };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerContainer}>
@@ -24,7 +53,8 @@ const LoginScreen = () => {
         <TextInput
           style={styles.input}
           placeholder="Nhập tài khoản (email)"
-          // Tùy chỉnh các thuộc tính khác của TextInput ở đây
+          onChangeText={setEmail}
+          value={email}
         />
       </View>
 
@@ -34,19 +64,18 @@ const LoginScreen = () => {
           style={styles.input}
           placeholder="Nhập mật khẩu"
           secureTextEntry={true}
-          // Tùy chỉnh các thuộc tính khác của TextInput ở đây
+          onChangeText={setPassword}
+          value={password}
         />
       </View>
-
-      <TouchableOpacity style={styles.forgotPasswordLink}>
-        <Text style={styles.linkText}>Quên mật khẩu?</Text>
+      <TouchableOpacity style={[styles.forgotPasswordLink,{marginTop:20,marginBottom:20}]}>
+        <Text style={[styles.linkText,{color:'blue',textDecorationLine: 'underline',fontWeight:'bold'}]}>Quên mật khẩu?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-      style={[styles.button,{backgroundColor:'#DE5223'}]}
-      onPress = {handleCreateroomScreen}>
-        <Text style={{textAlign:'center',color:'#fff',paddingTop:10}}>
-        Đăng nhập</Text>
+      <TouchableOpacity style={[styles.button, { backgroundColor: '#DE5223' }]} onPress={handleLogin}>
+        <Text style={{ textAlign: 'center', color: '#fff', paddingTop: 10 }}>
+          Đăng nhập
+        </Text>
       </TouchableOpacity>
 
     </ScrollView>
@@ -90,19 +119,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
   },
-  forgotPasswordLink: {
-    marginTop: 8,
-    marginBottom:20,
-  },
-  linkText: {
-    color: '#8A9DFF',
-    textDecorationLine: 'underline',
-    fontWeight:'bold',
-  },
-  button:{
-    borderRadius:10,
-    borderWidth:1,
-    height:40,
+  button: {
+    borderRadius: 10,
+    borderWidth: 1,
+    height: 40,
   },
 });
 

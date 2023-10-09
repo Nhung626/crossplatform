@@ -32,7 +32,7 @@ const InformationScreen = () => {
 
     try {
       const response = await fetch(
-        "http://192.168.1.8:3000/api/v1/customer/auth/update",
+        "http://172.20.10.10:3000/api/v1/customer/auth/update",
         {
           method: "POST",
           headers: {
