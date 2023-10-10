@@ -10,7 +10,6 @@ export default function SlidersScreen() {
   const navigation = useNavigation();
   const initialSliderValues = [100000, 3000000];
   const [sliderValues, setSliderValues] = useState(initialSliderValues);
-  const [isSelected, setSelection] = useState(false);
 
 
   const handleSliderChange = (values) => {
