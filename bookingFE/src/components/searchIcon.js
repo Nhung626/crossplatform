@@ -5,15 +5,17 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Icon from "react-native-feather"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import NumOfPeople from './numOfPeople'
+import CalendarPicker from 'react-native-calendar-picker'
 
 export default function SearchIcon() {
     const navigation = useNavigation();
     const route = useRoute();
     const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount } = route.params ?? {};
     const [numOfPeopleModalVisible, setNumOfPeopleModalVisible] = useState(false);
+    const [calendarModalVisible, setCalendarModalVisible] = useState(false)
 
     return (
-        <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+        <SafeAreaView style={{ backgroundColor: 'white' }}>
             <StatusBar style='dark' />
 
             <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -25,14 +27,14 @@ export default function SearchIcon() {
                     <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
                 </View>
 
-                <View style={{ borderWidth: 5, borderColor: themeColor.btColor }}>
+                <View style={{ borderWidth: 2, borderColor: themeColor.btColor }}>
                     <TouchableOpacity style={styles.searchContainer}
                         onPress={() => navigation.navigate('Map')}>
                         <Icon.Search height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
                         <Text style={styles.searchText}> Xung quanh vị trí hiện tại</Text>
                     </TouchableOpacity >
                     <TouchableOpacity style={styles.searchContainer}
-                        onPress={() => navigation.navigate('Calendar')}>
+                        onPress={() => setCalendarModalVisible(true)}>
                         <Icon.Calendar height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
 
                         <Text style={styles.searchText}>
@@ -47,6 +49,9 @@ export default function SearchIcon() {
                             )}
                         </Text>
                     </TouchableOpacity>
+                    <CalendarPicker
+                        isVisible={calendarModalVisible}
+                        onClose={() => setCalendarModalVisible(false)} />
 
                     <TouchableOpacity style={styles.searchContainer}
                         onPress={() => setNumOfPeopleModalVisible(true)}>
@@ -87,7 +92,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'gray',
         alignItems: 'center',
         flexDirection: 'row',
-        paddingVertical: 18
+        paddingVertical: 18, width: '100%'
     },
     searchText: {
         marginLeft: 10
