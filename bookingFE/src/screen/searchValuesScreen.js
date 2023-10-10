@@ -21,7 +21,7 @@ export default function SearchValuesScreen() {
         flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 16, paddingBottom: 16,
         backgroundColor: themeColor.bgColor
       }}>
-        <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', borderRadius: 20, borderWidth: 4, padding: 12, marginRight: 10, borderColor: themeColor.btColor, backgroundColor: 'white' }}>
+        <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', borderRadius: 20, padding: 12, marginRight: 10, backgroundColor: 'white' }}>
           <TouchableOpacity
             style={{ flexDirection: 'row', flex: 1, alignItems: 'center', }}
             onPress={() => navigation.navigate('SearchIcon')}>
