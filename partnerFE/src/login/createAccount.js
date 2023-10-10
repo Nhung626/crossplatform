@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// import config from '../utils/api-config.json';
+import config from '../utils/api-config.json';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-// const apiUrl = `${config.apiHost}:${config.apiPort}`;
+const apiUrl = `${config.apiHost}:${config.apiPort}`;
 const CreateAccount = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
@@ -38,7 +38,7 @@ const CreateAccount = () => {
     // dispatch(registerUser(user));
     try {
       const response = await fetch(
-        `http://192.168.0.240:3000/api/v1/customer/auth/sign-up`,
+        `${apiUrl}/api/v1/customer/auth/sign-up`,
         {
           method: "POST",
           headers: {
