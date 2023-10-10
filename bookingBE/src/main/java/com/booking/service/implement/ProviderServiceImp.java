@@ -16,9 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Service
 @RequiredArgsConstructor
 public class ProviderServiceImp implements ProviderService {
@@ -26,11 +23,6 @@ public class ProviderServiceImp implements ProviderService {
     private final UserRepository userRepository;
     @Autowired
     PasswordEncoder encoder;
-    private final ImageRepository imageRepository;
-
-    @Value("${media.img_path}")
-    private String uploadedFolder;
-
     @Override
     public void addProvider(CreateUserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
@@ -56,28 +48,4 @@ public class ProviderServiceImp implements ProviderService {
         provider.setDescription(updateProviderDto.getDescription());
         providerRepository.save(provider);
     }
-//    @Override
-//    public Long saveUploadedFiles(MultipartFile file) throws IOException {
-//        File dir = new File(uploadedFolder);
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
-//        Random rand = new Random();
-//        int ranNum = rand.nextInt();
-//        if (!file.isEmpty()) {
-//            byte[] bytes = file.getBytes();
-//            Path path = Paths.get(dir + "//" + file.getName() + ranNum + getFileExtension(file.getOriginalFilename()));
-//            Files.write(path, bytes);
-//            Image image = new Image();
-//            image.setImgName(path.getFileName().toString());
-//            image.setType(file.getContentType());
-//            image = imageRepository.save(image);
-//            return image.getImgId();
-//        }
-//        return null;
-//    }
-
-//    public String getFileExtension(String fileName){
-//        return "." + FilenameUtils.getExtension(fileName);
-//    }
 }

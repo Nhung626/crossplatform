@@ -23,6 +23,10 @@ public class Order {
     private LocalDateTime startDate;
     @Column(name = "end_date")
     private LocalDateTime endDate;
+    @Column(name = "checkin")
+    private LocalDateTime checkin;
+    @Column(name = "checkout")
+    private LocalDateTime checkout;
     @Column(name = "state")
     private String state;
     @ManyToOne

@@ -19,9 +19,9 @@ public class Room {
     @Column(name = "room_id")
     private Long roomId;
     @Column(name = "room_number")
-    private String roomNumber;
+    private int roomNumber;
     @Column(name = "state")
-    private String state;
+    private EStateRoom state;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;

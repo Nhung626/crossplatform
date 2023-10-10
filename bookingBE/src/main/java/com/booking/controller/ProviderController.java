@@ -1,12 +1,16 @@
 package com.booking.controller;
 
+import com.booking.dto.request.CreateCategoryDto;
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.LoginUserDto;
 import com.booking.dto.request.UpdateProviderDto;
 import com.booking.dto.response.JwtUserResponse;
+import com.booking.entity.Provider;
+import com.booking.repository.ProviderRepository;
 import com.booking.security.jwt.JwtUtil;
 import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.ProviderService;
+import com.booking.service.interfaces.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +35,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/provider")
 public class ProviderController {
     private final ProviderService providerService;
+    private final RoomService roomService;
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
     JwtUtil jwtUtil;
+    @Autowired
+    ProviderRepository providerRepository;
 
     @PostMapping(value = "/auth/sign-up")
     public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createUserDto) throws IOException {
@@ -54,17 +61,26 @@ public class ProviderController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
+        Provider provider = providerRepository.findByUserId(userDetails.getId());
         String role = roles.get(0);
         return ResponseEntity.ok(new JwtUserResponse().builder()
                 .token(jwt).role(role).type("Bearer")
-                .id(userDetails.getId())
-                .email(userDetails.getEmail())
+                .id(provider.getProviderId())
+                .email(provider.getUser().getEmail())
                 .build());
     }
 
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/update/{id}")
     public ResponseEntity<Object> updateProvider(@PathVariable Long id, @RequestBody UpdateProviderDto updateProviderDto) {
         providerService.updateProvider(id, updateProviderDto);
+        return ResponseEntity.status(200).build();
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/add-room")
+    public ResponseEntity<Object> addRoom(@RequestBody CreateCategoryDto createCategoryDto) {
+        roomService.addCategory(createCategoryDto);
         return ResponseEntity.status(200).build();
     }
 }

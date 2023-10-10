@@ -4,6 +4,8 @@ import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.LoginUserDto;
 import com.booking.dto.request.UpdateCustomerDto;
 import com.booking.dto.response.JwtUserResponse;
+import com.booking.entity.Customer;
+import com.booking.repository.CustomerRepository;
 import com.booking.security.jwt.JwtUtil;
 import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.CustomerService;
@@ -34,7 +36,8 @@ public class CustomerController {
     AuthenticationManager authenticationManager;
     @Autowired
     JwtUtil jwtUtil;
-
+    @Autowired
+    CustomerRepository customerRepository;
     @PostMapping(value = "/auth/sign-up")
     public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createUserDto) throws IOException {
         customerService.addCustomer(createUserDto);
@@ -54,10 +57,11 @@ public class CustomerController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
         String role = roles.get(0);
+        Customer customer = customerRepository.findByUserId(userDetails.getId());
         return ResponseEntity.ok(new JwtUserResponse().builder()
                 .token(jwt).role(role).type("Bearer")
-                .id(userDetails.getId())
-                .email(userDetails.getEmail())
+                .id(customer.getCustomerId())
+                .email(customer.getUser().getEmail())
                 .build());
     }
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
