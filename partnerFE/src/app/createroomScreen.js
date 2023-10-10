@@ -90,13 +90,13 @@ function Themphong() {
 
 
 //Duyệt yêu cầu khách hàng
-function QLThue() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:'#fff' }}>
+// function QLThue() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center',backgroundColor:'#fff' }}>
       
-    </View>
-  );
-}
+//     </View>
+//   );
+// }
 
 function CustomDrawerContent(props) {
   return (
@@ -136,11 +136,11 @@ function CreateroomScreen() {
     options={{ drawerLabel: ({ focused }) => <CustomDrawerItem label="Thông tin người sử dụng" focused={focused} /> }}
   />
   
-  <Drawer.Screen
+  {/* <Drawer.Screen
     name="Quản lý cho thuê"
     component={QLThue}
     options={{ drawerLabel: ({ focused }) => <CustomDrawerItem label="Quản lý cho thuê" focused={focused} /> }}
-  />
+  /> */}
 </Drawer.Navigator>
 
     

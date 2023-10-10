@@ -2,22 +2,28 @@ import React, { useState } from 'react';
 import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
-// import config from '.../api-config';
+import config from '../api-config';
 
-// const apiUrl = `${config.apiHost}:${config.apiPort}`;
+const apiUrl = `${config.apiHost}:${config.apiPort}`;
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Vui lòng nhập tài khoản và mật khẩu.");
+      return;
+    }
+
     try {
       const data = {
         email: email,
         password: password,
       };
 
-      const response = await fetch('http://172.20.10.10:3000/api/v1/customer/auth/login', {
+      const response = await fetch(
+        `${apiUrl}/api/v1/customer/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
