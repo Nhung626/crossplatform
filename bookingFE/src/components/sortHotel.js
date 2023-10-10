@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import React, { useState } from 'react'
 import { categories } from '../constains'
-import { themeColor } from '../../utils/theme'
+import { themeColor } from '../utils/theme'
 
 export default function SortHotel() {
   const [activeCategory, setActiveCategory] = useState(null);

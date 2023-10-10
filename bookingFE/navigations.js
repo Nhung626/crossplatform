@@ -2,16 +2,16 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SearchValuesScreen from './src/screen/searchValuesScreen';
-import MapScreen from './src/screen/mapScreen';
-import HotelScreen from './src/screen/hotelScreen';
-import SearchScreen from './src/screen/searchScreen';
+import SearchValuesScreen from './src/screen/searchScreen/searchValuesScreen';
+import MapScreen from './src/screen/searchScreen/mapScreen';
+import HotelScreen from './src/screen/searchScreen/hotelScreen';
+import SearchScreen from './src/screen/searchScreen/searchScreen';
 import SearchIcon from './src/components/searchIcon';
 import NumOfPeople from './src/components/numOfPeople';
-import SlidersScreen from './src/screen/slidersScreen';
+import SlidersScreen from './src/screen/searchScreen/slidersScreen';
 import Calendar from './src/components/calendarPicker';
-import PaymentScreen from './src/screen/paymentScreen';
-import CheckReservar from './src/screen/checkReservar';
+import PaymentScreen from './src/screen/searchScreen/paymentScreen';
+import CheckReservar from './src/screen/searchScreen/checkReservar';
 
 
 const Stack = createNativeStackNavigator();

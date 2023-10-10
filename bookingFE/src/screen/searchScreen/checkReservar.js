@@ -38,7 +38,7 @@ export default function CheckReservar() {
                 </View>
                 <View style={{ marginVertical: 10, backgroundColor: 'white', paddingHorizontal: 20, paddingVertical: 20, rowGap: 10 }}>
                     <Text style={{ fontSize: 15 }}> (1x) Standard Double Room </Text>
-                    <Image source={require('../assets/images/hotelImages/hotels/rooms/room1.png')} style={{ width: 200, height: 100 }} resizeMode='cover' />
+                    <Image source={require('../../assets/images/hotelImages/hotels/rooms/room1.png')} style={{ width: 200, height: 100 }} resizeMode='cover' />
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ rowGap: 10, paddingRight: 100 }}>
                             <Text>Loại giường</Text>
