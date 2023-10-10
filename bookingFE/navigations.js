@@ -12,6 +12,7 @@ import SlidersScreen from './src/screen/slidersScreen';
 import Calendar from './src/components/calendarPicker';
 import LoginScreen from './src/screen/loginScreen';
 import PaymentScreen from './src/screen/paymentScreen';
+import CheckReservar from './src/screen/checkReservar';
 
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +32,7 @@ export default function Navigations() {
                 <Stack.Screen name="Slider" component={SlidersScreen} />
                 <Stack.Screen name="Calendar" component={Calendar} />
                 <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+                <Stack.Screen name='CheckReservar' component={CheckReservar} />
 
 
 
