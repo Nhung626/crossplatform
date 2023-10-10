@@ -5,7 +5,7 @@ import { themeColor } from '../theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 export default function HotelScreen() {
-    const { params: { id, name, imageHotel, imageStar, location, address, reviewPoint, reviews, stars, hotelsData, lng, lat } } = useRoute();
+    const { params: {name, imageHotel, imageStar, location, address, reviewPoint, reviews, stars, hotelsData} } = useRoute();
     console.log('hotel: ', name);
     const navigation = useNavigation();
 
