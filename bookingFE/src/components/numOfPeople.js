@@ -5,8 +5,7 @@ import * as Icon from 'react-native-feather'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColor } from '../../utils/theme';
 
-export default function NumOfPeople() {
-    const [modalVisible, setModalVisible] = useState(false);
+export default function NumOfPeople({ isVisible, onClose }) {
 
     const navigation = useNavigation();
     const [roomCount, setRoomCount] = useState(0);
@@ -31,64 +30,75 @@ export default function NumOfPeople() {
         <Modal
             animationType="slide"
             transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                Alert.alert('Modal has been closed.');
-                setModalVisible(!modalVisible);
-            }}
+            visible={isVisible}
+            onRequestClose={onClose}
         >
-            <View style={{ marginLeft: 10, marginRight: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}
-                        style={{ padding: 4, marginVertical: 30 }}>
-                        <Icon.ArrowLeft
-                            strokeWidth={3} stroke={'white'} height={30} width={30}
-                            style={{ backgroundColor: themeColor.bgColor, borderRadius: 100 }} />
-                    </TouchableOpacity>
-                    <Text style={{ fontWeight: '500', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
-                </View>
-                <View style={styles.countContainer}>
-                    <Text style={styles.text}>Số phòng</Text>
-                    <View style={styles.count}
-                    >
-                        <TouchableOpacity
-                            onPress={() => handleDecrement('room')}
-                            style={styles.Icon}>
-                            <Icon.Minus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
-                        </TouchableOpacity>
-                        <Text>{roomCount}</Text>
-                        <TouchableOpacity
-                            onPress={() => handleIncrement('room')}
-                            style={styles.Icon}>
-                            <Icon.Plus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
-                        </TouchableOpacity>
-                    </View>
+            <View style={{
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
 
-                </View>
-                <View style={styles.countContainer}>
-                    <Text style={styles.text}>Số người</Text>
-                    <View style={styles.count}>
-                        <TouchableOpacity
-                            onPress={() => handleDecrement('people')}
-                            style={styles.Icon}>
-                            <Icon.Minus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
-                        </TouchableOpacity >
-                        <Text>{peopleCount}</Text>
-                        <TouchableOpacity
-                            onPress={() => handleIncrement('people')}
-                            style={styles.Icon}>
-                            <Icon.Plus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
-                        </TouchableOpacity>
+            }}>
+                <View style={{
+                    marginLeft: 10, marginRight: 10, backgroundColor: themeColor.bgModalColor,
+                    padding: 20,
+                    borderTopLeftRadius: 50, borderTopRightRadius: 50,
+                    borderWidth: 1,
+                    borderColor: "#ccc",
+                    height: "45%",
+                    width: "100%",
+                }}>
+                    <View style={{ paddingVertical: 30, alignItems: 'center' }}>
+                        <Text style={{ fontWeight: '500', fontSize: 20 }}>Thay đổi tìm kiếm của bạn</Text>
+
                     </View>
+                    <View style={styles.countContainer}>
+                        <Text style={styles.text}>Số phòng</Text>
+                        <View style={styles.count}
+                        >
+                            <TouchableOpacity
+                                onPress={() => handleDecrement('room')}
+                                style={styles.Icon}>
+                                <Icon.Minus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
+                            </TouchableOpacity>
+                            <Text>{roomCount}</Text>
+                            <TouchableOpacity
+                                onPress={() => handleIncrement('room')}
+                                style={styles.Icon}>
+                                <Icon.Plus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                    <View style={styles.countContainer}>
+                        <Text style={styles.text}>Số người</Text>
+                        <View style={styles.count}>
+                            <TouchableOpacity
+                                onPress={() => handleDecrement('people')}
+                                style={styles.Icon}>
+                                <Icon.Minus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
+                            </TouchableOpacity >
+                            <Text>{peopleCount}</Text>
+                            <TouchableOpacity
+                                onPress={() => handleIncrement('people')}
+                                style={styles.Icon}>
+                                <Icon.Plus strokeWidth={2} stroke={'white'} style={styles.sizeIcon} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('SearchIcon', {
+                                roomCount, peopleCount
+                            });
+                            onClose();
+                        }}
+                        style={{ borderRadius: 10, backgroundColor: themeColor.bgColor, alignItems: 'center', padding: 10 }}>
+                        <Text style={{ fontSize: 18, color: 'white' }}>Áp dụng</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('SearchIcon', {
-                        roomCount, peopleCount
-                    })}
-                    style={{ borderRadius: 10, backgroundColor: themeColor.bgColor, alignItems: 'center', padding: 10 }}>
-                    <Text style={{ fontSize: 18, color: 'white' }}>Áp dụng</Text>
-                </TouchableOpacity>
             </View>
+
         </Modal >
 
     )
