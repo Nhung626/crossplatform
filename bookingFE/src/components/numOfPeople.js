@@ -86,13 +86,10 @@ export default function NumOfPeople({ isVisible, onClose }) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('SearchIcon', {
-                                roomCount, peopleCount
-                            });
-                            onClose();
-                        }}
+                    <TouchableOpacity onPress={() => {
+                        onClose({ roomCount, peopleCount })
+                    }}
+
                         style={{ borderRadius: 10, backgroundColor: themeColor.bgColor, alignItems: 'center', padding: 10 }}>
                         <Text style={{ fontSize: 18, color: 'white' }}>Áp dụng</Text>
                     </TouchableOpacity>
