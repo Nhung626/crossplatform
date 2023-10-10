@@ -1,11 +1,11 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Modal } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CalendarPicker from 'react-native-calendar-picker'
 import { themeColor } from '../../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Calendar() {
+export default function Calendar({ isVisible, onClose }) {
     const navigation = useNavigation()
     const weekdays = ['T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7', 'CN']
 
@@ -77,38 +77,52 @@ export default function Calendar() {
 
 
     return (
-        <SafeAreaView>
-            <CalendarPicker
-                scrollable={true}
-                startFromMonday={true}
-                allowRangeSelection={true}
-                allowBackwardRangeSelect={true}
-                minDate={minDate}
-                maxDate={maxDate}
-                todayBackgroundColor={themeColor.btColor}
-                selectedDayColor={themeColor.bgColor}
-                selectedDayTextColor="#FFFFFF"
-                weekdays={customWeekdays}
-                months={customMonths}
-                onDateChange={onDateChange}
-            />
-            <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
-                <Text style={{ fontWeight: '500' }}> {selectedStartDate}</Text>
-                <Text> -</Text>
-                <Text style={{ fontWeight: '500' }}> {selectedEndDate}</Text>
-                <Text> ({calculateNightCount()} đêm)</Text>
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isVisible}
+            onRequestClose={onClose}
+        >
+            <View style={{
+                flex: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
+            }}>
+                <CalendarPicker
+                    scrollable={true}
+                    startFromMonday={true}
+                    allowRangeSelection={true}
+                    allowBackwardRangeSelect={true}
+                    minDate={minDate}
+                    maxDate={maxDate}
+                    todayBackgroundColor={themeColor.btColor}
+                    selectedDayColor={themeColor.bgColor}
+                    selectedDayTextColor="#FFFFFF"
+                    weekdays={customWeekdays}
+                    months={customMonths}
+                    onDateChange={onDateChange}
+                />
+                <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
+                    <Text style={{ fontWeight: '500' }}> {selectedStartDate}</Text>
+                    <Text> -</Text>
+                    <Text style={{ fontWeight: '500' }}> {selectedEndDate}</Text>
+                    <Text> ({calculateNightCount()} đêm)</Text>
+                </View>
+
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.navigate('SearchIcon', {
+                            startDate: selectedStartDate,
+                            endDate: selectedEndDate,
+                            startDayOfWeek,
+                            endDayOfWeek,
+                        }); onClose()
+                    }}
+                    style={{ backgroundColor: themeColor.bgColor, borderRadius: 5, alignItems: 'center', marginHorizontal: 10, paddingVertical: 10 }}>
+                    <Text style={{ color: 'white', fontSize: 20 }}>Chọn ngày</Text>
+                </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-                onPress={() => navigation.navigate('SearchIcon', {
-                    startDate: selectedStartDate,
-                    endDate: selectedEndDate,
-                    startDayOfWeek,
-                    endDayOfWeek,
-                })}
-                style={{ backgroundColor: themeColor.bgColor, borderRadius: 5, alignItems: 'center', marginHorizontal: 10, paddingVertical: 10 }}>
-                <Text style={{ color: 'white', fontSize: 20 }}>Chọn ngày</Text>
-            </TouchableOpacity>
-        </SafeAreaView>
+        </Modal>
     );
 }
