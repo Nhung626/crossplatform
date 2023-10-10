@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import * as Icon from 'react-native-feather'
@@ -6,6 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColor } from '../../utils/theme';
 
 export default function NumOfPeople() {
+    const [modalVisible, setModalVisible] = useState(false);
+
     const navigation = useNavigation();
     const [roomCount, setRoomCount] = useState(0);
     const [peopleCount, setPeopleCount] = useState(0);
@@ -26,10 +28,18 @@ export default function NumOfPeople() {
         }
     };
     return (
-        <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }} >
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setModalVisible(!modalVisible);
+            }}
+        >
             <View style={{ marginLeft: 10, marginRight: 10 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}
+                    <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}
                         style={{ padding: 4, marginVertical: 30 }}>
                         <Icon.ArrowLeft
                             strokeWidth={3} stroke={'white'} height={30} width={30}
@@ -79,7 +89,7 @@ export default function NumOfPeople() {
                     <Text style={{ fontSize: 18, color: 'white' }}>Áp dụng</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView >
+        </Modal >
 
     )
 }

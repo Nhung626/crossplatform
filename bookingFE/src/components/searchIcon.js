@@ -1,14 +1,16 @@
 import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { themeColor } from '../../utils/theme'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Icon from "react-native-feather"
 import { SafeAreaView } from 'react-native-safe-area-context'
+import NumOfPeople from './numOfPeople'
 
 export default function SearchIcon() {
     const navigation = useNavigation();
     const route = useRoute();
     const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount } = route.params ?? {};
+    const [numOfPeopleModalVisible, setNumOfPeopleModalVisible] = useState(false);
 
     return (
         <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
@@ -47,7 +49,7 @@ export default function SearchIcon() {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.searchContainer}
-                        onPress={() => navigation.navigate('NumOfPeople')}>
+                        onPress={() => setNumOfPeopleModalVisible(true)}>
                         <Icon.User height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
                         <Text style={styles.searchText}>
                             {roomCount ? (
@@ -61,6 +63,10 @@ export default function SearchIcon() {
                             )}
                         </Text>
                     </TouchableOpacity>
+                    <NumOfPeople
+                        isVisible={numOfPeopleModalVisible}
+                        onClose={() => setNumOfPeopleModalVisible(false)}
+                    />
                     <TouchableOpacity
                         style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor }}
                     >
