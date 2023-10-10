@@ -31,8 +31,12 @@ export default function Themphong() {
       setImages([...images, ...selectedImages]);
     }
   };
-  
-  
+
+  const handleRemoveImage = (indexToRemove) => {
+    const updatedImages = [...images];
+    updatedImages.splice(indexToRemove, 1);
+    setImages(updatedImages);
+  };
 
   const handleAddHotel = () => {
     // Thực hiện việc lưu thông tin khách sạn vào cơ sở dữ liệu hoặc thực hiện các hành động khác ở đây
@@ -42,7 +46,15 @@ export default function Themphong() {
     <ScrollView style={styles.container}>
       <View style={styles.imageContainer}>
         {images.map((imageUri, index) => (
-          <Image key={index} source={{ uri: imageUri }} style={styles.selectedImage} />
+          <View key={index} style={styles.imageItem}>
+            <Image source={{ uri: imageUri }} style={styles.selectedImage} />
+            <TouchableOpacity
+              onPress={() => handleRemoveImage(index)}
+              style={styles.removeButton}
+            >
+              <Text style={styles.removeButtonText}>Xóa</Text>
+            </TouchableOpacity>
+          </View>
         ))}
 
         <TouchableOpacity
@@ -135,11 +147,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row', // Hiển thị ảnh theo hàng ngang
     flexWrap: 'wrap',     // Cho phép các ảnh tràn hàng
   },
+  imageItem: {
+    marginRight: 10,      // Khoảng cách giữa các ảnh ngang
+    marginBottom: 10,     // Khoảng cách giữa các ảnh dọc
+    position: 'relative', // Cho phép sử dụng position
+  },
   selectedImage: {
     width: 100,            // Kích thước ảnh
     height: 100,
-    marginRight: 10,      // Khoảng cách giữa các ảnh ngang
-    marginBottom: 10,     // Khoảng cách giữa các ảnh dọc
+  },
+  removeButton: {
+    backgroundColor: 'red',      // Màu nền của nút xóa
+    width: 60,                   // Kích thước nút xóa
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    position: 'absolute',        // Vị trí tuyệt đối để đặt nút xóa
+    top: 0,                      // Đặt nút xóa ở góc trên cùng bên phải của ảnh
+    right: 0,
+  },
+  removeButtonText: {
+    color: 'white',             // Màu văn bản của nút xóa
   },
   input: {
     height: 40,
