@@ -10,7 +10,6 @@ import SearchIcon from './src/components/searchIcon';
 import NumOfPeople from './src/components/numOfPeople';
 import SlidersScreen from './src/screen/slidersScreen';
 import Calendar from './src/components/calendarPicker';
-import LoginScreen from './src/screen/loginScreen';
 import PaymentScreen from './src/screen/paymentScreen';
 import CheckReservar from './src/screen/checkReservar';
 
