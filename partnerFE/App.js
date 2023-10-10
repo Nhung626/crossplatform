@@ -15,7 +15,7 @@ const [isDarkMode, setIsDarkMode] = useState(false);
     <NavigationContainer>
     <Stack.Navigator
   screenOptions={{ headerShown: false }} 
-  initialRouteName="Themphong"> 
+  initialRouteName="CreateAccount"> 
   <Stack.Screen name="CreateAccount" component={CreateAccount} />
   <Stack.Screen name="LoginScreen" component={LoginScreen} />
   <Drawer.Screen name="CreateroomScreen" component={CreateroomScreen} />

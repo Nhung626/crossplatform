@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import config from '../utils/api-config.json';
+import config from '../api-config.json';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const apiUrl = `${config.apiHost}:${config.apiPort}`;
