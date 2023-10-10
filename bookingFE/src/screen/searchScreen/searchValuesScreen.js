@@ -4,9 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as Icon from "react-native-feather";
 import { themeColor } from '../../utils/theme';
-import SortHotel from '../components/sortHotel';
-import FeaturedRow from '../components/featuredRow';
-import { featured } from '../constains';
+import SortHotel from '../../components/sortHotel';
+import FeaturedRow from '../../components/featuredRow';
+import { featured } from '../../constains';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SearchValuesScreen() {

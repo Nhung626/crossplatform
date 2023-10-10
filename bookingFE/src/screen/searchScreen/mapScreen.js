@@ -5,7 +5,7 @@ import { themeColor } from '../../utils/theme'
 import * as Icon from 'react-native-feather'
 import { useNavigation } from '@react-navigation/native'
 import MapView, { Marker } from 'react-native-maps';
-import { featured } from '../constains'
+import { featured } from '../../constains'
 
 export default function MapScreen() {
     const navigation = useNavigation();

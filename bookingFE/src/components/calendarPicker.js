@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Modal } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import CalendarPicker from 'react-native-calendar-picker'
-import { themeColor } from '../../utils/theme';
+import { themeColor } from '../utils/theme';
 
 export default function Calendar({ isVisible, onClose }) {
     const weekdays = ['T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7', 'CN']
