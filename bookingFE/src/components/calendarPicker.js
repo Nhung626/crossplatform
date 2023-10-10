@@ -74,7 +74,7 @@ export default function Calendar({ isVisible, onClose }) {
     customMonths =
         ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12']
     customWeekdays = ['T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7', 'CN']
-
+    console.log(isVisible)
 
     return (
         <Modal
@@ -94,7 +94,7 @@ export default function Calendar({ isVisible, onClose }) {
                     borderTopLeftRadius: 50, borderTopRightRadius: 50,
                     borderWidth: 1,
                     borderColor: "#ccc",
-                    height: "60%",
+                    height: "55%",
                     width: "100%",
                 }}>
                     <CalendarPicker
