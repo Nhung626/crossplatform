@@ -3,7 +3,7 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as Icon from "react-native-feather";
-import { themeColor } from '../theme';
+import { themeColor } from '../../utils/theme';
 import SortHotel from '../components/sortHotel';
 import FeaturedRow from '../components/featuredRow';
 import { featured } from '../constains';
