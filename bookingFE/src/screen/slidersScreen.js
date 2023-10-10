@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Icon from 'react-native-feather';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { themeColor } from '../theme';
+import { themeColor } from '../../utils/theme';
 import { useNavigation } from '@react-navigation/native';
 export default function SlidersScreen() {
 

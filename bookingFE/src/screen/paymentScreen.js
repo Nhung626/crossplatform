@@ -1,7 +1,7 @@
 import { View, Text, StatusBar, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { themeColor } from '../theme';
+import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
 import { useNavigation } from '@react-navigation/native';
 

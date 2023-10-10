@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native'
 import React, { useEffect } from 'react'
-import { themeColor } from '../theme'
+import { themeColor } from '../../utils/theme'
 import * as Icon from "react-native-feather";
 import { useNavigation } from '@react-navigation/native';
 

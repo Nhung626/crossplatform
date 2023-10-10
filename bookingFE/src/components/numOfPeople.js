@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import * as Icon from 'react-native-feather'
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { themeColor } from '../theme';
+import { themeColor } from '../../utils/theme';
 
 export default function NumOfPeople() {
     const navigation = useNavigation();
