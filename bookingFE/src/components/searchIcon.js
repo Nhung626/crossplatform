@@ -5,15 +5,30 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Icon from "react-native-feather"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import NumOfPeople from './numOfPeople'
-import CalendarPicker from 'react-native-calendar-picker'
+import Calendar from './calendarPicker'
 
 export default function SearchIcon() {
     const navigation = useNavigation();
     const route = useRoute();
-    const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount } = route.params ?? {};
+    const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount, countNight } = route.params ?? {};
     const [numOfPeopleModalVisible, setNumOfPeopleModalVisible] = useState(false);
     const [calendarModalVisible, setCalendarModalVisible] = useState(false)
-
+    const [numOfPeopleData, setNumOfPeopleData] = useState({
+        roomCount,
+        peopleCount
+    });
+    const [calendarData, setCalendarData] = useState({
+        startDate, endDate, startDayOfWeek, countNight, endDayOfWeek
+    });
+    const handleNumOfPeopleClose = (data) => {
+        setNumOfPeopleData(data);
+        setNumOfPeopleModalVisible(false);
+    };
+    const handleCalendarClose = (data) => {
+        setCalendarData(data);
+        setCalendarModalVisible(false);
+    }
+    console.log(startDate)
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
             <StatusBar style='dark' />
@@ -38,40 +53,47 @@ export default function SearchIcon() {
                         <Icon.Calendar height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
 
                         <Text style={styles.searchText}>
-                            {startDate ? (
+                            {calendarData.startDate ? (
                                 <>
-                                    <Text > {startDayOfWeek}, {startDate}</Text>
+                                    <Text > {calendarData.startDayOfWeek}, {calendarData.startDate}</Text>
                                     <Text>  - </Text>
-                                    <Text >{endDayOfWeek}, {endDate}</Text>
+                                    <Text >{calendarData.endDayOfWeek}, {calendarData.endDate}</Text>
+                                    <Text> - ({calendarData.countNight} đêm)</Text>
                                 </>
                             ) : (
                                 'Thời gian đặt phòng'
                             )}
                         </Text>
                     </TouchableOpacity>
-                    <CalendarPicker
-                        isVisible={calendarModalVisible}
-                        onClose={() => setCalendarModalVisible(false)} />
+                    {calendarModalVisible && (
+                        <Calendar
+                            isVisible={calendarModalVisible}
+                            onClose={handleCalendarClose}
+                        />
+                    )}
+
 
                     <TouchableOpacity style={styles.searchContainer}
                         onPress={() => setNumOfPeopleModalVisible(true)}>
                         <Icon.User height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
                         <Text style={styles.searchText}>
-                            {roomCount ? (
+                            {numOfPeopleData.roomCount ? (
                                 <>
-                                    <Text> {roomCount} Phòng </Text>
+                                    <Text> {numOfPeopleData.roomCount} Phòng </Text>
                                     <Text> • </Text>
-                                    <Text> {peopleCount} Người</Text>
+                                    <Text> {numOfPeopleData.peopleCount} Người</Text>
                                 </>
                             ) : (
                                 'Chọn phòng và khách'
                             )}
                         </Text>
                     </TouchableOpacity>
-                    <NumOfPeople
-                        isVisible={numOfPeopleModalVisible}
-                        onClose={() => setNumOfPeopleModalVisible(false)}
-                    />
+                    {numOfPeopleModalVisible && (
+                        <NumOfPeople
+                            isVisible={numOfPeopleModalVisible}
+                            onClose={handleNumOfPeopleClose}
+                        />
+                    )}
                     <TouchableOpacity
                         style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor }}
                     >
