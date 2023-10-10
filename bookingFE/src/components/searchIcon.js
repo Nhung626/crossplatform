@@ -28,7 +28,6 @@ export default function SearchIcon() {
         setCalendarData(data);
         setCalendarModalVisible(false);
     }
-    console.log(startDate)
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
             <StatusBar style='dark' />
@@ -42,7 +41,7 @@ export default function SearchIcon() {
                     <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
                 </View>
 
-                <View style={{ borderWidth: 2, borderColor: themeColor.btColor }}>
+                <View style={{ borderWidth: 2, borderColor: themeColor.btColor, borderRadius: 6 }}>
                     <TouchableOpacity style={styles.searchContainer}
                         onPress={() => navigation.navigate('Map')}>
                         <Icon.Search height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
@@ -66,6 +65,7 @@ export default function SearchIcon() {
                         </Text>
                     </TouchableOpacity>
                     {calendarModalVisible && (
+
                         <Calendar
                             isVisible={calendarModalVisible}
                             onClose={handleCalendarClose}
@@ -95,7 +95,7 @@ export default function SearchIcon() {
                         />
                     )}
                     <TouchableOpacity
-                        style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor }}
+                        style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor, borderBottomEndRadius: 5, borderBottomStartRadius: 5 }}
                     >
                         <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Tìm</Text>
                     </TouchableOpacity>
