@@ -7,6 +7,7 @@ import AddScreen from './src/screens/AddScreen';
 import SaveScreen from './src/screens/SaveScreen';
 import BookingScreen from './src/screens/BookingScreen';
 import UserScreen from './src/screens/UserScreen';
+import MapScreen from './src/screens/searchScreen/mapScreen';
 
 // import { Provider } from 'react-redux';
 // import store from './redux/store'; 
@@ -14,7 +15,6 @@ import UserScreen from './src/screens/UserScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   return (
     // <Provider store={store}>
@@ -28,6 +28,7 @@ export default function App() {
         <Stack.Screen name='SaveScreen' component={SaveScreen} />
         <Stack.Screen name='BookingScreen' component={BookingScreen} />
         <Stack.Screen name='UserScreen' component={UserScreen} />
+        <Stack.Screen name='Map' component={MapScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
@@ -36,6 +37,3 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-
-});
