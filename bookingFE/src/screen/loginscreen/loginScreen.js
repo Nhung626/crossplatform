@@ -15,53 +15,56 @@ const LoginScreen = () => {
     // Chuyển hướng đến màn hình 'StartScreen'
     navigation.navigate("StartScreen");
   };
-
   return (
     // <ImageBackground style={styles.container}
     // source={require('../assets/nen1.png')}
-    // >
     <View style={styles.container}>
-      <Text style={styles.header}>
-        Đăng nhập để dễ dàng truy cập thông tin chuyến đi
-      </Text>
+      <ImageBackground source={require('../../assets/images/background/background.png')} resizeMode="cover" style={styles.image}>
+        <Text style={styles.header}>
+          Đăng nhập để dễ dàng truy cập thông tin chuyến đi
+        </Text>
 
-      <View style={styles.button}>
-        <View style={{ justifyContent: "center", marginTop: 20 }}>
-          <TouchableOpacity style={styles.buttonGG}>
-            <View style={styles.buttonContent}>
-              <Icon name="google" size={20} color="#146EAB" />
-              <Text style={styles.textGG}>Tiếp tục bằng tài khoản Google</Text>
-            </View>
-          </TouchableOpacity>
+        <View style={styles.button}>
+          <View style={{ justifyContent: "center", marginTop: 20 }}>
+            <TouchableOpacity style={styles.buttonGG}>
+              <View style={styles.buttonContent}>
+                <Icon name="google" size={20} color="#146EAB" />
+                <Text style={styles.textGG}>Tiếp tục bằng tài khoản Google</Text>
+              </View>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.buttonFB}>
-            <View style={styles.buttonContent}>
-              <Icon name="facebook" size={20} color="#146EAB" />
-              <Text style={styles.textFB}>
-                Tiếp tục bằng tài khoản Facebook
-              </Text>
-            </View>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonFB}>
+              <View style={styles.buttonContent}>
+                <Icon name="facebook" size={20} color="#146EAB" />
+                <Text style={styles.textFB}>
+                  Tiếp tục bằng tài khoản Facebook
+                </Text>
+              </View>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={handleStartScreen}
-            style={styles.buttonEmail}
-          >
-            <Text style={styles.textEmail}>Tiếp tục với Email</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleStartScreen}
+              style={styles.buttonEmail}
+            >
+              <Text style={styles.textEmail}>Tiếp tục với Email</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     </View>
+
     // </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  image: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff",
+  },
+  container: {
+    flex: 1
   },
   header: {
     fontSize: 25,
