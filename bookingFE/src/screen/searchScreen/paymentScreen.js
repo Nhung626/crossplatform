@@ -50,8 +50,8 @@ export default function PaymentScreen({ route }) {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.6, borderBottomColor: 'gray', paddingVertical: 20, alignItems: 'center', paddingHorizontal: 20, justifyContent: 'space-between' }}>
                         <Icon.Info stroke={themeColor.bgColor} height={30} width={30} />
                         <Text style={{ fontSize: 11.5, fontWeight: '300', paddingHorizontal: 20 }}>
-                            Thuế và phí là các khoản được Traveloka chuyển trả cho khách sạn.
-                            Mọi thắc mắc về thuế và hóa đơn, vui lòng tham khảo Điều khoản và Điều kiện của Traveloka để được giải đáp
+                            Thuế và phí là các khoản được Reservar chuyển trả cho khách sạn.
+                            Mọi thắc mắc về thuế và hóa đơn, vui lòng tham khảo Điều khoản và Điều kiện của Reservar để được giải đáp
                         </Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.6, borderBottomColor: 'gray', paddingVertical: 20, paddingHorizontal: 20 }}>

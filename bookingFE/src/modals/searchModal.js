@@ -83,6 +83,7 @@ export default function SearchModal() {
                 />
             )}
             <TouchableOpacity
+                onPress={() => navigation.navigate('SearchValue')}
                 style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor, borderBottomEndRadius: 5, borderBottomStartRadius: 5 }}
             >
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Tìm</Text>

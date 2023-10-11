@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
-import SearchModal from "../modals/searchModal";
+import SearchModal from "../../modals/searchModal";
 
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Booking.com</Text>
+        <Text style={styles.headerText}>Reservar</Text>
         <Ionicons style={styles.Icon1} name="chatbubble-outline"></Ionicons>
         <Ionicons style={styles.Icon2} name="notifications-outline"></Ionicons>
       </View>
