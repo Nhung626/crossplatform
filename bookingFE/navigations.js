@@ -28,6 +28,9 @@ export default function Navigations() {
 
         <NavigationContainer>
             <Stack.Navigator screenOptions={HidenHeader} initialRouteName='MainScreen'>
+
+
+
                 <Stack.Screen name='MainScreen' component={MainScreen} />
                 <Stack.Screen name='AddScreen' component={AddScreen} />
                 <Stack.Screen name='SaveScreen' component={SaveScreen} />
