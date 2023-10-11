@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-import config from '../api-config.json';
+
+import { customerUpdateApi } from "../../services/useAPI";
+import { useRoute } from "@react-navigation/native";
 
 const InformationScreen = () => {
   const [fullName, setFullName] = useState("");
@@ -19,55 +20,11 @@ const InformationScreen = () => {
   const [gender, setGender] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [token, setToken] = useState(""); // Thêm state để lưu trữ token
-
-  const apiUrl = `${config.apiHost}:${config.apiPort}`;
-
-  useEffect(() => {
-    // Lấy token từ AsyncStorage
-    const getTokenAndUserInfo = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem("authToken");
-        if (storedToken) {
-          setToken(storedToken); // Lưu token vào state
-          // Sử dụng token để truy vấn thông tin tài khoản từ máy chủ
-          const response = await fetch(
-              `${apiUrl}/api/v1/customer/update`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${storedToken}`, // Sử dụng token từ state
-              },
-            }
-          );
-          if (response.ok) {
-            const customer = await response.json();
-            // Xử lý thông tin người dùng và cập nhật state
-            setFullName(customer.fullName);
-            setGender(customer.gender);
-            setPhoneNumber(customer.phoneNumber);
-            setAddress(customer.address);
-            setCustomerCode(customer.customerCode);
-            // Cập nhật ngày sinh (dateOfBirth) nếu có giá trị hợp lệ từ customer
-            if (customer.dateOfBirth) {
-              setDateOfBirth(new Date(customer.dateOfBirth));
-            }
-            // ...
-          } else {
-            // Xử lý lỗi khi truy vấn thông tin tài khoản thất bại
-            console.error("Lỗi khi truy vấn thông tin tài khoản:", error);
-          }
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy token từ AsyncStorage:", error);
-      };
-    };
-
-    getTokenAndUserInfo();
-  }, []); // Chạy effect này một lần khi màn hình được tạo
-
+  const route = useRoute();
+  const { token, id } = route.params ?? {};
+  console.log(token)
+  console.log(id)
   const handleSaveInformation = async () => {
     const customer = {
       fullName: fullName,
@@ -79,26 +36,24 @@ const InformationScreen = () => {
     };
 
     try {
-      const response = await fetch(
-        "http://10.0.2.43:3000/api/v1/customer/update",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Sử dụng token từ state
-          },
-          body: JSON.stringify(customer),
-        }
-      );
+      const response = await customerUpdateApi(customer, token, id)
 
       if (response.status === 200) {
-        setStatusMessage("Thông tin đã được lưu thành công.");
+        console.log("Thông tin đã được lưu thành công.");
       } else {
-        setStatusMessage("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+        console.log(response.data)
       }
     } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error);
-      setStatusMessage("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      if (error.response) {
+        // Đây là lỗi từ phản hồi HTTP, ví dụ: 4xx, 5xx
+        console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error.response.data);
+      } else if (error.request) {
+        // Đây là lỗi không có phản hồi từ máy chủ
+        console.error("Không có phản hồi từ máy chủ");
+      } else {
+        // Đây là lỗi trong quá trình thiết lập yêu cầu
+        console.error("Lỗi trong quá trình thiết lập yêu cầu:", error.message);
+      }
     }
   };
 
@@ -184,8 +139,6 @@ const InformationScreen = () => {
         <TouchableOpacity style={styles.button} onPress={handleSaveInformation}>
           <Text style={styles.buttonText}>Lưu thông tin</Text>
         </TouchableOpacity>
-
-        <Text>{statusMessage}</Text>
       </ScrollView>
     </View>
   );

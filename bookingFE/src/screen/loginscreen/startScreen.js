@@ -10,9 +10,8 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import config from '../api-config.json';
+import { loginApi } from "../../services/useAPI";
 
-const apiUrl = `${config.apiHost}:${config.apiPort}`;
 const StartScreen = () => {
   const navigation = useNavigation();
 
@@ -26,49 +25,32 @@ const StartScreen = () => {
   const handleRegister = () => {
     navigation.navigate("SignupScreen");
   };
-  
+
 
   const handleLogin = async () => {
     const user = {
       email: email,
       password: password,
     };
-  
+
     try {
-      const response = await fetch(
-        `${apiUrl}/api/v1/customer/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        }
-      );
-  
-      if (!response.ok) {
-        // Nếu phản hồi không thành công, kiểm tra mã lỗi
-        if (response.status === 401) {
-          // Mã lỗi 401 cho biết tài khoản hoặc mật khẩu không đúng
-          alert("Đăng nhập thất bại. Tài khoản hoặc mật khẩu không đúng.");
-        } else {
-          // Xử lý lỗi khác (ví dụ: lỗi máy chủ)
-          throw new Error("Lỗi khi nhận phản hồi từ API");
-        }
-      } else {
-        // Nếu phản hồi thành công, tiến hành đăng nhập
+      const response = await loginApi(user)
+
+      if (response.status === 200) {
+        const token = response.data.token;
+        const id = response.data.id;
         console.log("Đăng nhập thành công");
-        // navigation.navigate('MainScreen');
+        navigation.navigate("InformationScreen", { token, id })
       }
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu đăng nhập:", error);
       alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     }
   };
-  
+
   return (
     <ImageBackground
-      source={require("../assets/nen6.png")}
+      source={require("../../assets/nen6.png")}
       style={styles.container}
     >
       <ScrollView style={styles.view1}>
@@ -78,7 +60,7 @@ const StartScreen = () => {
           <View style={styles.headerContainer}>
             <Image
               style={styles.logo}
-              source={require("../assets/reservar-01.png")}
+              source={require("../../assets/reservar-01.png")}
             />
             <Text style={styles.header}>Chào mừng bạn</Text>
           </View>
@@ -104,7 +86,7 @@ const StartScreen = () => {
                   onChangeText={(text) => setPassword(text)}
                   value={password}
                   placeholder="Nhập mật khẩu"
-                  secureTextEntry="none"
+                  secureTextEntry
                   placeholderTextColor="#fff"
                 />
               </View>

@@ -24,7 +24,7 @@ const Notice = () => {
         <View style={{ flex: 1 }}>
           <Image
             style={[styles.logo, { marginTop: 150 }]}
-            source={require("../assets/reservar-01.png")}
+            source={require("../../assets/reservar-01.png")}
           />
         </View>
 

@@ -1,3 +1,4 @@
+import { useRoute } from "@react-navigation/native";
 import React from "react";
 import {
   View,
@@ -7,16 +8,34 @@ import {
   ImageBackground,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import { loginApi } from "../../services/useAPI";
 
 function SignupSuccess({ navigation }) {
-  const handleInformationScreen = () => {
-    navigation.navigate("InformationScreen");
+  const route = useRoute()
+  const { user } = route.params ?? {};
+  const handleInformationScreen = async () => {
+    try {
+      const response = await loginApi(user);
+      if (response.status === 200) {
+        const token = response.data.token;
+        const id = response.data.id
+        console.log(id)
+        navigation.navigate("InformationScreen", { token, id });
+      }
+      else {
+        const errorData = await response.json();
+        alert(`Đăng ký thất bại: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu đăng ký:", error);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+    }
   };
 
   return (
     <View
       style={styles.container}
-      // source={require("../assets/nen5.png")}
+    // source={require("../assets/nen5.png")}
     >
       <View>
         <Icon
@@ -44,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor:'#fff'
+    backgroundColor: '#fff'
   },
   successText: {
     fontSize: 24,
@@ -62,7 +81,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: "bold",
     marginLeft: 15,
-    color:'#146EAB'
+    color: '#146EAB'
   },
 });
 

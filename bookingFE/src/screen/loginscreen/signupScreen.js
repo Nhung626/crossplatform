@@ -12,11 +12,10 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
-import config from '../api-config.json';
+import { signUpApi } from "../../services/useAPI";
 // import { useDispatch } from 'react-redux';
 // import { registerUser } from './redux/actions/authActions';
 
-const apiUrl = `${config.apiHost}:${config.apiPort}`;
 function SignupScreen() {
   // const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -35,50 +34,31 @@ function SignupScreen() {
       alert("Mật khẩu và xác nhận mật khẩu không khớp.");
       return;
     }
-
     const user = {
       email: email,
       password: password,
     };
-    // dispatch(registerUser(user));
     try {
-      const response = await fetch(
-        `${apiUrl}/api/v1/customer/auth/sign-up`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        }
-      );
-
-      if (response.ok) {
-        // Lưu trữ token vào AsyncStorage sau khi đăng ký thành công
-        // const tokenData = await response.json();
-        // await AsyncStorage.setItem("authToken", tokenData.token);
-        navigation.navigate("SignupSuccess");
-      }
-      else {
-        const errorData = await response.json();
-        alert(`Đăng ký thất bại: ${errorData.message}`);
+      const response = await signUpApi(user);
+      if (response.status === 200) {
+        console.log('Đăng ký thành công')
+        navigation.navigate("SignupSuccess", { user })
       }
     } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu đăng ký:", error);
-      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      console.log(user)
+      console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error);
     }
   };
-
   return (
     <ImageBackground
-      source={require("../assets/nen4.png")}
+      source={require("../../assets/nen4.png")}
       style={styles.container}
     >
       <ScrollView>
         <View style={styles.header}>
           <Image
             style={[styles.logo]}
-            source={require("../assets/reservar-01.png")}
+            source={require("../../assets/reservar-01.png")}
           />
           <Text style={styles.headerText}>Đăng ký</Text>
         </View>
@@ -167,4 +147,3 @@ const styles = StyleSheet.create({
 export default SignupScreen;
 
 
-      
