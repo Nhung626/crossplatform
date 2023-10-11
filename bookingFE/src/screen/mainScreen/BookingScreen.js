@@ -1,6 +1,8 @@
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, useWindowDimensions  } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { TabView, SceneMap } from 'react-native-tab-view';
+
 
 export default function BookingScreen() {
 
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
   headerText: {
     flex: 10,
     color: '#fff',
-    fontSize: 20,
+    fontSize: 24,
     marginLeft: 20,
     justifyContent: 'center',
     alignItems: 'center',
