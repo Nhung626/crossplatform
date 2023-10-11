@@ -12,6 +12,11 @@ import SlidersScreen from './src/screen/searchScreen/slidersScreen';
 import Calendar from './src/components/calendarPicker';
 import PaymentScreen from './src/screen/searchScreen/paymentScreen';
 import CheckReservar from './src/screen/searchScreen/checkReservar';
+import MainScreen from './src/screen/mainScreen/MainScreen';
+import AddScreen from './src/screen/mainScreen/AddScreen';
+import SaveScreen from './src/screen/mainScreen/SaveScreen';
+import BookingScreen from './src/screen/mainScreen/BookingScreen';
+import UserScreen from './src/screen/mainScreen/UserScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -22,10 +27,16 @@ export default function Navigations() {
     return (
 
         <NavigationContainer>
-            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='SearchValue'>
+            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='MainScreen'>
+                <Stack.Screen name='MainScreen' component={MainScreen} />
+                <Stack.Screen name='AddScreen' component={AddScreen} />
+                <Stack.Screen name='SaveScreen' component={SaveScreen} />
+                <Stack.Screen name='BookinhScreen' component={BookingScreen} />
+                <Stack.Screen name='UserScreen' component={UserScreen} />
+                <Stack.Screen name='Map' component={MapScreen} />
+
                 <Stack.Screen name="SearchValue" component={SearchValuesScreen} />
                 <Stack.Screen name="Hotel" component={HotelScreen} />
-                <Stack.Screen name="Map" component={MapScreen} />
                 <Stack.Screen name="SearchIcon" component={SearchIcon} options={{ presentation: 'modal' }} />
                 <Stack.Screen name="NumOfPeople" component={NumOfPeople} />
                 <Stack.Screen name="Slider" component={SlidersScreen} />
