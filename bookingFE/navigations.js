@@ -13,7 +13,6 @@ import PaymentScreen from './src/screen/searchScreen/paymentScreen';
 import CheckReservar from './src/screen/searchScreen/checkReservar';
 
 import MainScreen from './src/screen/mainScreen/MainScreen';
-import AddScreen from './src/screen/mainScreen/AddScreen';
 import SaveScreen from './src/screen/mainScreen/SaveScreen';
 import BookingScreen from './src/screen/mainScreen/BookingScreen';
 import UserScreen from './src/screen/mainScreen/UserScreen';
@@ -48,7 +47,6 @@ export default function Navigations() {
 
 
                 <Stack.Screen name='MainScreen' component={MainScreen} />
-                <Stack.Screen name='AddScreen' component={AddScreen} />
                 <Stack.Screen name='SaveScreen' component={SaveScreen} />
                 <Stack.Screen name='BookinhScreen' component={BookingScreen} />
                 <Stack.Screen name='UserScreen' component={UserScreen} />
