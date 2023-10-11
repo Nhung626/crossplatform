@@ -16,7 +16,6 @@ import LoginScreen from './src/screen/loginscreen/loginScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   return (
     // <Provider store={store}>
