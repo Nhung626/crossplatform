@@ -24,6 +24,8 @@ public class FavoriteServiceImp implements FavoriteService {
         Provider provider = providerRepository.findByProviderId(providerId);
         favorite.getProviders().add(provider);
         favoriteRepository.save(favorite);
+        provider.getFavoriteCustomers().add(favorite);
+        providerRepository.save(provider);
     }
 
     public void removeFavoriteProvider(Long customerId, Long providerId) {
@@ -31,6 +33,8 @@ public class FavoriteServiceImp implements FavoriteService {
         Provider provider = providerRepository.findByProviderId(providerId);
         favorite.getProviders().remove(provider);
         favoriteRepository.save(favorite);
+        provider.getFavoriteCustomers().remove(favorite);
+        providerRepository.save(provider);
     }
 
     public List<ProviderDto> getFavoriteProvider(Long customerId) {
