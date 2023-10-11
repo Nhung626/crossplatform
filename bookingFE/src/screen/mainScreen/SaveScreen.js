@@ -1,25 +1,16 @@
 import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
 
 
 
 
-export default function SaveScreen({ navigation }) {
+
+export default function SaveScreen() {
   return (
     <SafeAreaView style={styles.container} >
       <View style={styles.header}>
         <Text style={styles.headerText}>Đã lưu</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('AddScreen')} >
-          <Ionicons name="add-circle-outline"
-            style={{
-              alignSelf: 'flex-end',
-              fontSize: 32,
-              color: '#fff',
-              marginBottom: 5,
-              marginRight: 40,
-            }} />
-        </TouchableOpacity>
+        
       </View>
 
     </SafeAreaView>
