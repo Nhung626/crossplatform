@@ -35,7 +35,7 @@ export default function Navigations() {
     return (
 
         <NavigationContainer>
-            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='LoginScreen'>
+            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='InformationScreen'>
                 <Stack.Screen name="Notice" component={Notice} />
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="StartScreen" component={StartScreen} />
