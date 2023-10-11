@@ -3,6 +3,7 @@ package com.booking.controller;
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.LoginUserDto;
 import com.booking.dto.request.UpdateCustomerDto;
+import com.booking.dto.response.CustomerDto;
 import com.booking.dto.response.JwtUserResponse;
 import com.booking.dto.response.ProviderDto;
 import com.booking.entity.Customer;
@@ -21,8 +22,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +71,15 @@ public class CustomerController {
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/update/{id}")
-    public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @RequestBody UpdateCustomerDto updateCustomerDto) throws IOException {
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long id,
+                                                 @RequestParam("avatar")MultipartFile avatar,
+                                                 @RequestParam("fullName") String fullName,
+                                                 @RequestParam("gender") String gender,
+                                                 @RequestParam("phoneNumber") String phoneNumber,
+                                                 @RequestParam("address") String address,
+                                                 @RequestParam("customerCode") String customerCode,
+                                                 @RequestParam("dateOfBirth")LocalDate birthDay) throws IOException {
+        UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto(avatar,fullName, gender, phoneNumber,address, customerCode,birthDay);
         customerService.updateCustomer(id, updateCustomerDto);
         return ResponseEntity.status(200).build();
     }
@@ -78,7 +89,12 @@ public class CustomerController {
         favoriteService.addFavoriteProvider(customerId,providerId);
         return ResponseEntity.status(200).build();
     }
-
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping(value = "/get-customer/{id}")
+    public ResponseEntity<CustomerDto> getCustomer(@PathVariable("id") Long customerId){
+        CustomerDto customerDto = customerService.getCustomer(customerId);
+        return ResponseEntity.ok(customerDto);
+    }
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @DeleteMapping(value = "/del-favorite/{id}")
     public ResponseEntity removeFavorite(@PathVariable("id") Long customerId, @RequestParam("providerId") Long providerId){

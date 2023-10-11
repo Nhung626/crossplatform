@@ -2,6 +2,7 @@ package com.booking.service.implement;
 
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.UpdateCustomerDto;
+import com.booking.dto.response.CustomerDto;
 import com.booking.entity.*;
 import com.booking.exception.CustomException;
 import com.booking.repository.CustomerRepository;
@@ -60,4 +61,10 @@ public class CustomerServiceImp implements CustomerService {
         customerRepository.save(customer);
     }
 
+    public CustomerDto getCustomer(Long customerId){
+        Customer customer = customerRepository.findByCustomerId(customerId);
+        CustomerDto customerDto = new CustomerDto(customer.getAvatar().getImgId(), customer.getFullName(), customer.getGender(), customer.getPhoneNumber(),
+                customer.getAddress(), customer.getCustomerCode(), customer.getDateOfBirth());
+        return customerDto;
+    }
 }
