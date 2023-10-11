@@ -26,7 +26,7 @@ const NewPasswordScreen = () => {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>Thay đổi mật khẩu</Text>
+      <Text style={styles.title}>Thay đổi mật khẩu</Text>
 
       <TextInput
         style={styles.input}
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title:{
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',

@@ -11,7 +11,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import { customerUpdateApi } from "../../services/useAPI";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const InformationScreen = () => {
   const [fullName, setFullName] = useState("");
@@ -23,8 +23,9 @@ const InformationScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const route = useRoute();
   const { token, id } = route.params ?? {};
-  console.log(token)
-  console.log(id)
+
+  const navigation = useNavigation();
+
   const handleSaveInformation = async () => {
     const customer = {
       fullName: fullName,
@@ -39,7 +40,10 @@ const InformationScreen = () => {
       const response = await customerUpdateApi(customer, token, id)
 
       if (response.status === 200) {
+        navigation.navigate("StartScreen", { token, id });
+
         console.log("Thông tin đã được lưu thành công.");
+
       } else {
         console.log(response.data)
       }
