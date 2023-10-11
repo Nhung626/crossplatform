@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,26 +6,30 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  ImageBackground,
+  Image
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import { customerUpdateApi } from "../../services/useAPI";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
+import { themeColor } from "../../utils/theme";
+import moment from "moment";
 
 const InformationScreen = () => {
   const [fullName, setFullName] = useState("");
   const [customerCode, setCustomerCode] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [viewDateOfBirth, setViewDateOfBirth] = useState(false)
   const [gender, setGender] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const route = useRoute();
   const { token, id } = route.params ?? {};
-
-  const navigation = useNavigation();
-
+  console.log(token)
+  console.log(id)
   const handleSaveInformation = async () => {
     const customer = {
       fullName: fullName,
@@ -40,10 +44,7 @@ const InformationScreen = () => {
       const response = await customerUpdateApi(customer, token, id)
 
       if (response.status === 200) {
-        navigation.navigate("StartScreen", { token, id });
-
         console.log("Thông tin đã được lưu thành công.");
-
       } else {
         console.log(response.data)
       }
@@ -63,176 +64,186 @@ const InformationScreen = () => {
 
 
   return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.information}>Thông tin khách hàng</Text>
-
-        <TextInput
-          placeholder="Họ và tên"
-          style={styles.input}
-          placeholderTextColor="#002929"
-          onChangeText={(text) => setFullName(text)}
-          value={fullName}
-        />
-
-        <View style={styles.inputRow}>
-          <View style={styles.dateInputContainer}>
-            <TouchableOpacity
-              style={styles.dateIcon}
-              onPress={() => setShowDatePicker(true)}
-            >
-              <Icon name="calendar" size={24} color="#002929" />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.inputdate}
-              onChangeText={(text) => setDateOfBirth(text)}
-              value={dateOfBirth.toDateString()}
-              editable={false}
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        resizeMode="cover"
+        source={require("../../assets/images/background/background.png")}
+        style={styles.backgroundStyle}
+      >
+        <ScrollView>
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Image
+              style={styles.imageLogo}
+              source={require("../../assets/reservar-01.png")}
             />
           </View>
-          <TextInput
-            placeholder="Giới tính"
-            style={styles.inputsex}
-            placeholderTextColor="#002929"
-            onChangeText={(text) => setGender(text)}
-            value={gender}
-          />
-        </View>
+          <View style={styles.container}>
+            <Text style={styles.header}>Thông tin khách hàng</Text>
+            <View style={{}}>
+              <TextInput
+                placeholder="Họ và tên"
+                style={styles.inputBox}
+                placeholderTextColor="grey"
+                onChangeText={(text) => setFullName(text)}
+                value={fullName}
+              />
 
-        <TextInput
-          placeholder="CCCD"
-          style={styles.input}
-          placeholderTextColor="#002929"
-          onChangeText={(text) => setCustomerCode(text)}
-          value={customerCode}
-        />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <TouchableOpacity
+                    style={styles.inputBoxDate}
+                    onPress={() => setShowDatePicker(true)}
+                  >
+                    <Icon name="calendar" size={24} color={themeColor.bgColor} />
+                    {showDatePicker && (
+                      <DateTimePicker
+                        value={dateOfBirth}
+                        mode="date"
+                        display="default"
+                        onChange={(event, selectedDate) => {
+                          if (selectedDate) {
+                            setDateOfBirth(selectedDate);
+                            setViewDateOfBirth(true)
+                          }
+                          setShowDatePicker(false);
+                        }}
+                      />
+                    )}
+                    <Text style={{ paddingLeft: 20 }}>
+                      {viewDateOfBirth ? (
+                        <>
+                          <Text> {moment(dateOfBirth).format('DD/MM/YYYY')}</Text>
+                        </>
+                      ) : (
+                        <>
+                          <Text style={{ color: 'grey' }}>DD/MM/YYYY</Text>
+                        </>
+                      )}
+                    </Text>
 
-        <TextInput
-          placeholder="Số điện thoại"
-          style={styles.input}
-          placeholderTextColor="#002929"
-          onChangeText={(text) => setPhoneNumber(text)}
-          value={phoneNumber}
-        />
+                  </TouchableOpacity>
+                </View>
 
-        <TextInput
-          placeholder="Địa chỉ"
-          style={styles.input}
-          placeholderTextColor="#002929"
-          onChangeText={(text) => setAddress(text)}
-          value={address}
-        />
+                <TextInput
+                  placeholder="Giới tính"
+                  style={styles.inputBoxGender}
+                  placeholderTextColor="grey"
+                  onChangeText={(text) => setGender(text)}
+                  value={gender}
+                />
+              </View>
 
-        {showDatePicker && (
-          <View style={styles.datePickerContainer}>
-            <DateTimePicker
-              style={styles.datePicker}
-              value={dateOfBirth}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => {
-                if (selectedDate) {
-                  setDateOfBirth(selectedDate);
-                }
-                setShowDatePicker(false);
-              }}
-            />
+
+              <TextInput
+                placeholder="CCCD"
+                style={styles.inputBox}
+                placeholderTextColor="grey"
+                onChangeText={(text) => setCustomerCode(text)}
+                value={customerCode}
+              />
+
+              <TextInput
+                placeholder="Số điện thoại"
+                style={styles.inputBox}
+                placeholderTextColor="grey"
+                onChangeText={(text) => setPhoneNumber(text)}
+                value={phoneNumber}
+              />
+
+              <TextInput
+                placeholder="Địa chỉ"
+                style={styles.inputBox}
+                placeholderTextColor="grey"
+                onChangeText={(text) => setAddress(text)}
+                value={address}
+              />
+
+
+              <TouchableOpacity style={styles.button} onPress={handleSaveInformation}>
+                <Text style={{ color: 'white' }}>Lưu thông tin</Text>
+              </TouchableOpacity>
+            </View>
+
           </View>
-        )}
 
-        <TouchableOpacity style={styles.button} onPress={handleSaveInformation}>
-          <Text style={styles.buttonText}>Lưu thông tin</Text>
-        </TouchableOpacity>
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundStyle: {
+    flex: 1,
+
+  },
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  information: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 40,
-    color: "#146EAB",
-  },
-  inputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  input: {
-    width: "80%",
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
+    backgroundColor: 'white',
     paddingHorizontal: 10,
-    marginBottom: 20,
-    color: "#002929",
+    paddingTop: 10,
+    borderColor: themeColor.textColor,
     borderRadius: 10,
+    borderWidth: 0.6,
+    marginHorizontal: 20,
+    paddingVertical: 20
   },
-  dateInputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "50%",
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginBottom: 20,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    marginLeft: 40,
+  imageLogo: {
+    marginTop: '10%',
+    height: 240,
+    width: 240
   },
-  dateIcon: {
-    marginRight: 10,
+  header: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: themeColor.textColor,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    textAlign: 'center',
   },
-  inputdate: {
-    flex: 1,
-    height: 40,
-    color: "#002929",
-    marginLeft: 20,
+  inputBox: {
+    padding: 10,
+    backgroundColor:
+      themeColor.bgModalColor,
+    borderRadius: 20,
+    marginBottom: 10,
+    alignItems: 'center'
   },
-  inputsex: {
-    width: "30%",
-    marginRight: 38,
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginBottom: 20,
-    color: "#002929",
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
+  inputBoxDate: {
+    padding: 12,
+    backgroundColor:
+      themeColor.bgModalColor,
+    borderRadius: 20,
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+  },
+  inputBoxGender: {
+    padding: 10,
+    backgroundColor:
+      themeColor.bgModalColor,
+    borderRadius: 20,
+    alignItems: 'center',
+    paddingHorizontal: 20
   },
   button: {
-    backgroundColor: "#A7BFD9",
+    alignItems: 'center',
+    padding: 15,
+    marginTop: 20,
     borderRadius: 20,
-    width: 130,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: themeColor.textColor
   },
-  buttonText: {
-    color: "#146EAB",
-    fontWeight: "bold",
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+  boxSignUp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+
   },
-  datePickerContainer: {
-    position: "absolute",
-    right: 170,
-    bottom: 473,
-  },
-  datePicker: {
-    backgroundColor: "#fff",
-  },
+  textSignUp: {
+    color: '#136EA7',
+    paddingLeft: 8,
+
+  }
 });
 
 export default InformationScreen;

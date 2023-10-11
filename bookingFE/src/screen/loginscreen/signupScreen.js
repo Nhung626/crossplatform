@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { signUpApi } from "../../services/useAPI";
 // import { useDispatch } from 'react-redux';
 // import { registerUser } from './redux/actions/authActions';
-
+import { themeColor } from "../../utils/theme";
 function SignupScreen() {
   // const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -50,98 +50,118 @@ function SignupScreen() {
     }
   };
   return (
-    <ImageBackground
-      source={require("../../assets/nen4.png")}
-      style={styles.container}
-    >
-      <ScrollView>
-        <View style={styles.header}>
-          <Image
-            style={[styles.logo]}
-            source={require("../../assets/reservar-01.png")}
-          />
-          <Text style={styles.headerText}>Đăng ký</Text>
-        </View>
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={require("../../assets/images/background/background.png")}
+        style={styles.backgroundStyle}
+      >
+        <ScrollView >
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Image
+              style={[styles.imageLogo]}
+              source={require("../../assets/reservar-01.png")}
+            />
+          </View>
+          <View style={styles.container}>
+            <Text style={styles.header}>Đăng ký</Text>
+            <View style={{ marginBottom: 20 }}>
+              <TextInput
+                style={styles.inputBox}
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                placeholder="Email của bạn"
+              />
 
-        <Text style={styles.label}>Nhập tài khoản</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="Email của bạn"
-        />
+              <TextInput
+                style={styles.inputBox}
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                placeholder="Mật khẩu của bạn"
+                secureTextEntry={true}
+              />
 
-        <Text style={styles.label}>Nhập mật khẩu</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          placeholder="Mật khẩu của bạn"
-          secureTextEntry={true}
-        />
+              <TextInput
+                style={styles.inputBox}
+                onChangeText={(text) => setConfirmPassword(text)}
+                value={confirmPassword}
+                placeholder="Nhập lại mật khẩu"
+                secureTextEntry={true}
+              />
 
-        <Text style={styles.label}>Nhập lại mật khẩu</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setConfirmPassword(text)}
-          value={confirmPassword}
-          placeholder="Nhập lại mật khẩu"
-          secureTextEntry={true}
-        />
+              <TouchableOpacity style={styles.button}>
+                <Text style={{ color: 'white' }}>Đăng ký</Text>
+              </TouchableOpacity>
+              <View style={styles.boxSignUp}>
+                <Text> Bạn đã có tài khoản?</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+                  <Text style={styles.textSignUp}>Đăng nhâp</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-        <TouchableOpacity style={styles.button1}>
-          <Button onPress={handleSignup} title="Đăng ký" color="black" />
-        </TouchableOpacity>
-      </ScrollView>
-    </ImageBackground>
+          </View>
+
+        </ScrollView>
+      </ImageBackground>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    fontWeight: "bold",
-    fontSize: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  logo: {
-    width: 250,
-    height: 250,
-    marginTop: 20,
-  },
-  headerText: {
-    fontWeight: "bold",
-    fontSize: 20,
+  backgroundStyle: {
+    flex: 1,
+
   },
   container: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center",
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  input: {
-    height: 50,
-    borderColor: "gray",
-    borderWidth: 1,
+    backgroundColor: 'white',
     paddingHorizontal: 10,
-    marginBottom: 16,
-    color: "black",
+    paddingTop: 10,
+    borderColor: themeColor.textColor,
     borderRadius: 10,
+    borderWidth: 0.6,
+    marginHorizontal: 20,
   },
-  button1: {
-    width: "100%",
-    height: 40,
-    borderRadius: 40,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
+  imageLogo: {
+    marginTop: '20%',
+    height: 240,
+    width: 240
+  },
+  header: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: themeColor.textColor,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    textAlign: 'center'
+  },
+  inputBox: {
+    padding: 16,
+    backgroundColor:
+      themeColor.bgModalColor,
+    borderRadius: 20,
+    marginBottom: 3,
+    marginBottom: 10
+  },
+  button: {
+    alignItems: 'center',
+    padding: 15,
+    marginTop: 20,
+    borderRadius: 20,
+    backgroundColor: themeColor.textColor
+  },
+  boxSignUp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginVertical: 20,
+
   },
+  textSignUp: {
+    color: '#136EA7',
+    paddingLeft: 8,
+
+  }
 });
 
 export default SignupScreen;

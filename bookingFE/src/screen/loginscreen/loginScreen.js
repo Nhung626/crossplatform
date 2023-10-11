@@ -5,9 +5,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  Image
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import { themeColor } from "../../utils/theme";
 const LoginScreen = () => {
   const navigation = useNavigation();
 
@@ -20,35 +22,36 @@ const LoginScreen = () => {
     // source={require('../assets/nen1.png')}
     <View style={styles.container}>
       <ImageBackground source={require('../../assets/images/background/background.png')} resizeMode="cover" style={styles.image}>
-        <Text style={styles.header}>
-          Đăng nhập để dễ dàng truy cập thông tin chuyến đi
-        </Text>
+        <Image
+          style={styles.imageLogo}
+          source={require('../../assets/reservar-01.png')}
+        />
 
-        <View style={styles.button}>
-          <View style={{ justifyContent: "center", marginTop: 20 }}>
-            <TouchableOpacity style={styles.buttonGG}>
-              <View style={styles.buttonContent}>
-                <Icon name="google" size={20} color="#146EAB" />
-                <Text style={styles.textGG}>Tiếp tục bằng tài khoản Google</Text>
-              </View>
-            </TouchableOpacity>
+        <Text style={styles.header}> Đăng nhập để dễ dàng truy cập thông tin chuyến đi </Text>
 
-            <TouchableOpacity style={styles.buttonFB}>
-              <View style={styles.buttonContent}>
-                <Icon name="facebook" size={20} color="#146EAB" />
-                <Text style={styles.textFB}>
-                  Tiếp tục bằng tài khoản Facebook
-                </Text>
-              </View>
-            </TouchableOpacity>
+        <View style={{ marginTop: 20 }}>
+          <TouchableOpacity style={styles.button}>
+            <View style={styles.buttonContent}>
+              <Image source={require('../../assets/images/icons/google.png')} resizeMode={'cover'} style={styles.iconStyle} />
+              <Text style={styles.text}>Tiếp tục bằng tài khoản Google</Text>
+            </View>
+          </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleStartScreen}
-              style={styles.buttonEmail}
-            >
-              <Text style={styles.textEmail}>Tiếp tục với Email</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.button}>
+            <View style={styles.buttonContent}>
+              <Image source={require('../../assets/images/icons/facebook.png')} resizeMode={'cover'} style={{ height: 24, width: 24 }} />
+              <Text style={styles.text}>
+                Tiếp tục bằng tài khoản Facebook
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleStartScreen}
+            style={styles.buttonEmail}
+          >
+            <Text style={styles.textEmail}>Tiếp tục với Email</Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </View>
@@ -60,45 +63,44 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   image: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+  },
+  imageLogo: {
+    marginTop: '20%',
+    height: 240,
+    width: 240
   },
   container: {
     flex: 1
   },
+  iconStyle:
+  {
+    height: 24,
+    width: 24
+  },
   header: {
     fontSize: 25,
     fontWeight: "bold",
-    marginTop: -150,
-    marginBottom: 60,
-    color: "#146EAB",
+    color: themeColor.textColor,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    textAlign: 'center'
   },
 
-  buttonGG: {
+  button: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
-    marginTop: 10, // Dịch lên
     borderWidth: 1,
-    borderColor: "#146EAB",
-    marginBottom: 10,
+    borderColor: themeColor.textColor,
+    marginVertical: 10,
   },
-  buttonFB: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: "#146EAB",
-    marginBottom: 10,
-  },
+
   buttonEmail: {
     marginTop: 10,
-    backgroundColor: "#146EAB",
+    backgroundColor: themeColor.textColor,
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
@@ -108,16 +110,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     fontWeight: "bold",
   },
-  textGG: {
+  text: {
     textAlign: "center",
     marginLeft: 10,
-    color: "#146EAB",
+    color: themeColor.textColor,
   },
-  textFB: {
-    textAlign: "center",
-    marginLeft: 10,
-    color: "#146EAB",
-  },
+
   textEmail: {
     textAlign: "center",
     color: "#fff",

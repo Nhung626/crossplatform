@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { loginApi } from "../../services/useAPI";
+import { themeColor } from "../../utils/theme";
 
 function SignupSuccess({ navigation }) {
   const route = useRoute()
@@ -42,7 +43,7 @@ function SignupSuccess({ navigation }) {
           style={{ marginLeft: 60 }}
           name="checkmark-done-outline"
           size={100}
-          color="#146EAB"
+          color={themeColor.textColor}
         />
 
         <Text style={styles.successText}>Đăng ký thành công</Text>
@@ -69,11 +70,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 20,
-    color: "#146EAB",
+    color: themeColor.textColor,
   },
   button: {
     marginTop: 30,
-    backgroundColor: "#A7BFD9",
+    backgroundColor: themeColor.textColor,
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontWeight: "bold",
     marginLeft: 15,
-    color: '#146EAB'
+    color: 'white'
   },
 });
 
