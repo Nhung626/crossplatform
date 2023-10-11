@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  ImageBackground,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -41,7 +40,6 @@ const Notice = () => {
             Nhận thông báo từ ứng dụng để bạn có trải nghiệm tốt hơn!
           </Text>
         </View>
-
         <View style={{ height: 201 }}>
           {/* backgroundColor: '#C0C0C0' */}
           <TouchableOpacity onPress={handleLoginScreen} style={styles.button}>
@@ -74,7 +72,7 @@ const styles = StyleSheet.create({
     height: 250,
     marginLeft: 70,
     borderRadius: 30,
-    
+
   },
   textnotice: {
     marginLeft: 25,
@@ -99,7 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   linkContainer: {
-    marginTop: 30, 
+    marginTop: 30,
   },
   link: {
     textAlign: "center",
