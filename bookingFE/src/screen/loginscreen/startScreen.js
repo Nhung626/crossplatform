@@ -33,63 +33,61 @@ const StartScreen = () => {
       email: email,
       password: password,
     };
+    console.log(user)
 
     try {
       const response = await loginApi(user)
-
+      console.log(response.data.token)
       if (response.status === 200) {
-        const token = response.data.token;
+        const token = response.data.token
         const id = response.data.id;
+        navigation.navigate('MainScreen', { token, id })
         console.log("Đăng nhập thành công");
-        navigation.navigate("MainScreen", { token, id })
       }
     } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu đăng nhập:", error);
+      console.error("Lỗi khi gửi yêu cầu đăng nhập:", error.response);
       alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     }
   };
 
   return (
-    <ImageBackground
-      source={require("../../assets/images/background/background.png")}
-      style={styles.container}
-    >
-      <ScrollView style={styles.view1}>
-        <View style={styles.overlay}>
-          <View style={styles.headerContainer}>
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        resizeMode="cover"
+        source={require("../../assets/images/background/background.png")}
+        style={styles.backgroundStyle}
+      >
+        <ScrollView style={{ paddingBottom: 100 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Image
-              style={styles.logo}
+              style={styles.imageLogo}
               source={require("../../assets/reservar-01.png")}
             />
-            <Text style={styles.header}>Chào mừng bạn</Text>
           </View>
 
-          <View style={styles.Tp}>
-            <View style={styles.content}>
-              <View style={styles.inputBox}>
-                <Text style={[styles.lableTitle]}>Tài khoản</Text>
-                <TextInput
-                  style={styles.inputText}
-                  onChangeText={(text) => setEmail(text)}
-                  value={email}
-                  placeholder="Nhập tài khoản"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  placeholderTextColor="black"
-                />
-              </View>
-              <View style={styles.inputBox}>
-                <Text style={styles.lableTitle}>Mật khẩu</Text>
-                <TextInput
-                  style={styles.inputText}
-                  onChangeText={(text) => setPassword(text)}
-                  value={password}
-                  placeholder="Nhập mật khẩu"
-                  secureTextEntry
-                  placeholderTextColor="black"
-                />
-              </View>
-              <View style={styles.forget}>
+          <View
+            style={styles.container}>
+            <Text style={styles.header}>Đăng nhập</Text>
+
+            <View style={{ marginBottom: 20 }}>
+
+              <TextInput
+                style={styles.inputBox}
+                onChangeText={(text) => setEmail(text)}
+                value={email}
+                placeholder="Email"
+                autoCapitalize="none"
+                placeholderTextColor="grey"
+              />
+              <TextInput
+                style={styles.inputBox}
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                placeholder="Mật khẩu"
+                secureTextEntry
+                placeholderTextColor="grey"
+              />
+              {/* <View style={styles.forget}>
                 <TouchableOpacity onPress={handleForgetPassword}>
                   <Text style={styles.cmt}>
                     <Text>Bạn quên mật khẩu?</Text>
@@ -97,128 +95,92 @@ const StartScreen = () => {
                     <Text style={styles.link}>Lấy lại mật khẩu</Text>
                   </Text>
                 </TouchableOpacity>
-              </View>
-              <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text>Đăng nhập</Text>
+              </View> */}
+              <TouchableOpacity
+                onPress={handleLogin} style={styles.button}>
+                <Text style={{ color: 'white' }}>Đăng nhập</Text>
               </TouchableOpacity>
-            </View>
+              <View style={styles.boxSignUp}>
+                <Text> Bạn không có tài khoản?</Text>
+                <TouchableOpacity onPress={handleRegister}>
+                  <Text style={styles.textSignUp}>Đăng ký</Text>
+                </TouchableOpacity>
+              </View>
 
-            <View style={styles.forget}>
+            </View>
+          </View>
+
+        </ScrollView>
+
+
+        {/* <View style={styles.forget}>
               <TouchableOpacity
                 onPress={handleForgetPassword}
               ></TouchableOpacity>
-            </View>
-            <View style={styles.register}>
-              <TouchableOpacity onPress={handleRegister}>
-                <Text style={{ fontWeight: "bold", color: "black" }}>
-                  Bạn không có tài khoản?
-                  <Text style={{ color: "black" }}> | </Text>
-                  <Text style={styles.link}>Đăng ký</Text>
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    </ImageBackground>
+            </View> */}
+      </ImageBackground>
+
+    </View>
+
+
+
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundStyle: {
     flex: 1,
-    resizeMode: "cover",
-  },
-  view1: {
-    width: "100%",
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: "transparent",
-  },
 
-  Tp: {
-    marginTop: 80,
-    marginLeft: 20,
-    justifyContent: "center",
-    width: "90%",
-    borderRadius: 20,
   },
-  headerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    borderColor: themeColor.textColor,
+    borderRadius: 10,
+    borderWidth: 0.6,
+    marginHorizontal: 20,
   },
-  logo: {
-    width: 250,
-    height: 250,
-    marginTop: 60,
+  imageLogo: {
+    marginTop: '20%',
+    height: 240,
+    width: 240
   },
   header: {
-    fontSize: 24,
-    color: themeColor.bgColor,
-    marginTop: 10,
-    marginBottom: -70,
+    fontSize: 25,
     fontWeight: "bold",
+    color: themeColor.textColor,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    textAlign: 'center'
   },
-  content: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
   inputBox: {
-    marginVertical: 10,
-    width: "90%",
-    justifyContent: "center",
-  },
-
-  lableTitle: {
-    color: "black",
-  },
-  inputText: {
-    width: "100%",
-    height: 50,
-    fontSize: 16,
-    color: "black",
-    borderWidth: 0.6,
-    borderColor: themeColor.btColor,
-    paddingHorizontal: 10
-  },
-
-  forget: {
-    marginTop: 210,
-    fontSize: 14,
-    color: "black",
-    marginBottom: 10,
-  },
-  link: {
-    textDecorationLine: "underline",
-    color: "black",
-    fontWeight: "bold",
-  },
-  cmt: {
-    marginTop: -170,
-    color: "black",
-    fontWeight: "bold",
+    padding: 16,
+    backgroundColor:
+      themeColor.bgModalColor,
+    borderRadius: 20,
+    marginBottom: 3,
+    marginBottom: 10
   },
   button: {
-    marginTop: -130,
-    width: "80%",
-    height: 40,
-    borderRadius: 40,
-    backgroundColor: themeColor.bgColor,
-    justifyContent: "center",
-    alignItems: "center",
+    alignItems: 'center',
+    padding: 15,
+    marginTop: 20,
+    borderRadius: 20,
+    backgroundColor: themeColor.textColor
+  },
+  boxSignUp: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginVertical: 20,
-    marginBottom: -150,
+
   },
-  register: {
-    marginTop: -50,
-    alignItems: "center",
-    fontSize: 14,
-    marginBottom: 100,
-  },
+  textSignUp: {
+    color: '#136EA7',
+    paddingLeft: 8,
+
+  }
 });
 
 export default StartScreen;
