@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { loginApi } from "../../services/useAPI";
+import { themeColor } from "../../utils/theme";
 
 const StartScreen = () => {
   const navigation = useNavigation();
@@ -50,13 +51,11 @@ const StartScreen = () => {
 
   return (
     <ImageBackground
-      source={require("../../assets/nen6.png")}
+      source={require("../../assets/images/background/background.png")}
       style={styles.container}
     >
       <ScrollView style={styles.view1}>
         <View style={styles.overlay}>
-          {/* <Image style={[styles.logo,width = 10,]}
-    source={require('../assets/reservar-01.png')} />  */}
           <View style={styles.headerContainer}>
             <Image
               style={styles.logo}
@@ -67,27 +66,27 @@ const StartScreen = () => {
 
           <View style={styles.Tp}>
             <View style={styles.content}>
-              <View style={styles.inputBoxemail}>
-                <Text style={[styles.labelemail]}>Tài khoản</Text>
+              <View style={styles.inputBox}>
+                <Text style={[styles.lableTitle]}>Tài khoản</Text>
                 <TextInput
-                  style={styles.inputemail}
+                  style={styles.inputText}
                   onChangeText={(text) => setEmail(text)}
                   value={email}
                   placeholder="Nhập tài khoản"
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  placeholderTextColor="#fff"
+                  placeholderTextColor="black"
                 />
               </View>
-              <View style={styles.inputBoxpass}>
-                <Text style={styles.labelpass}>Mật khẩu</Text>
+              <View style={styles.inputBox}>
+                <Text style={styles.lableTitle}>Mật khẩu</Text>
                 <TextInput
-                  style={styles.inputpass}
+                  style={styles.inputText}
                   onChangeText={(text) => setPassword(text)}
                   value={password}
                   placeholder="Nhập mật khẩu"
                   secureTextEntry
-                  placeholderTextColor="#fff"
+                  placeholderTextColor="black"
                 />
               </View>
               <View style={styles.forget}>
@@ -111,7 +110,7 @@ const StartScreen = () => {
             </View>
             <View style={styles.register}>
               <TouchableOpacity onPress={handleRegister}>
-                <Text style={{ fontWeight: "bold", color: "#fff" }}>
+                <Text style={{ fontWeight: "bold", color: "black" }}>
                   Bạn không có tài khoản?
                   <Text style={{ color: "black" }}> | </Text>
                   <Text style={styles.link}>Đăng ký</Text>
@@ -142,10 +141,7 @@ const styles = StyleSheet.create({
     marginTop: 80,
     marginLeft: 20,
     justifyContent: "center",
-    // borderWidth:1,
-    borderColor: "#fff",
     width: "90%",
-    height: 500,
     borderRadius: 20,
   },
   headerContainer: {
@@ -160,7 +156,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    color: "#FFE4D6",
+    color: themeColor.bgColor,
     marginTop: 10,
     marginBottom: -70,
     fontWeight: "bold",
@@ -171,55 +167,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  inputBoxemail: {
+  inputBox: {
     marginVertical: 10,
-    width: 310,
-    borderBottomWidth: 1,
-    borderBottomColor: "#fff",
-    borderColor: "transparent",
+    width: "90%",
     justifyContent: "center",
   },
-  inputBoxpass: {
-    marginVertical: 10,
-    width: 310,
-    borderBottomWidth: 1,
-    borderBottomColor: "#fff",
-    borderColor: "transparent",
+
+  lableTitle: {
+    color: "black",
   },
-  labelemail: {
-    color: "#fff",
-  },
-  inputemail: {
+  inputText: {
     width: "100%",
     height: 50,
     fontSize: 16,
-    color: "#fff",
+    color: "black",
+    borderWidth: 0.6,
+    borderColor: themeColor.btColor,
+    paddingHorizontal: 10
   },
-  labelpass: {
-    color: "#fff",
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  inputpass: {
-    width: "100%",
-    height: 50,
-    fontSize: 16,
-    color: "#fff",
-  },
+
   forget: {
     marginTop: 210,
     fontSize: 14,
-    color: "#fff",
+    color: "black",
     marginBottom: 10,
   },
   link: {
     textDecorationLine: "underline",
-    color: "#fff",
+    color: "black",
     fontWeight: "bold",
   },
   cmt: {
     marginTop: -170,
-    color: "#fff",
+    color: "black",
     fontWeight: "bold",
   },
   button: {
@@ -227,7 +207,7 @@ const styles = StyleSheet.create({
     width: "80%",
     height: 40,
     borderRadius: 40,
-    backgroundColor: "#fff",
+    backgroundColor: themeColor.bgColor,
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 20,
