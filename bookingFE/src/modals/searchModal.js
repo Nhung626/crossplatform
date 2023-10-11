@@ -1,8 +1,13 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-
+import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import * as Icon from "react-native-feather"
+import NumOfPeople from './numOfPeople'
+import { themeColor } from '../utils/theme'
+import Calendar from './calendarPicker'
 export default function SearchModal() {
-    const route = useRoute();
+    const navigation = useNavigation()
+    const route = useRoute;
     const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount, countNight } = route.params ?? {};
     const [numOfPeopleModalVisible, setNumOfPeopleModalVisible] = useState(false);
     const [calendarModalVisible, setCalendarModalVisible] = useState(false)
@@ -38,7 +43,10 @@ export default function SearchModal() {
                             <Text > {calendarData.startDayOfWeek}, {calendarData.startDate}</Text>
                             <Text>  - </Text>
                             <Text >{calendarData.endDayOfWeek}, {calendarData.endDate}</Text>
-                            <Text> - ({calendarData.countNight} đêm)</Text>
+                            {calendarData.countNight ? (
+                                <Text> - ({calendarData.countNight} đêm)</Text>
+
+                            ) : ('')}
                         </>
                     ) : (
                         'Thời gian đặt phòng'
@@ -82,3 +90,15 @@ export default function SearchModal() {
         </View>
     )
 }
+const styles = StyleSheet.create({
+    searchContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingVertical: 18, width: '100%'
+    },
+    searchText: {
+        marginLeft: 10
+    }
+})
