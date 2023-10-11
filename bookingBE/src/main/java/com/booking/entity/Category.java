@@ -29,7 +29,7 @@ public class Category {
     @Column(name = "description")
     private String description;
     @Column(name = "price")
-    private float price;
+    private int price;
     @ManyToOne
     @JoinColumn(name = "provider_id")
     private Provider provider;

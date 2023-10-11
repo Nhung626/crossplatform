@@ -5,6 +5,7 @@ import com.booking.repository.ImageRepository;
 import com.booking.service.interfaces.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +40,7 @@ public class ImageServiceImp implements ImageService {
     }
 
     //    @Override
-    public Long saveUploadedFiles(MultipartFile file) throws IOException {
+    public Image saveUploadedFile(MultipartFile file) throws IOException {
         File dir = new File(uploadedFolder);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -54,7 +55,7 @@ public class ImageServiceImp implements ImageService {
             image.setImgName(path.getFileName().toString());
             image.setType(file.getContentType());
             image = imageRepository.save(image);
-            return image.getImgId();
+            return image;
         }
         return null;
     }

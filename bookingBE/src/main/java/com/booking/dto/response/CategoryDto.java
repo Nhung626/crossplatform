@@ -1,7 +1,6 @@
-package com.booking.dto.request;
+package com.booking.dto.response;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -10,9 +9,9 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class CreateCategoryDto {
-    private List<MultipartFile> imgCategories;
-    private Long providerId;
+public class CategoryDto {
+    private List<Long> imgIdCategories;
+    private Long categoryId;
     private String categoryName;
     private int person;
     private float area;

@@ -4,7 +4,10 @@ import com.booking.dto.request.CreateCategoryDto;
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.LoginUserDto;
 import com.booking.dto.request.UpdateProviderDto;
+import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.JwtUserResponse;
+import com.booking.dto.response.ProviderDto;
+import com.booking.entity.Category;
 import com.booking.entity.Provider;
 import com.booking.repository.ProviderRepository;
 import com.booking.security.jwt.JwtUtil;
@@ -21,11 +24,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -72,15 +74,69 @@ public class ProviderController {
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/update/{id}")
-    public ResponseEntity<Object> updateProvider(@PathVariable Long id, @RequestBody UpdateProviderDto updateProviderDto) {
+    public ResponseEntity<Object> updateProvider(@PathVariable Long id,
+                                                 @RequestParam("imgProviders") List<MultipartFile> images,
+                                                 @RequestParam("providerName") String providerName,
+                                                 @RequestParam("providerPhone") String providerPhone,
+                                                 @RequestParam("address") String address,
+                                                 @RequestParam("description") String description) throws IOException {
+        UpdateProviderDto updateProviderDto = new UpdateProviderDto().builder()
+                .imgProviders(images)
+                .providerName(providerName)
+                .providerPhone(providerPhone)
+                .address(address)
+                .description(description).build();
         providerService.updateProvider(id, updateProviderDto);
-        return ResponseEntity.status(200).build();
+        return ResponseEntity.ok("success");
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/add-room")
-    public ResponseEntity<Object> addRoom(@RequestBody CreateCategoryDto createCategoryDto) {
+    public ResponseEntity<Object> addRoom(@RequestParam("imgCategories") List<MultipartFile> images,
+                                          @RequestParam("providerId") Long providerId,
+                                          @RequestParam("person") int person,
+                                          @RequestParam("categoryName") String categoryName,
+                                          @RequestParam("area") float area,
+                                          @RequestParam("bedType") String bedType,
+                                          @RequestParam("description") String description,
+                                          @RequestParam("price") int price,
+                                          @RequestParam("roomNumbers") String roomNumbers) throws IOException {
+        List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n)).toList();
+        CreateCategoryDto createCategoryDto = new CreateCategoryDto().builder()
+                .imgCategories(images)
+                .providerId(providerId)
+                .categoryName(categoryName)
+                .person(person)
+                .area(area)
+                .bedType(bedType)
+                .price(price)
+                .description(description)
+                .roomNumbers(numbers).build();
         roomService.addCategory(createCategoryDto);
         return ResponseEntity.status(200).build();
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
+    @GetMapping("/get-categories/{id}")
+    public ResponseEntity<List<CategoryDto>> getCategories(@PathVariable("id") Long providerId){
+        return ResponseEntity.ok(providerService.getAllCategories(providerId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
+    @GetMapping("/get-category/{id}")
+    public ResponseEntity<CategoryDto> getCategory(@PathVariable("id") Long categoryId){
+        return ResponseEntity.ok(roomService.getCategory(categoryId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
+    @GetMapping("/get-provider/{id}")
+    public ResponseEntity<ProviderDto> getProvider(@PathVariable("id") Long providerId){
+        return ResponseEntity.ok(providerService.getProvider(providerId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping("/get-providers")
+    public ResponseEntity<List<ProviderDto>> getAllProviders(){
+        return ResponseEntity.ok(providerService.getAllProviders());
     }
 }

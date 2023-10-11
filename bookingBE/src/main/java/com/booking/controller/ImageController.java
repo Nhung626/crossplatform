@@ -4,6 +4,9 @@ import com.booking.entity.Image;
 import com.booking.exception.CustomException;
 import com.booking.service.interfaces.ImageService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -27,9 +30,11 @@ public class ImageController {
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
     @PostMapping("/api/v1/image/upload")
-    public ResponseEntity uploadImage(@RequestParam("image") MultipartFile img) throws IOException {
-        Long imgId = imageService.saveUploadedFiles(img);
-        return ResponseEntity.ok(imgId);
+    public ResponseEntity uploadImage(@RequestParam("images") List<MultipartFile> images) throws IOException {
+        for (MultipartFile img : images) {
+            imageService.saveUploadedFile(img);
+        }
+        return ResponseEntity.ok("Success");
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")

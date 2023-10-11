@@ -3,7 +3,7 @@ package com.booking.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,13 +20,13 @@ public class Order {
     @Column(name = "order_id")
     private Long orderId;
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
     @Column(name = "checkin")
-    private LocalDateTime checkin;
+    private LocalDate checkin;
     @Column(name = "checkout")
-    private LocalDateTime checkout;
+    private LocalDate checkout;
     @Column(name = "state")
     private String state;
     @ManyToOne
@@ -39,7 +39,7 @@ public class Order {
     private Set<Room> rooms = new HashSet<>();
 
     @Column(name = "total")
-    private float total;
+    private int total;
 
     public void calTotal(){
 //        total = 0;

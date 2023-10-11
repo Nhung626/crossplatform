@@ -10,6 +10,6 @@ import java.io.IOException;
 public interface ImageService {
     Image getImage(Long id);
     String getPathImage(Long id);
-    Long saveUploadedFiles(MultipartFile file) throws IOException;
+    Image saveUploadedFile(MultipartFile file) throws IOException;
 //    String getFileExtension(String fileName);
 }

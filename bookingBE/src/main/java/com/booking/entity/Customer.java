@@ -34,7 +34,9 @@ public class Customer {
     private String customerCode;
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "img_id")
+    private Image avatar;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     private Set<Order> orders = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
