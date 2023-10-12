@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { getImgCustomerUrl } from '../../services/baseUrl';
 import { getAllCategoryAPI } from '../../services/useAPI';
 import FeaturedRow from '../../components/featuredRow';
-export default function HotelScreen() {
+export default function TestHotelScreen() {
     const { params: {
         id,
         name,
@@ -84,16 +84,8 @@ export default function HotelScreen() {
 
 
                 </View>
-                <View
-                    style={{ backgroundColor: 'white', }}>
-                    <Text
-                        style={{
-                            fontWeight: 'bold',
-                            fontSize: 24,
-                            marginVertical: 16,
-                            paddingHorizontal: 16
-                        }}>
-                        Thông tin các phòng</Text>
+                <View style={{ backgroundColor: 'white', paddingBottom: 144 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 24, marginVertical: 16, paddingHorizontal: 16 }}> Thông tin các phòng</Text>
 
                 </View>
                 <View style={{ backgroundColor: "white" }}>
@@ -105,11 +97,7 @@ export default function HotelScreen() {
                                 imageHotel={item.imgIdCategories}
                                 description={item.description}
                                 address={item.address}
-                                providerPhone={item.providerPhone || 0}
-                                person={item.person}
-                                price={item.price}
-
-                            />
+                                providerPhone={item.providerPhone || 0} />
                         ))
                     ) : (
                         <Text>Data is not an array.</Text>

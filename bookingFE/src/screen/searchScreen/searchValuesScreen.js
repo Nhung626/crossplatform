@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
 import * as Icon from "react-native-feather";
@@ -8,9 +8,26 @@ import SortHotel from '../../components/sortHotel';
 import FeaturedRow from '../../components/featuredRow';
 import { featured } from '../../constains';
 import { useNavigation } from '@react-navigation/native';
+import { getAllProviderAPI } from '../../services/useAPI'
 
 export default function SearchValuesScreen() {
   const navigation = useNavigation();
+  const [data, setData] = useState("")
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAllProviderAPI();
+        if (response.status === 200) {
+          setData(response.data)
+        } else {
+          console.log(response.status)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    fetchData();
+  }, []);
   return (
     <SafeAreaView style={{ backgroundColor: themeColor.bgColor }}>
 
@@ -54,27 +71,20 @@ export default function SearchValuesScreen() {
 
         <SortHotel />
         {/* featured */}
-        <View style={{ backgroundColor: 'white' }}>
-          {
-            featured.map((item, index) => {
-              return (
-                <FeaturedRow
-                  key={index.toString()}  // Thêm key vào đây
-                  name={item.name}
-                  imageHotel={item.imageHotel}
-                  imageStar={item.imageStar}
-                  stars={item.stars}
-                  hotels={item.hotels}
-                  description={item.description}
-                  location={item.location}
-                  reviews={item.reviews}
-                  reviewPoint={item.reviewPoint}
-                  address={item.address}
-                  hotelsData={item.hotelsData}
-                />
-              )
-            })
-          }
+        <View style={{ backgroundColor: "white" }}>
+          {Array.isArray(data) ? (
+            data.map((item) => (
+              <FeaturedRow
+                key={item.providerId}
+                name={item.providerName}
+                imageHotel={item.imgIdProviders}
+                description={item.description}
+                address={item.address}
+                providerPhone={item.providerPhone} />
+            ))
+          ) : (
+            <Text>Data is not an array.</Text>
+          )}
         </View>
       </ScrollView>
 
