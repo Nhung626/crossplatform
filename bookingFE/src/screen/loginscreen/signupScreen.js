@@ -88,7 +88,9 @@ function SignupScreen() {
                 secureTextEntry={true}
               />
 
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                onPress={handleSignup}
+                style={styles.button}>
                 <Text style={{ color: 'white' }}>Đăng ký</Text>
               </TouchableOpacity>
               <View style={styles.boxSignUp}>
