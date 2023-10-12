@@ -1,5 +1,5 @@
 import axios from "axios"
-import { addUrlCustomerLogin, addUrlCustomerSignUp, addUrlCustomerUpdate } from "./baseUrl"
+import { addUrlCustomerLogin, addUrlCustomerSignUp, addUrlCustomerUpdate, getCustomerUrl, getImgCustomerUrl } from "./baseUrl"
 
 export const loginApi = (user) => {
     const customerLogin = axios({
@@ -32,9 +32,34 @@ export const customerUpdateApi = (data, token, id) => {
         url: addUrlCustomerUpdate(id),
         data: data,
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`
         },
     });
     return customerUpdate;
 };
+
+export const getCustomerApi = (token, id) => {
+    // Sử dụng hàm addUrlCustomerUpdate để có URL chứa id
+    const getCustomer = axios({
+        method: "GET",
+        url: getCustomerUrl(id),
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    });
+    return getCustomer;
+};
+export const getImgCustomerApi = (token, id) => {
+    // const formData = new FormData();
+    // formData.append('imageId', id);
+    const getImg = axios({
+        method: "GET",
+        url: getImgCustomerUrl.concat(`?imageId=${id}`),
+        data: formData,
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    })
+    return getImg
+}
