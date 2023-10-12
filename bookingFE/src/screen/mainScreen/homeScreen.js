@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
 import SearchModal from "../../modals/searchModal";
+import { themeColor } from "../../utils/theme";
 
 export default function HomeScreen() {
   return (
@@ -11,12 +12,15 @@ export default function HomeScreen() {
         <Ionicons style={styles.Icon1} name="chatbubble-outline"></Ionicons>
         <Ionicons style={styles.Icon2} name="notifications-outline"></Ionicons>
       </View>
+
       <ScrollView>
         <View style={styles.modalSearchContainer}>
           <SearchModal />
         </View>
       </ScrollView>
+
     </SafeAreaView>
+
   )
 }
 const styles = StyleSheet.create({
@@ -25,7 +29,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    backgroundColor: '#29b4ca',
+    backgroundColor: themeColor.bgColor,
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
