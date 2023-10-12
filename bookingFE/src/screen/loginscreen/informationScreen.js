@@ -16,6 +16,8 @@ import { customerUpdateApi } from "../../services/useAPI";
 import { useRoute } from "@react-navigation/native";
 import { themeColor } from "../../utils/theme";
 import moment from "moment";
+import * as ImagePicker from 'expo-image-picker';
+
 
 const InformationScreen = () => {
   const [fullName, setFullName] = useState("");
@@ -26,20 +28,30 @@ const InformationScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [image, setImage] = useState(null);
+
+
   const route = useRoute();
   const { token, id } = route.params ?? {};
   console.log(token)
   console.log(id)
   const handleSaveInformation = async () => {
-    const customer = {
-      fullName: fullName,
-      gender: gender,
-      phoneNumber: phoneNumber,
-      address: address,
-      customerCode: customerCode,
-      dateOfBirth: dateOfBirth.toISOString(),
-    };
+    const customer = new FormData();
 
+    if (image) {
+      customer.append('avatar', {
+        uri: image.uri,
+        type: 'image/png', // hoặc 'image/png' tùy thuộc vào loại hình ảnh
+        name: 'avatar.png', // tên tệp tin, bạn có thể đặt tên theo ý muốn
+      });
+    }
+    customer.append('fullName', fullName);
+    customer.append('gender', gender);
+    customer.append('phoneNumber', phoneNumber);
+    customer.append('address', address);
+    customer.append('customerCode', customerCode);
+    customer.append('dateOfBirth', moment(dateOfBirth).format('YYYY-MM-DD'));
+    console.log(customer)
     try {
       const response = await customerUpdateApi(customer, token, id)
 
@@ -61,8 +73,21 @@ const InformationScreen = () => {
       }
     }
   };
+  console.log(dateOfBirth.toISOString())
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-
+    if (!result.canceled) {
+      setImage(result.assets[0]);
+      return
+    }
+  };
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
@@ -72,10 +97,18 @@ const InformationScreen = () => {
       >
         <ScrollView>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Image
-              style={styles.imageLogo}
-              source={require("../../assets/reservar-01.png")}
-            />
+            <TouchableOpacity onPress={() => pickImage()} style={{ marginVertical: 30 }}>
+              {image ? (
+                <Image source={{ uri: image.uri }} style={styles.imageLogo} />
+              ) : (
+                <Image style={styles.imageLogo}
+                  source={require("../../assets/avatar.png")}
+                />
+              )}
+
+
+            </TouchableOpacity>
+
           </View>
           <View style={styles.container}>
             <Text style={styles.header}>Thông tin khách hàng</Text>
@@ -188,9 +221,11 @@ const styles = StyleSheet.create({
     paddingVertical: 20
   },
   imageLogo: {
-    marginTop: '10%',
-    height: 240,
-    width: 240
+    marginTop: '20%',
+    height: 180,
+    width: 180,
+    borderRadius: 120,  // Đặt giá trị lớn để tạo thành hình tròn
+    overflow: 'hidden',  // Cắt ảnh thành hình tròn
   },
   header: {
     fontSize: 25,
