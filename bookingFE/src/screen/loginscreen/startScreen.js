@@ -42,7 +42,7 @@ const StartScreen = () => {
         const token = response.data.token
         const id = response.data.id;
         navigation.navigate('MainScreen', { token, id })
-        console.log("Đăng nhập thành công");
+        console.log("Đăng nhập thành công", id);
       }
     } catch (error) {
       console.error("Lỗi khi gửi yêu cầu đăng nhập:", error.response);
