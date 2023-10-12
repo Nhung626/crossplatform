@@ -5,6 +5,8 @@ import BookingScreen from "./BookingScreen";
 import UserScreen from "./UserScreen";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./homeScreen";
+import { themeColor } from "../../utils/theme";
+import { useRoute } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -19,6 +21,9 @@ const screenOptions = {
   },
 }
 export default function MainScreen() {
+  const route = useRoute()
+  const { token, id } = route.params ?? {};
+
   return (
     <Tab.Navigator screenOptions={screenOptions}>
 
@@ -30,12 +35,12 @@ export default function MainScreen() {
               <Ionicons name="search-outline"
                 style={{
                   fontSize: 30,
-                  color: focused ? "#29b4ca" : "#000",
+                  color: focused ? themeColor.bgColor : "#000",
                 }}
               />
               <Text
                 style={{
-                  color: focused ? "#29b4ca" : "#000", fontSize: 16
+                  color: focused ? themeColor.bgColor : "#000", fontSize: 16
                 }}
               >
                 Tìm kiếm
@@ -45,6 +50,8 @@ export default function MainScreen() {
         }}
         name="HomeScreen"
         component={HomeScreen}
+        initialParams={{ token, id }}
+
       />
       <Tab.Screen
         options={{
@@ -54,11 +61,11 @@ export default function MainScreen() {
               <Ionicons name="heart-circle-outline"
                 style={{
                   fontSize: 30,
-                  color: focused ? "#29b4ca" : "#000",
+                  color: focused ? themeColor.bgColor : "#000",
                 }}
               />
               <Text
-                style={{ color: focused ? "#29b4ca" : "#000", fontSize: 16 }}
+                style={{ color: focused ? themeColor.bgColor : "#000", fontSize: 16 }}
               >
                 Đã lưu
               </Text>
@@ -67,6 +74,8 @@ export default function MainScreen() {
         }}
         name="Save"
         component={SaveScreen}
+        initialParams={{ token, id }}
+
       />
       <Tab.Screen
         options={{
@@ -76,11 +85,11 @@ export default function MainScreen() {
               <Ionicons name="bed-outline"
                 style={{
                   fontSize: 30,
-                  color: focused ? "#29b4ca" : "#000",
+                  color: focused ? themeColor.bgColor : "#000",
                 }}
               />
               <Text
-                style={{ color: focused ? "#29b4ca" : "#000", fontSize: 16 }}
+                style={{ color: focused ? themeColor.bgColor : "#000", fontSize: 16 }}
               >
                 Đặt phòng
               </Text>
@@ -89,6 +98,8 @@ export default function MainScreen() {
         }}
         name="Book"
         component={BookingScreen}
+        initialParams={{ token, id }}
+
       />
       <Tab.Screen
         options={{
@@ -98,12 +109,12 @@ export default function MainScreen() {
               <Ionicons name="person-circle-outline"
                 style={{
                   fontSize: 30,
-                  color: focused ? "#29b4ca" : "#000",
+                  color: focused ? themeColor.bgColor : "#000",
                 }}
 
               />
               <Text
-                style={{ color: focused ? "#29b4ca" : "#000", fontSize: 16 }}
+                style={{ color: focused ? themeColor.bgColor : "#000", fontSize: 16 }}
               >
                 Cá nhân
               </Text>
@@ -112,6 +123,8 @@ export default function MainScreen() {
         }}
         name="User"
         component={UserScreen}
+        initialParams={{ token, id }}
+
       />
     </Tab.Navigator>
   );
