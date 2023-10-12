@@ -35,7 +35,7 @@ export default function Navigations() {
     return (
 
         <NavigationContainer>
-            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='InformationScreen'>
+            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='StartScreen'>
                 <Stack.Screen name="Notice" component={Notice} />
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="StartScreen" component={StartScreen} />
@@ -60,7 +60,6 @@ export default function Navigations() {
                 <Stack.Screen name="Calendar" component={Calendar} />
                 <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
                 <Stack.Screen name='CheckReservar' component={CheckReservar} />
-
 
 
 
