@@ -6,3 +6,8 @@ export const getCustomerUrl = (id) => BASE_URL.concat(`customer/get-customer/${i
 
 export const getImgCustomerUrl = BASE_URL.concat('image');
 
+export const getAllProviderUrl = BASE_URL.concat('provider/get-providers');
+
+export const getCategoryUrl = (id) => BASE_URL.concat(`provider/get-categories/${id}`);
+
+

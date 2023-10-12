@@ -3,34 +3,29 @@ import React, { useEffect } from 'react'
 import { themeColor } from '../utils/theme'
 import * as Icon from "react-native-feather";
 import { useNavigation } from '@react-navigation/native';
+import { getImgCustomerUrl } from '../services/baseUrl';
 
 
 
 export default function FeaturedRow({
+    id,
     name,
     imageHotel,
-    imageStar,
-    stars,
-    hotelsData,
     description,
-    location,
-    reviewPoint,
-    reviews,
-    address }) {
+    address,
+    providerPhone,
+    price
+}) {
     const navigation = useNavigation();
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate('Hotel', {
+            id,
             name,
             imageHotel,
-            imageStar,
-            stars,
-            hotelsData,
             description,
-            location,
-            reviewPoint,
-            reviews,
-            address
+            address,
+            providerPhone,
         })} style={{ marginHorizontal: 10 }}>
             <View style={{
                 borderBottomWidth: 1,
@@ -41,16 +36,23 @@ export default function FeaturedRow({
                     marginBottom: 10, marginTop: 10
                 }}>
                     <View style={{ alignItems: 'center', marginRight: 4 }}>
-                        <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={imageHotel} />
+                        <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={{ uri: getImgCustomerUrl.concat(`?imageId=${imageHotel[0]}`) }} />
                     </View>
                     <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                         <View >
                             <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap' }}>{name}</Text>
+                            <Text>{address}</Text>
+                            <Text>{description}</Text>
+                            {providerPhone ? (
+                                <Text>{providerPhone}</Text>
+                            ) : ("")}
+                            {price ? (
+                                <Text>{price}</Text>
+                            ) : ("")}
+
                             <View style={{ flexDirection: 'row' }}>
                                 <Icon.MapPin color='gray' width={15} height={15} style={{ marginHorizontal: 5 }} />
                                 <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                    <Text style={{ color: 'gray', fontSize: 12, flexWrap: 'wrap' }}>{location}</Text>
-                                    <Text style={{ color: 'gray', fontSize: 12, flexWrap: 'wrap' }}>{reviewPoint}</Text>
 
                                 </View>
                             </View>

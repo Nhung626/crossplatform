@@ -25,6 +25,8 @@ import InformationScreen from './src/screen/loginscreen/informationScreen';
 import ForgetPassword from './src/screen/loginscreen/forgetPassword';
 import NewPasswordScreen from './src/screen/loginscreen/newPassword';
 import Notice from './src/screen/loginscreen/notice';
+import GetProvider from './src/screen/testScreen/getProvider';
+import TestHotelScreen from './src/screen/testScreen/testHotelScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -35,7 +37,7 @@ export default function Navigations() {
     return (
 
         <NavigationContainer>
-            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='StartScreen'>
+            <Stack.Navigator screenOptions={HidenHeader} initialRouteName='GetAll'>
                 <Stack.Screen name="Notice" component={Notice} />
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="StartScreen" component={StartScreen} />
@@ -61,6 +63,8 @@ export default function Navigations() {
                 <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
                 <Stack.Screen name='CheckReservar' component={CheckReservar} />
 
+                <Stack.Screen name='GetAll' component={GetProvider} />
+                <Stack.Screen name='TestHotel' component={TestHotelScreen} />
 
 
 

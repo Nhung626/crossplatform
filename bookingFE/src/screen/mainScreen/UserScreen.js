@@ -9,7 +9,6 @@ import { getImgCustomerUrl } from "../../services/baseUrl";
 
 export default function UserScreen({ navigation, route }) {
     const [fullName, setFullName] = useState("");
-    const [idImg, setidImg] = useState("")
     const [imageUrl, setImageUrl] = useState("");
     const { token, id } = route.params ?? {};
 

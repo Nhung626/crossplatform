@@ -1,5 +1,5 @@
 import axios from "axios"
-import { addUrlCustomerLogin, addUrlCustomerSignUp, addUrlCustomerUpdate, getCustomerUrl, getImgCustomerUrl } from "./baseUrl"
+import { addUrlCustomerLogin, addUrlCustomerSignUp, addUrlCustomerUpdate, getAllProvider, getAllProviderUrl, getCategoryUrl, getCustomerUrl, getImgCustomerUrl } from "./baseUrl"
 
 export const loginApi = (user) => {
     const customerLogin = axios({
@@ -62,4 +62,25 @@ export const getImgCustomerApi = (token, id) => {
         },
     })
     return getImg
+}
+
+export const getAllProviderAPI = () => {
+    const getAll = axios({
+        method: 'GET',
+        url: getAllProviderUrl,
+        headers: {
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcwOTIwMjUsImV4cCI6MTY5NzE3ODQyNX0.pNplIRs8lA8LxJApcdgMrTZ3RMk7pGcjEjdBREbJp84"
+        },
+    })
+    return getAll
+}
+export const getAllCategoryAPI = (id) => {
+    const getAll = axios({
+        method: 'GET',
+        url: getCategoryUrl(id),
+        headers: {
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcwOTIwMjUsImV4cCI6MTY5NzE3ODQyNX0.pNplIRs8lA8LxJApcdgMrTZ3RMk7pGcjEjdBREbJp84"
+        },
+    })
+    return getAll
 }
