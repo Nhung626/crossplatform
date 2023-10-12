@@ -37,7 +37,6 @@ public class ImageController {
         return ResponseEntity.ok("Success");
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
     @GetMapping("/api/v1/image")
     public ResponseEntity<Resource> getImage(@RequestParam("imageId") Long imageId) throws IOException {
         Path path = Paths.get(imageService.getPathImage(imageId));
