@@ -27,7 +27,7 @@ export default function SearchModal() {
         setCalendarModalVisible(false);
     }
     return (
-        <View style={{ borderWidth: 2, borderColor: themeColor.btColor, borderRadius: 6, marginHorizontal: 10 }}>
+        <View style={{ borderWidth: 2, borderColor: themeColor.bgColor, borderRadius: 6, marginHorizontal: 10 }}>
             <TouchableOpacity style={styles.searchContainer}
                 onPress={() => navigation.navigate('Map')}>
                 <Icon.Search height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
