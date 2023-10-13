@@ -5,10 +5,9 @@ import { StatusBar } from 'expo-status-bar'
 import * as Icon from "react-native-feather";
 import { themeColor } from '../../utils/theme';
 import SortHotel from '../../components/sortHotel';
-import FeaturedRow from '../../components/featuredRow';
-import { featured } from '../../constains';
 import { useNavigation } from '@react-navigation/native';
 import { getAllProviderAPI } from '../../services/useAPI'
+import ShowHotel from '../../components/showHotel';
 
 export default function SearchValuesScreen() {
   const navigation = useNavigation();
@@ -74,8 +73,9 @@ export default function SearchValuesScreen() {
         <View style={{ backgroundColor: "white" }}>
           {Array.isArray(data) ? (
             data.map((item) => (
-              <FeaturedRow
+              <ShowHotel
                 key={item.providerId}
+                id={item.providerId}
                 name={item.providerName}
                 imageHotel={item.imgIdProviders}
                 description={item.description}

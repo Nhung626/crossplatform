@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StatusBar, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StatusBar, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getImgCustomerUrl } from '../../services/baseUrl';
 import { getAllCategoryAPI } from '../../services/useAPI';
-import FeaturedRow from '../../components/featuredRow';
+import FeaturedRow from '../../components/showHotel';
+import ShowRoom from '../../components/showRoom';
 export default function HotelScreen() {
     const { params: {
         id,
@@ -14,7 +15,7 @@ export default function HotelScreen() {
         imageHotel,
         description,
         address,
-        providerPhone, } } = useRoute();
+    } } = useRoute();
     const navigation = useNavigation();
     const [data, setData] = useState("");
     useEffect(() => {
@@ -42,17 +43,35 @@ export default function HotelScreen() {
             navigation.navigate('PaymentScreen', { selectedRoom: room });
         }
     };
-
+    const screenWidth = Dimensions.get("window").width;
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ backgroundColor: themeColor.bgModalColor }}>
 
             <StatusBar style='light' backgroundColor={themeColor.bgColor} />
 
             {/* Header bar */}
             <ScrollView>
-                <View style={{ position: 'relative' }}>
-                    <Image style={{ width: '', height: 256 }} source={{ uri: getImgCustomerUrl.concat(`?imageId=${imageHotel[0]}`) }} />
-                    <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                <ScrollView horizontal
+                    pagingEnabled
+                    contentContainerStyle={styles.contentContainer}
+
+                >
+                    {imageHotel.map((imageId, index) => (
+                        <Image
+                            key={index}
+                            style={{
+                                width: screenWidth, // Điều chỉnh kích thước theo nhu cầu của bạn
+                                height: 300,
+                                resizeMode: 'cover',
+                            }}
+                            source={{ uri: `${getImgCustomerUrl}?imageId=${imageId}` }}
+                        />
+                    ))}
+                </ScrollView>
+                <View style={styles.container}>
+
+
+                    <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10 }}>
                         <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>
                             <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
                         </TouchableOpacity>
@@ -60,54 +79,60 @@ export default function HotelScreen() {
                             <Icon.Heart height={30} width={30} strokeWidth="2" stroke="white" style={{ marginHorizontal: 10 }} fill='white' />
                         </View>
                     </View>
-                </View>
-                {/* Content */}
-                <View style={{
-                    borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: 'white', marginTop: -48, paddingTop: 24
-                }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingLeft: 20, paddingRight: 20 }}>
-                        <View style={{ flexDirection: 'column', width: "80%" }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 24, flexWrap: 'wrap', marginBottom: 10 }}>{name} </Text>
+                    {/* Content */}
+                    <View style={{
+                        backgroundColor: 'white', paddingTop: 24
+                    }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 15 }}>
+                            <View style={{ flexDirection: 'column', width: "80%" }}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 24, flexWrap: 'wrap', paddingBottom: 10, textAlign: 'center', }}>{name} </Text>
+
+                                <Text>{description}</Text>
+                            </View>
 
 
                         </View>
+                        {/*Vị trí */}
 
+                        <View style={{ marginHorizontal: 10 }}>
+
+                            <Text style={{ fontWeight: 'bold', fontSize: 20, paddingVertical: 10 }}> Vị trí chỗ nghỉ</Text>
+                            <View style={{ flexDirection: 'row', columnGap: 10, marginHorizontal: 10 }}>
+                                <Icon.MapPin stroke={'grey'} height={24} width={24} />
+                                <Text>{address}</Text>
+                            </View>
+
+                        </View>
+                    </View>
+                    <View
+                        style={{ backgroundColor: 'white', }}>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 24,
+                                marginVertical: 16,
+                                paddingHorizontal: 16
+                            }}>
+                            Thông tin các phòng</Text>
 
                     </View>
-                    {/*Vị trí */}
-
-                    <View style={{ marginHorizontal: 10 }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 20, marginVertical: 10 }}> Vị trí chỗ nghỉ</Text>
-                        <Text>{address}</Text>
-                    </View>
-
-
-
                 </View>
-                <View
-                    style={{ backgroundColor: 'white', }}>
-                    <Text
-                        style={{
-                            fontWeight: 'bold',
-                            fontSize: 24,
-                            marginVertical: 16,
-                            paddingHorizontal: 16
-                        }}>
-                        Thông tin các phòng</Text>
 
-                </View>
-                <View style={{ backgroundColor: "white" }}>
+
+                <View style={{ backgroundColor: themeColor.bgModalColor }}>
                     {Array.isArray(data) ? (
                         data.map((item) => (
-                            <FeaturedRow
+                            <ShowRoom
                                 key={item.categoryId}
                                 name={item.categoryName}
-                                imageHotel={item.imgIdCategories}
+                                imageRoom={item.imgIdCategories}
                                 description={item.description}
-                                address={item.address}
-                                providerPhone={item.providerPhone || 0}
                                 person={item.person}
                                 price={item.price}
+                                area={item.area}
+                                bedType={item.bedType}
+                                roomNumber={item.roomNumber}
+
 
                             />
                         ))
@@ -120,4 +145,28 @@ export default function HotelScreen() {
 
         </SafeAreaView >
     );
+
 }
+const styles = StyleSheet.create({
+    container: {
+        shadowOffset: { width: 2, height: 5 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 5, // Cho Android
+    },
+    img: {
+        height: 300,
+        resizeMode: 'cover', // Chọn loại scale cho hình ảnh
+    },
+    contentContainer: {
+        alignItems: 'center',
+    },
+    box: {
+        width: 200,
+        height: 200,
+        backgroundColor: 'lightblue',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+})

@@ -7,14 +7,13 @@ import { getImgCustomerUrl } from '../services/baseUrl';
 
 
 
-export default function FeaturedRow({
+export default function ShowHotel({
     id,
     name,
     imageHotel,
     description,
     address,
     providerPhone,
-    price
 }) {
     const navigation = useNavigation();
 
@@ -38,17 +37,14 @@ export default function FeaturedRow({
                     <View style={{ alignItems: 'center', marginRight: 4 }}>
                         <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={{ uri: getImgCustomerUrl.concat(`?imageId=${imageHotel[0]}`) }} />
                     </View>
-                    <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                    <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}>
                         <View >
                             <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap' }}>{name}</Text>
                             <Text>{address}</Text>
                             <Text>{description}</Text>
-                            {providerPhone ? (
-                                <Text>{providerPhone}</Text>
-                            ) : ("")}
-                            {price ? (
-                                <Text>{price}</Text>
-                            ) : ("")}
+                            <Text>{providerPhone}</Text>
+                            <Text></Text>
+
 
                             <View style={{ flexDirection: 'row' }}>
                                 <Icon.MapPin color='gray' width={15} height={15} style={{ marginHorizontal: 5 }} />

@@ -69,7 +69,7 @@ export const getAllProviderAPI = () => {
         method: 'GET',
         url: getAllProviderUrl,
         headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcwOTIwMjUsImV4cCI6MTY5NzE3ODQyNX0.pNplIRs8lA8LxJApcdgMrTZ3RMk7pGcjEjdBREbJp84"
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcxNjI4MzIsImV4cCI6MTY5NzI0OTIzMn0.ieqJmgyR2Lbw69xTKVlG28j_wE6hboXFc-DriDftLnc"
         },
     })
     return getAll
@@ -79,7 +79,7 @@ export const getAllCategoryAPI = (id) => {
         method: 'GET',
         url: getCategoryUrl(id),
         headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcwOTIwMjUsImV4cCI6MTY5NzE3ODQyNX0.pNplIRs8lA8LxJApcdgMrTZ3RMk7pGcjEjdBREbJp84"
+            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcxNjI4MzIsImV4cCI6MTY5NzI0OTIzMn0.ieqJmgyR2Lbw69xTKVlG28j_wE6hboXFc-DriDftLnc"
         },
     })
     return getAll

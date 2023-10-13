@@ -4,9 +4,8 @@ import { themeColor } from '../utils/theme'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Icon from "react-native-feather"
 import { SafeAreaView } from 'react-native-safe-area-context'
-import NumOfPeople from './numOfPeople'
-import Calendar from './calendarPicker'
-
+import Calendar from '../modals/calendarPicker';
+import NumOfPeople from '../modals/numOfPeople'
 export default function SearchIcon() {
     const navigation = useNavigation();
     const route = useRoute();

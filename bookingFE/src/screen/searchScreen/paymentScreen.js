@@ -3,11 +3,24 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-export default function PaymentScreen({ route }) {
-    const { selectedRoom } = route.params;
+export default function PaymentScreen() {
+    const route = useRoute()
+    const {
+        id,
+        name,
+        imageRoom,
+        description,
+        price,
+        person,
+        area,
+        bedType,
+        roomNumber,
+    } = route.params ?? {}
     const navigation = useNavigation();
+
+    console.log('Data to be passed:', { id, name, imageRoom, description, price, person, area, bedType, roomNumber });
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#dedede' }}>
@@ -22,12 +35,12 @@ export default function PaymentScreen({ route }) {
                 <View style={{ backgroundColor: themeColor.bgColor, paddingHorizontal: 20, paddingVertical: 20 }}>
                     <View style={{ backgroundColor: 'white', borderRadius: 10, }}>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 10, rowGap: 8, borderBottomWidth: 0.6, borderBlockColor: 'gray' }}>
-                            <Text style={{ fontSize: 16, fontWeight: '500' }}>Tên khách sạn</Text>
+                            <Text style={{ fontSize: 16, fontWeight: '500' }}>{name}</Text>
                             <Text>Nhận phòng         (VD) T.2, 9 Th10 2023 (14:00)</Text>
                             <Text>Trả phòng          (VD) T.3, 9 Th10 2023 (12:00)</Text>
                         </View>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 10, rowGap: 8, borderBottomWidth: 0.6, borderBlockColor: 'gray' }}>
-                            <Text>(3x) {selectedRoom.name} </Text>
+                            <Text>{name}</Text>
                             <Text style={{ fontSize: 12, color: 'gray' }}>1 giường đôi</Text>
                             <Text style={{ fontSize: 12, color: 'gray' }}>2 khách/phòng</Text>
                         </View>
@@ -59,7 +72,7 @@ export default function PaymentScreen({ route }) {
                         <Text style={{ fontSize: 20, fontWeight: '500', color: themeColor.bgColor }}> VND 1.108.399</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 20, }}>
-                        <Text style={{ fontWeight: '200' }}>(3x) {selectedRoom.name} </Text>
+                        <Text style={{ fontWeight: '200' }}>{name}</Text>
                         <Text style={{ fontWeight: '200' }}>VND 977.424</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 20, }}>
