@@ -6,7 +6,7 @@ import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getImgCustomerUrl } from '../../services/baseUrl';
 import { getAllCategoryAPI } from '../../services/useAPI';
-import FeaturedRow from '../../components/featuredRow';
+import FeaturedRow from '../../components/showHotel';
 export default function TestHotelScreen() {
     const { params: {
         id,

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getAllProviderAPI } from '../../services/useAPI'
 import { themeColor } from '../../utils/theme'
-import FeaturedRow from '../../components/featuredRow'
+import FeaturedRow from '../../components/showHotel'
 
 export default function GetProvider() {
     const [data, setData] = useState("")

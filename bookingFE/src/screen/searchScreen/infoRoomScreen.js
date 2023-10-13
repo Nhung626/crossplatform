@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function SortHotels() {
+export default function InfoRoomScreen() {
     return (
         <View>
-            <Text>S</Text>
+            <Text>InfoRoomScreen</Text>
         </View>
     )
 }
