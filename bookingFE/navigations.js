@@ -14,6 +14,9 @@ import MainScreen from './src/screen/mainScreen/MainScreen';
 import SaveScreen from './src/screen/mainScreen/SaveScreen';
 import BookingScreen from './src/screen/mainScreen/BookingScreen';
 import UserScreen from './src/screen/mainScreen/UserScreen';
+import inforRoomScreen from './src/screen/searchScreen/inforRoomScreen';
+
+
 
 import LoginScreen from './src/screen/loginscreen/loginScreen';
 import StartScreen from './src/screen/loginscreen/startScreen';
@@ -52,7 +55,7 @@ export default function Navigations() {
                 <Stack.Screen name='BookinhScreen' component={BookingScreen} />
                 <Stack.Screen name='UserScreen' component={UserScreen} />
                 <Stack.Screen name='Map' component={MapScreen} />
-
+                <Stack.Screen name ='InforRoomScreen' component={inforRoomScreen}/>
                 <Stack.Screen name="SearchValue" component={SearchValuesScreen} />
                 <Stack.Screen name="Hotel" component={HotelScreen} />
                 <Stack.Screen name="SearchIcon" component={SearchIcon} options={{ presentation: 'modal' }} />
