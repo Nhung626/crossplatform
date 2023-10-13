@@ -9,16 +9,7 @@ export default function HotelScreen() {
     console.log('hotel: ', name);
     const navigation = useNavigation();
 
-    const [selectedRooms, setSelectedRooms] = useState([]);
-    const handleSelectRoom = (room) => {
-        if (!selectedRooms.includes(room.id)) {
-            // Nếu phòng chưa được chọn, thêm vào danh sách
-            setSelectedRooms([...selectedRooms, room.id]);
-
-            // Chuyển đến màn hình thanh toán và truyền thông tin phòng
-            navigation.navigate('PaymentScreen', { selectedRoom: room });
-        }
-    };
+ 
 
     return (
         <SafeAreaView>
@@ -74,8 +65,9 @@ export default function HotelScreen() {
 
 
                 </View>
+
                 <View style={{ backgroundColor: 'white', paddingBottom: 144 }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 24, marginVertical: 16, paddingHorizontal: 16 }}> Thông tin các phòng</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 24, marginVertical: 16, paddingHorizontal: 16 }}> Danh sách các phòng</Text>
                     {/* Hiển thị các thông tin khác của khách sạn */}
 
                     {hotelsData.map((room) => (
@@ -83,11 +75,17 @@ export default function HotelScreen() {
                             flexDirection: 'row', alignItems: 'center', marginLeft: 10, marginRight: 10,
                             marginBottom: 10, borderBottomWidth: 0.6, borderBottomColor: 'gray', paddingBottom: 10
                         }}>
-                            <View>
-                                <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={room.image} />
+                            <TouchableOpacity onPress={() => navigation.navigate('InforRoomScreen')}>
+                            <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={room.image} />
                                 {/* Hiển thị các thông tin khác của mỗi phòng */}
+                            </TouchableOpacity>
+                            <View>
+                                
                             </View>
+                            
+                            
                             <View style={{ marginLeft: 10 }}>
+                                <TouchableOpacity onPress={() => navigation.navigate('InforRoomScreen')}>
                                 <View style={{ width: 210 }}>
                                     <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap', marginBottom: 5 }}>{room.name}</Text>
                                     <View style={{ flexDirection: 'row' }}>
@@ -102,7 +100,7 @@ export default function HotelScreen() {
                                 <Text style={{}}> { }</Text>
 
                                 <TouchableOpacity
-                                    onPress={() => handleSelectRoom(room)}
+                                    onPress={() => navigation.navigate("PaymentScreen")}
                                     style={{
                                         width: '50%',
                                         backgroundColor: themeColor.bgColor,
@@ -115,6 +113,9 @@ export default function HotelScreen() {
                                 >
                                     <Text>Chọn</Text>
                                 </TouchableOpacity>
+
+                                </TouchableOpacity>
+                                
 
                             </View>
                         </View>

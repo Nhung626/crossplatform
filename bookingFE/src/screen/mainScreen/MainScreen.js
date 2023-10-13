@@ -1,10 +1,12 @@
-import { View, Text } from "react-native";
+import { View, Text,StatusBar } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SaveScreen from "./SaveScreen";
 import BookingScreen from "./BookingScreen";
 import UserScreen from "./UserScreen";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./homeScreen";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { themeColor } from "../../utils/theme";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -20,7 +22,9 @@ const screenOptions = {
 }
 export default function MainScreen() {
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <SafeAreaView style={{flex:1}}>
+      <StatusBar style='light' backgroundColor={themeColor.bgColor} />
+      <Tab.Navigator screenOptions={screenOptions}>
 
       <Tab.Screen
         options={{
@@ -114,5 +118,7 @@ export default function MainScreen() {
         component={UserScreen}
       />
     </Tab.Navigator>
+    </SafeAreaView>
+    
   );
 }

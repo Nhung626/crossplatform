@@ -5,8 +5,7 @@ import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
 import { useNavigation } from '@react-navigation/native';
 
-export default function PaymentScreen({ route }) {
-    const { selectedRoom } = route.params;
+export default function PaymentScreen() {
     const navigation = useNavigation();
 
     return (
@@ -27,7 +26,7 @@ export default function PaymentScreen({ route }) {
                             <Text>Trả phòng          (VD) T.3, 9 Th10 2023 (12:00)</Text>
                         </View>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 10, rowGap: 8, borderBottomWidth: 0.6, borderBlockColor: 'gray' }}>
-                            <Text>(3x) {selectedRoom.name} </Text>
+                            <Text>(3x) Tên phòng </Text>
                             <Text style={{ fontSize: 12, color: 'gray' }}>1 giường đôi</Text>
                             <Text style={{ fontSize: 12, color: 'gray' }}>2 khách/phòng</Text>
                         </View>
@@ -59,7 +58,7 @@ export default function PaymentScreen({ route }) {
                         <Text style={{ fontSize: 20, fontWeight: '500', color: themeColor.bgColor }}> VND 1.108.399</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 20, }}>
-                        <Text style={{ fontWeight: '200' }}>(3x) {selectedRoom.name} </Text>
+                        <Text style={{ fontWeight: '200' }}>(3x) Tên phòng </Text>
                         <Text style={{ fontWeight: '200' }}>VND 977.424</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 20, }}>
