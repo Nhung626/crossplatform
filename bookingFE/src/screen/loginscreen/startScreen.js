@@ -10,7 +10,7 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { loginApi } from "../../services/useAPI";
+import { getToken, loginApi } from "../../services/useAPI";
 import { themeColor } from "../../utils/theme";
 
 const StartScreen = () => {
@@ -29,26 +29,13 @@ const StartScreen = () => {
 
 
   const handleLogin = async () => {
-    const user = {
-      email: email,
-      password: password,
-    };
-    console.log(user)
-
-    try {
-      const response = await loginApi(user)
-      console.log(response.data.token)
-      if (response.status === 200) {
-        const token = response.data.token
-        const id = response.data.id;
-        navigation.navigate('MainScreen', { token, id })
-        console.log("Đăng nhập thành công", id);
-      }
-    } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu đăng nhập:", error.response);
-      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+    const result = loginApi(email, password)
+    if (result) {
+      const token = await getToken();
+      console.log("token: ", token)
+      navigation.navigate("MainScreen")
     }
-  };
+  }
 
   return (
     <View style={{ flex: 1 }}>

@@ -9,12 +9,11 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signUpApi } from "../../services/useAPI";
-// import { useDispatch } from 'react-redux';
-// import { registerUser } from './redux/actions/authActions';
+
 import { themeColor } from "../../utils/theme";
 function SignupScreen() {
   // const dispatch = useDispatch();
@@ -34,21 +33,16 @@ function SignupScreen() {
       alert("Mật khẩu và xác nhận mật khẩu không khớp.");
       return;
     }
-    const user = {
-      email: email,
-      password: password,
-    };
-    try {
-      const response = await signUpApi(user);
-      if (response.status === 200) {
-        console.log('Đăng ký thành công')
-        navigation.navigate("SignupSuccess", { user })
-      }
-    } catch (error) {
-      console.log(user)
-      console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error);
+    const response = await signUpApi(email, password);
+    console.log(response);
+
+    if (response) {
+      Alert.alert("Đăng ký thành công! Điền thông tin ngay nào!")
+      navigation.navigate('InformationScreen')
+    } else {
+      Alert.alert("Đăng kí không thành công");
     }
-  };
+  }
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
