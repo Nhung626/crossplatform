@@ -1,6 +1,7 @@
 package com.booking.service.implement;
 
 import com.booking.dto.request.CreateCategoryDto;
+//import com.booking.*;
 import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.RoomDto;
 import com.booking.entity.*;
@@ -51,14 +52,13 @@ public class RoomServiceImp implements RoomService {
             image.setCategory(category);
             imageRepository.save(image);
         }
-
         List<Integer> roomNumbers = createCategoryDto.getRoomNumbers();
         ArrayList<Room> rooms = new ArrayList<Room>(roomNumbers.size());
         for (int i = 0; i < roomNumbers.size(); i++) {
             rooms.add(new Room().builder()
                     .roomNumber(roomNumbers.get(i))
                     .category(category)
-                    .state(EStateRoom.AVAILABLE).build());
+                    .build());
             if (roomRepository.findByRoomNumber(roomNumbers.get(i)) != null) {
                 throw new CustomException("room exit");
             } else {
@@ -67,26 +67,4 @@ public class RoomServiceImp implements RoomService {
         }
     }
 
-    public CategoryDto getCategory(long categoryId) {
-        Category category = categoryRepository.findByCategoryId(categoryId);
-        List<Long> imgIds = category.getImgRooms().stream().map(img -> img.getImgId()).toList();
-        List<Integer> rooms = category.getRooms().stream().map(room -> room.getRoomNumber()).toList();
-        CategoryDto categoryDto = new CategoryDto().builder()
-                .imgIdCategories(imgIds)
-                .categoryName(category.getCategoryName())
-                .price(category.getPrice())
-                .description(category.getDescription())
-                .person(category.getPerson())
-                .area(category.getArea())
-                .bedType(category.getBedType())
-                .roomNumbers(rooms)
-                .categoryId(category.getCategoryId()).build();
-        return categoryDto;
-    }
-
-    public RoomDto getRoom(int roomNumber){
-        Room room = roomRepository.findByRoomNumber(roomNumber);
-        CategoryDto category = getCategory(room.getCategory().getCategoryId());
-        return new RoomDto(room.getRoomNumber(), category);
-    }
 }

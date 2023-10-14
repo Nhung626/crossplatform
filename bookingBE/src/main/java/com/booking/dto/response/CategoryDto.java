@@ -19,4 +19,5 @@ public class CategoryDto {
     private String description;
     private int price;
     private List<Integer> roomNumbers;
+    private int countRoom;
 }

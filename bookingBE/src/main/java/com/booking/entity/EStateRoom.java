@@ -8,6 +8,4 @@ public enum EStateRoom {
     ON_HOLD,
     //phòng đã đặt
     BOOKED,
-    CHECKIN,
-    CHECKOUT,
 }

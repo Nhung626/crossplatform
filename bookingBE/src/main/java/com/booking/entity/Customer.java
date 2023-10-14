@@ -38,7 +38,7 @@ public class Customer {
     @JoinColumn(name = "img_id")
     private Image avatar;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-    private Set<Order> orders = new HashSet<>();
+    private Set<Reservar> reservar = new HashSet<>();
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     private Set<Review> reviews = new HashSet<>();
 }

@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @Getter
 public class RoomDto {
+    private Long roomId;
     private int roomNumber;
     private CategoryDto category;
 }

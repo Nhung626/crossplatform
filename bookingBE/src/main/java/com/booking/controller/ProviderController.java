@@ -8,6 +8,7 @@ import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.JwtUserResponse;
 import com.booking.dto.response.ProviderDto;
 import com.booking.entity.Category;
+import com.booking.entity.Customer;
 import com.booking.entity.Provider;
 import com.booking.repository.ProviderRepository;
 import com.booking.security.jwt.JwtUtil;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
@@ -92,8 +94,8 @@ public class ProviderController {
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/add-room")
-    public ResponseEntity<Object> addRoom(@RequestParam("imgCategories") List<MultipartFile> images,
-                                          @RequestParam("providerId") Long providerId,
+    public ResponseEntity<Object> addRoom(Principal principal,
+                                          @RequestParam("imgCategories") List<MultipartFile> images,
                                           @RequestParam("person") int person,
                                           @RequestParam("categoryName") String categoryName,
                                           @RequestParam("area") float area,
@@ -104,7 +106,7 @@ public class ProviderController {
         List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n)).toList();
         CreateCategoryDto createCategoryDto = new CreateCategoryDto().builder()
                 .imgCategories(images)
-                .providerId(providerId)
+                .providerId(getProviderId(principal))
                 .categoryName(categoryName)
                 .person(person)
                 .area(area)
@@ -118,25 +120,31 @@ public class ProviderController {
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-categories/{id}")
-    public ResponseEntity<List<CategoryDto>> getCategories(@PathVariable("id") Long providerId){
-        return ResponseEntity.ok(providerService.getAllCategories(providerId));
+    public ResponseEntity<List<CategoryDto>> getCategories(Principal principal){
+        return ResponseEntity.ok(providerService.getAllCategories(getProviderId(principal)));
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
-    @GetMapping("/get-category/{id}")
-    public ResponseEntity<CategoryDto> getCategory(@PathVariable("id") Long categoryId){
-        return ResponseEntity.ok(roomService.getCategory(categoryId));
+    @GetMapping("/get-category")
+    public ResponseEntity<CategoryDto> getCategory(@RequestParam("categoryId") Long categoryId){
+        return ResponseEntity.ok(providerService.getCategory(categoryId));
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
-    @GetMapping("/get-provider/{id}")
-    public ResponseEntity<ProviderDto> getProvider(@PathVariable("id") Long providerId){
-        return ResponseEntity.ok(providerService.getProvider(providerId));
+    @GetMapping("/get-provider")
+    public ResponseEntity<ProviderDto> getProvider(Principal principal){
+        return ResponseEntity.ok(providerService.getProvider(getProviderId(principal)));
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/get-providers")
     public ResponseEntity<List<ProviderDto>> getAllProviders(){
         return ResponseEntity.ok(providerService.getAllProviders());
+    }
+
+    public Long getProviderId(Principal principal) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        Provider provider = providerRepository.findByUserId(userDetails.getId());
+        return provider.getProviderId();
     }
 }

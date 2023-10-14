@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,40 +71,50 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @PostMapping(value = "/update/{id}")
-    public ResponseEntity<Object> updateCustomer(@PathVariable Long id,
-                                                 @RequestParam("avatar")MultipartFile avatar,
+    @PostMapping(value = "/update")
+    public ResponseEntity<Object> updateCustomer(@RequestParam("avatar") MultipartFile avatar,
                                                  @RequestParam("fullName") String fullName,
                                                  @RequestParam("gender") String gender,
                                                  @RequestParam("phoneNumber") String phoneNumber,
                                                  @RequestParam("address") String address,
                                                  @RequestParam("customerCode") String customerCode,
-                                                 @RequestParam("dateOfBirth")LocalDate birthDay) throws IOException {
-        UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto(avatar,fullName, gender, phoneNumber,address, customerCode,birthDay);
-        customerService.updateCustomer(id, updateCustomerDto);
+                                                 @RequestParam("dateOfBirth") LocalDate birthDay,
+                                                 Principal principal) throws IOException {
+        UpdateCustomerDto updateCustomerDto = new UpdateCustomerDto(avatar, fullName, gender, phoneNumber, address, customerCode, birthDay);
+        customerService.updateCustomer(getCustomerId(principal), updateCustomerDto);
         return ResponseEntity.status(200).build();
     }
+
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @PostMapping(value = "/add-favorite/{id}")
-    public ResponseEntity addFavorite(@PathVariable("id") Long customerId, @RequestParam("providerId") Long providerId){
-        favoriteService.addFavoriteProvider(customerId,providerId);
+    @PostMapping(value = "/add-favorite")
+    public ResponseEntity addFavorite(Principal principal, @RequestParam("providerId") Long providerId) {
+        favoriteService.addFavoriteProvider(getCustomerId(principal), providerId);
         return ResponseEntity.status(200).build();
     }
+
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping(value = "/get-customer/{id}")
-    public ResponseEntity<CustomerDto> getCustomer(@PathVariable("id") Long customerId){
-        CustomerDto customerDto = customerService.getCustomer(customerId);
+    @GetMapping(value = "/get-customer")
+    public ResponseEntity<CustomerDto> getCustomer(Principal principal) {
+        CustomerDto customerDto = customerService.getCustomer(getCustomerId(principal));
         return ResponseEntity.ok(customerDto);
     }
+
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @DeleteMapping(value = "/del-favorite/{id}")
-    public ResponseEntity removeFavorite(@PathVariable("id") Long customerId, @RequestParam("providerId") Long providerId){
-        favoriteService.removeFavoriteProvider(customerId,providerId);
+    @DeleteMapping(value = "/del-favorite")
+    public ResponseEntity removeFavorite(Principal principal, @RequestParam("providerId") Long providerId) {
+        favoriteService.removeFavoriteProvider(getCustomerId(principal), providerId);
         return ResponseEntity.status(200).build();
     }
+
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping(value = "/get-favorite/{id}")
-    public ResponseEntity<List<ProviderDto>> getFavorites(@PathVariable("id") Long customerId){
-        return ResponseEntity.ok(favoriteService.getFavoriteProvider(customerId));
+    @GetMapping(value = "/get-favorite")
+    public ResponseEntity<List<ProviderDto>> getFavorites(Principal principal) {
+        return ResponseEntity.ok(favoriteService.getFavoriteProvider(getCustomerId(principal)));
+    }
+
+    public Long getCustomerId(Principal principal) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        Customer customer = customerRepository.findByUserId(userDetails.getId());
+        return customer.getCustomerId();
     }
 }

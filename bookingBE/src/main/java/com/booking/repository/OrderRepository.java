@@ -1,7 +1,7 @@
 package com.booking.repository;
 
-import com.booking.entity.Order;
+import com.booking.entity.Reservar;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Reservar, Long> {
 }

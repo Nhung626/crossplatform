@@ -9,5 +9,4 @@ import java.io.IOException;
 @Service
 public interface RoomService {
     void addCategory(CreateCategoryDto createCategoryDto) throws IOException;
-    CategoryDto getCategory(long categoryId);
 }

@@ -4,11 +4,10 @@ import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.UpdateProviderDto;
 import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.ProviderDto;
+import com.booking.dto.response.RoomDto;
 import com.booking.entity.*;
 import com.booking.exception.CustomException;
-import com.booking.repository.ImageRepository;
-import com.booking.repository.ProviderRepository;
-import com.booking.repository.UserRepository;
+import com.booking.repository.*;
 import com.booking.service.interfaces.ImageService;
 import com.booking.service.interfaces.ProviderService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProviderServiceImp implements ProviderService {
     private final ProviderRepository providerRepository;
+    private final CategoryRepository categoryRepository;
+    private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     @Autowired
     PasswordEncoder encoder;
@@ -70,50 +71,39 @@ public class ProviderServiceImp implements ProviderService {
         List<Provider> providers = providerRepository.findAll();
         List<ProviderDto> providerDtos = new ArrayList<>();
         for (Provider provider : providers) {
-            List<Long> imgIds = provider.getImgProviders().stream().map(img -> img.getImgId()).toList();
-            providerDtos.add(new ProviderDto().builder()
-                    .providerId(provider.getProviderId())
-                    .imgIdProviders(imgIds)
-                    .providerName(provider.getProviderName())
-                    .providerPhone(provider.getProviderPhone())
-                    .address(provider.getAddress())
-                    .description(provider.getDescription()).build());
+            providerDtos.add(Convert.convertProvider(provider));
         }
         return providerDtos;
     }
 
-    public ProviderDto getProvider(Long providerId){
+    @Override
+    public ProviderDto getProvider(Long providerId) {
         Provider provider = providerRepository.findByProviderId(providerId);
-        List<Long> imgIds = provider.getImgProviders().stream().map(img -> img.getImgId()).toList();
-
-        ProviderDto providerDto = new ProviderDto().builder()
-                .providerId(provider.getProviderId())
-                .imgIdProviders(imgIds)
-                .providerName(provider.getProviderName())
-                .providerPhone(provider.getProviderPhone())
-                .address(provider.getAddress())
-                .description(provider.getDescription()).build();
-        return providerDto;
+        return Convert.convertProvider(provider);
     }
+
+
+
     @Override
     public List<CategoryDto> getAllCategories(Long providerId) {
         Provider provider = providerRepository.findByProviderId(providerId);
         List<Category> categories = provider.getCategories().stream().toList();
         List<CategoryDto> categoryDtos = new ArrayList<>();
         for (Category category : categories) {
-            List<Long> imgIds = category.getImgRooms().stream().map(img -> img.getImgId()).toList();
-            List<Integer> rooms = category.getRooms().stream().map(room -> room.getRoomNumber()).toList();
-            categoryDtos.add(new CategoryDto().builder()
-                    .imgIdCategories(imgIds)
-                    .categoryName(category.getCategoryName())
-                    .price(category.getPrice())
-                    .description(category.getDescription())
-                    .person(category.getPerson())
-                    .area(category.getArea())
-                    .bedType(category.getBedType())
-                    .roomNumbers(rooms)
-                    .categoryId(category.getCategoryId()).build());
+            categoryDtos.add(Convert.convertCategory(category));
         }
         return categoryDtos;
     }
+    @Override
+    public CategoryDto getCategory(long categoryId) {
+        Category category = categoryRepository.findByCategoryId(categoryId);
+        return Convert.convertCategory(category);
+    }
+
+    public RoomDto getRoom(long roomId) {
+        Room room = roomRepository.findByRoomId(roomId);
+        return Convert.convertRoom(room);
+    }
+
+
 }

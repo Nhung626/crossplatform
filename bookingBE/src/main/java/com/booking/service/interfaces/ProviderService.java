@@ -16,4 +16,5 @@ public interface ProviderService {
     List<CategoryDto> getAllCategories(Long providerId);
     ProviderDto getProvider(Long providerId);
     List<ProviderDto> getAllProviders();
+    CategoryDto getCategory(long categoryId);
 }

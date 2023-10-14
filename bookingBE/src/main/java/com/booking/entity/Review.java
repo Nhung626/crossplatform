@@ -23,12 +23,9 @@ public class Review {
     private String description;
     @Column(name = "time")
     private LocalDateTime time;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    @OneToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @Column(name = "reservarId")
+    private Long reservarId;
 }
