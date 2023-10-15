@@ -12,16 +12,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { getToken, loginApi } from "../../services/useAPI";
 import { themeColor } from "../../utils/theme";
-
+import screenNames from "../../utils/screenNames"
 const StartScreen = () => {
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleForgetPassword = () => {
-    navigation.navigate("ForgetPassword");
-  };
 
   const handleRegister = () => {
     navigation.navigate("SignupScreen");
@@ -29,11 +25,11 @@ const StartScreen = () => {
 
 
   const handleLogin = async () => {
-    const result = loginApi(email, password)
+    const result = await loginApi(email, password)
     if (result) {
       const token = await getToken();
       console.log("token: ", token)
-      navigation.navigate("MainScreen")
+      navigation.navigate(screenNames.MAIN, { token: token })
     }
   }
 
@@ -48,7 +44,7 @@ const StartScreen = () => {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Image
               style={styles.imageLogo}
-              source={require("../../assets/reservar-01.png")}
+              source={require("../../assets/logoReservar.png")}
             />
           </View>
 

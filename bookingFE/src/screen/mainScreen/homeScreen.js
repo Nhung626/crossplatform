@@ -12,7 +12,6 @@ export default function HomeScreen() {
         <Ionicons style={styles.Icon1} name="chatbubble-outline"></Ionicons>
         <Ionicons style={styles.Icon2} name="notifications-outline"></Ionicons>
       </View>
-
       <ScrollView>
         <View style={styles.modalSearchContainer}>
           <SearchModal />

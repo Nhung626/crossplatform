@@ -24,7 +24,7 @@ const LoginScreen = () => {
       <ImageBackground source={require('../../assets/images/background/background.png')} resizeMode="cover" style={styles.image}>
         <Image
           style={styles.imageLogo}
-          source={require('../../assets/reservar-01.png')}
+          source={require('../../assets/logoReservar.png')}
         />
 
         <Text style={styles.header}> Đăng nhập để dễ dàng truy cập thông tin chuyến đi </Text>

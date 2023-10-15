@@ -5,24 +5,21 @@ import { StatusBar } from 'expo-status-bar'
 import * as Icon from "react-native-feather";
 import { themeColor } from '../../utils/theme';
 import SortHotel from '../../components/sortHotel';
-import { useNavigation } from '@react-navigation/native';
-import { getAllProviderAPI } from '../../services/useAPI'
+import { useNavigation, useRoute } from '@react-navigation/native';
 import ShowHotel from '../../components/showHotel';
+import { searchAPI } from '../../services/useAPI';
 
 export default function SearchValuesScreen() {
   const navigation = useNavigation();
   const [data, setData] = useState("")
+  const route = useRoute()
+  const { start, end, person, token } = route.params ?? {};
+  console.log(start, end, person, token)
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await getAllProviderAPI();
-        if (response.status === 200) {
-          setData(response.data)
-        } else {
-          console.log(response.status)
-        }
-      } catch (error) {
-        console.error(error)
+      const response = await searchAPI(start, end, person, token);
+      if (response) {
+        setData(response)
       }
     }
     fetchData();
@@ -80,7 +77,12 @@ export default function SearchValuesScreen() {
                 imageHotel={item.imgIdProviders}
                 description={item.description}
                 address={item.address}
-                providerPhone={item.providerPhone} />
+                providerPhone={item.providerPhone}
+                start={start}
+                end={end}
+                token={token}
+                person={person}
+              />
             ))
           ) : (
             <Text>Data is not an array.</Text>

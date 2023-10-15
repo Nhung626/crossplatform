@@ -1,129 +1,185 @@
-import React, { useState } from 'react';
-import { View, Text, StatusBar, Image, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StatusBar, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { getImgCustomerUrl } from '../../services/baseUrl';
+import ShowRoom from '../../components/showRoom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectHotel, selectSelectedHotel } from '../../redux/slices/hotelSlice';
+import { addFavoriteAPI, getAllRoomAPI } from '../../services/useAPI';
+
 export default function HotelScreen() {
-    const { params: { name, imageHotel, imageStar, location, address, reviewPoint, reviews, stars, hotelsData } } = useRoute();
-    console.log('hotel: ', name);
+    const { params: {
+        id,
+        name,
+        imageHotel,
+        description,
+        address,
+        start, end, person, token
+
+    } } = useRoute();
+
     const navigation = useNavigation();
+    const [data, setData] = useState("");
+    const [favorite, setFavorite] = useState(false);
 
- 
+    const hotel = useSelector(selectSelectedHotel);
 
+    let dispatch = useDispatch();
+
+    console.log(" datat", id, start, end, person, token)
+
+    useEffect(() => {
+        if (token && person && start && end) {
+            const fetchDataFromAPI = async () => {
+                const response = await getAllRoomAPI(id, start, end, person, token);
+                if (response) {
+                    dispatch(selectHotel({
+                        id,
+                        name,
+                        imageHotel,
+                        description,
+                        address,
+                    }));
+                    setData(response);
+                    console.log(data)
+                }
+            };
+            fetchDataFromAPI();
+        }
+    }, []);
+
+    const handleFavotite = async () => {
+        await addFavoriteAPI(id, token);
+
+    }
+    const screenWidth = Dimensions.get("window").width;
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ backgroundColor: themeColor.bgModalColor }}>
 
             <StatusBar style='light' backgroundColor={themeColor.bgColor} />
-
+            <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 50, zIndex: 1000, paddingHorizontal: 10 }}>
+                <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>
+                    <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleFavotite}
+                    style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }}>
+                    <Icon.Heart height={30} width={30} strokeWidth="2" stroke="white" style={{ marginHorizontal: 10 }} fill='white' />
+                </TouchableOpacity>
+            </View>
             {/* Header bar */}
             <ScrollView>
-                <View style={{ position: 'relative' }}>
-                    <Image style={{ width: '', height: 256 }} source={imageHotel} />
-                    <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
-                        <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>
-                            <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
-                        </TouchableOpacity>
-                        <View style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }}>
-                            <Icon.Heart height={30} width={30} strokeWidth="2" stroke="white" style={{ marginHorizontal: 10 }} fill='white' />
-                        </View>
-                    </View>
-                </View>
-                {/* Content */}
-                <View style={{
-                    borderTopLeftRadius: 30, borderTopRightRadius: 30, backgroundColor: 'white', marginTop: -48, paddingTop: 24
-                }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingLeft: 20, paddingRight: 20 }}>
-                        <View style={{ flexDirection: 'column', width: "80%" }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 24, flexWrap: 'wrap', marginBottom: 10 }}>{name} </Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                {Array.from({ length: stars }, (v, i) => (
-                                    <Image
-                                        key={i}
-                                        style={{ width: 20, height: 20, marginRight: 2 }}
-                                        source={imageStar} // Ảnh sao
-                                    />
-                                ))}
-                                <Text> ( {reviews} reviews)</Text>
-                            </View>
+                <ScrollView horizontal
+                    pagingEnabled
+                    contentContainerStyle={styles.contentContainer}
 
-                        </View>
-                        <View style={{ padding: 10, borderRadius: 10, backgroundColor: themeColor.bgColor }}>
-                            <Text style={{ fontWeight: 'bold', color: 'white' }}>{reviewPoint}</Text>
-                        </View>
-
-
-                    </View>
-                    {/*Vị trí */}
-
-                    <View style={{ marginHorizontal: 10 }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 20, marginVertical: 10 }}> Vị trí chỗ nghỉ</Text>
-                        <Text>{address}</Text>
-                        <Text>{location}</Text>
-                    </View>
-
-
-
-                </View>
-
-                <View style={{ backgroundColor: 'white', paddingBottom: 144 }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 24, marginVertical: 16, paddingHorizontal: 16 }}> Danh sách các phòng</Text>
-                    {/* Hiển thị các thông tin khác của khách sạn */}
-
-                    {hotelsData.map((room) => (
-                        <View key={room.id} style={{
-                            flexDirection: 'row', alignItems: 'center', marginLeft: 10, marginRight: 10,
-                            marginBottom: 10, borderBottomWidth: 0.6, borderBottomColor: 'gray', paddingBottom: 10
-                        }}>
-                            <TouchableOpacity onPress={() => navigation.navigate('InforRoomScreen')}>
-                            <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={room.image} />
-                                {/* Hiển thị các thông tin khác của mỗi phòng */}
-                            </TouchableOpacity>
-                            <View>
-                                
-                            </View>
-                            
-                            
-                            <View style={{ marginLeft: 10 }}>
-                                <TouchableOpacity onPress={() => navigation.navigate('InforRoomScreen')}>
-                                <View style={{ width: 210 }}>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap', marginBottom: 5 }}>{room.name}</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Icon.MapPin color='gray' width={15} height={15} style={{ marginHorizontal: 5 }} />
-                                        <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                                            <Text style={{ color: 'gray', fontSize: 12, flexWrap: 'wrap' }}>{room.address}</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                <Text style={{ color: 'gray' }}> Giá cho 1 đêm </Text>
-                                <Text style={{ color: themeColor.bgColor, fontSize: 12, flexWrap: 'wrap', fontWeight: 'bold', fontSize: 18 }}>VND {room.prices}</Text>
-                                <Text style={{}}> { }</Text>
-
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate("PaymentScreen")}
-                                    style={{
-                                        width: '50%',
-                                        backgroundColor: themeColor.bgColor,
-                                        alignItems: 'center',
-                                        marginHorizontal: 20,
-                                        borderRadius: 100,
-                                        padding: 16,
-                                        paddingVertical: 12,
-                                    }}
-                                >
-                                    <Text>Chọn</Text>
-                                </TouchableOpacity>
-
-                                </TouchableOpacity>
-                                
-
-                            </View>
-                        </View>
+                >
+                    {imageHotel.map((imageId, index) => (
+                        <Image
+                            key={index}
+                            style={{
+                                width: screenWidth, // Điều chỉnh kích thước theo nhu cầu của bạn
+                                height: 300,
+                                resizeMode: 'cover',
+                            }}
+                            source={{ uri: `${getImgCustomerUrl}?imageId=${imageId}` }}
+                        />
                     ))}
+                </ScrollView>
+                <View style={styles.container}>
+
+
+
+                    {/* Content */}
+                    <View style={{
+                        backgroundColor: 'white', paddingTop: 24
+                    }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 15 }}>
+                            <View style={{ flexDirection: 'column', width: "80%" }}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 24, flexWrap: 'wrap', paddingBottom: 10, textAlign: 'center', }}>{name} </Text>
+
+                                <Text>{description}</Text>
+                            </View>
+
+
+                        </View>
+                        {/*Vị trí */}
+
+                        <View style={{ marginHorizontal: 10 }}>
+
+                            <Text style={{ fontWeight: 'bold', fontSize: 20, paddingVertical: 10 }}> Vị trí chỗ nghỉ</Text>
+                            <View style={{ flexDirection: 'row', columnGap: 10, marginHorizontal: 10 }}>
+                                <Icon.MapPin stroke={'grey'} height={24} width={24} />
+                                <Text>{address}</Text>
+                            </View>
+
+                        </View>
+                    </View>
+                    <View
+                        style={{ backgroundColor: 'white', }}>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 24,
+                                marginVertical: 16,
+                                paddingHorizontal: 16
+                            }}>
+                            Thông tin các phòng</Text>
+
+                    </View>
+                </View>
+
+
+                <View style={{ backgroundColor: themeColor.bgModalColor }}>
+                    {Array.isArray(data) ? (
+                        data.map((item) => (
+                            <ShowRoom
+                                key={item.categoryId}
+                                name={item.categoryName}
+                                imageRoom={item.imgIdCategories}
+                                description={item.description}
+                                person={item.person}
+                                price={item.price}
+                                area={item.area}
+                                bedType={item.bedType}
+                                roomNumber={item.roomNumber}
+
+
+                            />
+                        ))
+                    ) : (
+                        <Text>Data is not an array.</Text>
+                    )}
                 </View>
 
             </ScrollView>
 
         </SafeAreaView >
     );
+
 }
+const styles = StyleSheet.create({
+    container: {
+        shadowOffset: { width: 2, height: 5 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 5, // Cho Android
+    },
+    img: {
+        height: 300,
+        resizeMode: 'cover', // Chọn loại scale cho hình ảnh
+    },
+    contentContainer: {
+        alignItems: 'center',
+    },
+    box: {
+        width: 200,
+        height: 200,
+        backgroundColor: 'lightblue',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+})

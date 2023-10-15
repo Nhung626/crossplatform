@@ -1,14 +1,11 @@
 import axios from "axios"
 import {
     BASE_URL,
-    addUrlCustomerSignUp,
-    addUrlCustomerUpdate,
-    getAllProviderUrl,
-    getCategoryUrl,
     getCustomerUrl,
     getImgCustomerUrl
 } from "./baseUrl"
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
 
 export const loginApi = async (email, password) => {
     try {
@@ -41,7 +38,7 @@ export const saveToken = async ({ token, id }) => {
 
         await AsyncStorage.setItem("token", token ? token : "");
         await AsyncStorage.setItem("id", idString);
-        // console.log('đã lưu token vào AsyncStorage!')
+        console.log('đã lưu token vào AsyncStorage!', token)
     } catch (error) {
         console.log(error.response)
         console.error('Lỗi khi lưu trữ token vào Async Storage: ', error)
@@ -50,7 +47,7 @@ export const saveToken = async ({ token, id }) => {
 export const getToken = async () => {
     try {
         const token = await AsyncStorage.getItem("token");
-        console.log(token)
+        console.log(" get được nè: ", token)
         return token;
     } catch (error) {
         console.error("Lỗi khi truy xuất token:", error);
@@ -71,12 +68,11 @@ export const getIdCustm = async () => {
 // signUpApi function
 export const signUpApi = async (email, password) => {
     try {
-        const userType = 2;
 
         const response = await axios({
             method: "POST",
             url: `${BASE_URL}customer/auth/sign-up`,
-            data: { email, password, userType },
+            data: { email, password },
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -103,6 +99,7 @@ export const signUpApi = async (email, password) => {
 export const Logout = async () => {
     try {
         await AsyncStorage.removeItem("token");
+        console.log("đã xóa token")
     } catch (error) {
         console.error("Lỗi khi xóa token:", error);
     }
@@ -110,16 +107,25 @@ export const Logout = async () => {
 
 
 
-export const getCustomerApi = (token, id) => {
-    // Sử dụng hàm addUrlCustomerUpdate để có URL chứa id
-    const getCustomer = axios({
-        method: "GET",
-        url: getCustomerUrl(id),
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-    });
-    return getCustomer;
+export const getCustomerApi = async (token) => {
+    try {
+        const response = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/get-customer`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+        }
+        );
+        if (response.status === 200) {
+            return response
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return null
+    }
+
 };
 export const getImgCustomerApi = (token, id) => {
     // const formData = new FormData();
@@ -135,24 +141,98 @@ export const getImgCustomerApi = (token, id) => {
     return getImg
 }
 
-export const getAllProviderAPI = () => {
-    const getAll = axios({
-        method: 'GET',
-        url: getAllProviderUrl,
-        headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcxNjI4MzIsImV4cCI6MTY5NzI0OTIzMn0.ieqJmgyR2Lbw69xTKVlG28j_wE6hboXFc-DriDftLnc"
-        },
-    })
-    return getAll
+export const saveDayBooking = async ({ start, end, person }) => {
+    try {
+        await AsyncStorage.setItem("person", person ? person.toString() : "")
+        await AsyncStorage.setItem("start", start ? start : "");
+        await AsyncStorage.setItem("end", end ? end : "");
+
+        console.log('đã lưu ngày book phòng vào AsyncStorage!', start, end, person)
+    } catch (error) {
+        console.log(error.response)
+        console.error('Lỗi khi lưu trữ token vào Async Storage: ', error)
+    }
 }
-export const getAllCategoryAPI = (id) => {
-    const getAll = axios({
-        method: 'GET',
-        url: getCategoryUrl(id),
-        headers: {
-            Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUcWxpbmgzMDUwMkBnbWFpbC5jb20iLCJpYXQiOjE2OTcxNjI4MzIsImV4cCI6MTY5NzI0OTIzMn0.ieqJmgyR2Lbw69xTKVlG28j_wE6hboXFc-DriDftLnc"
-        },
-    })
-    return getAll
+export const searchAPI = async (start, end, person, token) => {
+    try {
+        const response = await axios.get(`${BASE_URL}customer/search-provider`, {
+            params: {
+                start: moment(start).format('YYYY-MM-DD'),
+                end: moment(end).format('YYYY-MM-DD'),
+                person: parseInt(person),
+            },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (response.status === 200) {
+            saveDayBooking({ start, end, person })
+            console.log('Data from API:', response.data);
+            return response.data;
+        } else {
+            console.log('Error status:', response.status);
+        }
+    } catch (error) {
+        if (error.response) {
+            console.log('Response data:', error.response.data);
+        }
+        console.error(error);
+    }
+};
+export const getAllRoomAPI = async (id, start, end, person, token) => {
+    try {
+        const response = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/search-category`,
+            params: {
+                start: moment(start).format('YYYY-MM-DD'),
+                end: moment(end).format('YYYY-MM-DD'),
+                person: parseInt(person),
+                providerId: parseInt(id)
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+
+        if (response.status === 200) {
+            return response.data
+        } else {
+            console.log("Error status: ", response.error)
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return null
+    }
+
 }
 
+export const addFavoriteAPI = async (id, token) => {
+    const formData = new FormData();
+    formData.append('providerId', id);
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: `${BASE_URL}customer/add-favorite`,
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.status === 200) {
+            console.log("Thêm vào yêu thích!")
+            return response
+        }
+    }
+    catch (error) {
+        console.log(error);
+        return null
+    }
+}
+
+export const deleteFavorite = async (id, token)=>{
+
+}
