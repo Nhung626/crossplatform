@@ -6,10 +6,13 @@ import com.booking.dto.response.RoomDto;
 import com.booking.entity.Category;
 import com.booking.entity.Provider;
 import com.booking.entity.Room;
+import com.booking.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class Convert {
+
     public static ProviderDto convertProvider(Provider provider) {
         List<Long> imgIds = provider.getImgProviders().stream().map(img -> img.getImgId()).toList();
         ProviderDto providerDto = new ProviderDto().builder()
@@ -33,6 +36,7 @@ public class Convert {
                 .area(category.getArea())
                 .bedType(category.getBedType())
                 .roomNumbers(rooms)
+                .countRoom(rooms.size())
                 .categoryId(category.getCategoryId()).build();
         return categoryDto;
     }
@@ -41,4 +45,6 @@ public class Convert {
         CategoryDto category = convertCategory(room.getCategory());
         return new RoomDto(room.getRoomId(), room.getRoomNumber(), category);
     }
+
+
 }

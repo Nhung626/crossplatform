@@ -9,6 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode
 public class CategoryDto {
     private List<Long> imgIdCategories;
     private Long categoryId;

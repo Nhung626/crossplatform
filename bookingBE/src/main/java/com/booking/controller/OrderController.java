@@ -31,7 +31,7 @@ public class OrderController {
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping(value = "/seach-provider")
+    @GetMapping(value = "/search-provider")
     public ResponseEntity<Set<ProviderDto>> searchProvider(@RequestParam("start") LocalDate start,
                                                            @RequestParam("end") LocalDate end,
                                                            @RequestParam("person") int person) {
@@ -40,7 +40,7 @@ public class OrderController {
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping(value = "/seach-category")
+    @GetMapping(value = "/search-category")
     public ResponseEntity<Set<CategoryDto>> searchCategory(@RequestParam("start") LocalDate start,
                                                            @RequestParam("end") LocalDate end,
                                                            @RequestParam("person") int person,

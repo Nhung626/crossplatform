@@ -3,6 +3,7 @@ package com.booking.controller;
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.LoginUserDto;
 import com.booking.dto.request.UpdateCustomerDto;
+import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.CustomerDto;
 import com.booking.dto.response.JwtUserResponse;
 import com.booking.dto.response.ProviderDto;
@@ -12,6 +13,7 @@ import com.booking.security.jwt.JwtUtil;
 import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.CustomerService;
 import com.booking.service.interfaces.FavoriteService;
+import com.booking.service.interfaces.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,8 @@ import java.util.stream.Collectors;
 public class CustomerController {
     private final CustomerService customerService;
     private final FavoriteService favoriteService;
+    private final ProviderService providerService;
+
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -116,5 +120,30 @@ public class CustomerController {
         UserDetailsImpl userDetails = (UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         Customer customer = customerRepository.findByUserId(userDetails.getId());
         return customer.getCustomerId();
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping("/get-categories")
+    public ResponseEntity<List<CategoryDto>> getCategories(@RequestParam("providerId") Long providerId) {
+        return ResponseEntity.ok(providerService.getAllCategories(providerId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping("/get-category")
+    public ResponseEntity<CategoryDto> getCategory(@RequestParam("categoryId") Long categoryId) {
+        return ResponseEntity.ok(providerService.getCategory(categoryId));
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping("/get-provider")
+    public ResponseEntity<ProviderDto> getProvider(@RequestParam("providerId") Long providerId){
+        return ResponseEntity.ok(providerService.getProvider(providerId));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping("/get-providers")
+    public ResponseEntity<List<ProviderDto>> getAllProviders(){
+        return ResponseEntity.ok(providerService.getAllProviders());
     }
 }

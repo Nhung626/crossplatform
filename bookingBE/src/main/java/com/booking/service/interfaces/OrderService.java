@@ -15,6 +15,6 @@ public interface OrderService {
     void createOrder(CreateReservarDto createOrderDto);
     Set<ProviderDto> getSearchProviders(List<Room> rooms);
     Set<CategoryDto> getSearchCategories(Long providerId, List<Room> rooms);
-    Set<Room> getSearchRooms(Long categoryId, List<Room> rooms);
+    Set<Room> getSearchRooms(Long categoryId,  Set<Room> rooms);
     List<Room> searchRoom(LocalDate start, LocalDate end, int personCount);
 }

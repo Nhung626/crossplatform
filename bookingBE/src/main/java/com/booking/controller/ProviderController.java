@@ -75,8 +75,8 @@ public class ProviderController {
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
-    @PostMapping(value = "/update/{id}")
-    public ResponseEntity<Object> updateProvider(@PathVariable Long id,
+    @PostMapping(value = "/update")
+    public ResponseEntity<Object> updateProvider(Principal principal,
                                                  @RequestParam("imgProviders") List<MultipartFile> images,
                                                  @RequestParam("providerName") String providerName,
                                                  @RequestParam("providerPhone") String providerPhone,
@@ -88,7 +88,7 @@ public class ProviderController {
                 .providerPhone(providerPhone)
                 .address(address)
                 .description(description).build();
-        providerService.updateProvider(id, updateProviderDto);
+        providerService.updateProvider(getProviderId(principal), updateProviderDto);
         return ResponseEntity.ok("success");
     }
 
@@ -118,28 +118,22 @@ public class ProviderController {
         return ResponseEntity.status(200).build();
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
-    @GetMapping("/get-categories/{id}")
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @GetMapping("/get-categories")
     public ResponseEntity<List<CategoryDto>> getCategories(Principal principal){
         return ResponseEntity.ok(providerService.getAllCategories(getProviderId(principal)));
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
+    @PreAuthorize(" hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-category")
     public ResponseEntity<CategoryDto> getCategory(@RequestParam("categoryId") Long categoryId){
         return ResponseEntity.ok(providerService.getCategory(categoryId));
     }
 
-    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-provider")
     public ResponseEntity<ProviderDto> getProvider(Principal principal){
         return ResponseEntity.ok(providerService.getProvider(getProviderId(principal)));
-    }
-
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping("/get-providers")
-    public ResponseEntity<List<ProviderDto>> getAllProviders(){
-        return ResponseEntity.ok(providerService.getAllProviders());
     }
 
     public Long getProviderId(Principal principal) {

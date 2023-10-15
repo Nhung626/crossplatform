@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode
 public class CustomerDto {
     private Long avatarId;
     private String fullName;

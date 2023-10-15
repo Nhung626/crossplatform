@@ -5,10 +5,7 @@ import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.ProviderDto;
 import com.booking.entity.*;
 import com.booking.exception.CustomException;
-import com.booking.repository.CustomerRepository;
-import com.booking.repository.OrderRepository;
-import com.booking.repository.RoomRepository;
-import com.booking.repository.StateRoomRepository;
+import com.booking.repository.*;
 import com.booking.service.interfaces.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +21,7 @@ public class OrderServiceImp implements OrderService {
     private final StateRoomRepository stateRoomRepository;
     private final CustomerRepository customerRepository;
     private final RoomRepository roomRepository;
+    private final CategoryRepository categoryRepository;
 
     public void createOrder(CreateReservarDto createOrderDto) {
         Customer customer = customerRepository.findByCustomerId(createOrderDto.getCustomerId());
@@ -104,19 +102,23 @@ public class OrderServiceImp implements OrderService {
     public Set<CategoryDto> getSearchCategories(Long providerId, List<Room> rooms) {
         Set<CategoryDto> categories = new HashSet<>();
         Set<Room> roomProviders = new HashSet<>();
+        Set<Long> categoryIds = new HashSet<>();
         for (Room room : rooms) {
             if (room.getCategory().getProvider().getProviderId() == providerId) {
                 roomProviders.add(room);
             }
         }
-        int count = roomProviders.size();
         for (Room room : roomProviders) {
-            categories.add(Convert.convertCategory(room.getCategory()));
+            categoryIds.add(room.getCategory().getCategoryId());
+        }
+
+        for (Long categoryId : categoryIds) {
+            categories.add(convertCategory2(categoryId, getSearchRooms(categoryId, roomProviders)));
         }
         return categories;
     }
 
-    public Set<Room> getSearchRooms(Long categoryId, List<Room> rooms) {
+    public Set<Room> getSearchRooms(Long categoryId, Set<Room> rooms) {
         Set<Room> roomCategories = new HashSet<>();
         for (Room room : rooms) {
             if (room.getCategory().getCategoryId() == categoryId) {
@@ -125,5 +127,21 @@ public class OrderServiceImp implements OrderService {
         }
         return roomCategories;
     }
-
+    public CategoryDto convertCategory2(Long categoryId,  Set<Room> rooms ) {
+        Category category = categoryRepository.findByCategoryId(categoryId);
+        List<Long> imgIds = category.getImgRooms().stream().map(img -> img.getImgId()).toList();
+        List<Integer> roomNumbers = rooms.stream().map(room -> room.getRoomNumber()).toList();
+        CategoryDto categoryDto = new CategoryDto().builder()
+                .imgIdCategories(imgIds)
+                .categoryName(category.getCategoryName())
+                .price(category.getPrice())
+                .description(category.getDescription())
+                .person(category.getPerson())
+                .area(category.getArea())
+                .bedType(category.getBedType())
+                .roomNumbers(roomNumbers)
+                .countRoom(rooms.size())
+                .categoryId(category.getCategoryId()).build();
+        return categoryDto;
+    }
 }

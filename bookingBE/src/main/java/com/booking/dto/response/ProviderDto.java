@@ -9,6 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode
 public class ProviderDto {
     private List<Long> imgIdProviders;
     private Long providerId;

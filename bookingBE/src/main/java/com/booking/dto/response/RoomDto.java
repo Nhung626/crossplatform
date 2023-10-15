@@ -7,6 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode
+
 public class RoomDto {
     private Long roomId;
     private int roomNumber;
