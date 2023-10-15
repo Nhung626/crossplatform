@@ -26,7 +26,12 @@ import Notice from './src/screen/loginscreen/notice';
 import GetProvider from './src/screen/testScreen/getProvider';
 import TestHotelScreen from './src/screen/testScreen/testHotelScreen';
 import InfoRoomScreen from './src/screen/searchScreen/infoRoomScreen';
+<<<<<<< Updated upstream
 
+=======
+import ScreenNames from './src/utils/screenNames';
+import LoadingScreen from './src/screen/loginscreen/loadingScreen';
+>>>>>>> Stashed changes
 
 const Stack = createNativeStackNavigator();
 const HidenHeader = {
