@@ -31,7 +31,7 @@ public class ReservarServiceImp implements ReservarService {
                 .customer(customer)
                 .stateReservar(EStateReservar.BOOKED)
                 .stateRooms(new HashSet<>()).build();
-        List<Long> roomIds = Arrays.stream(createOrderDto.getRoomIds().split(",")).map(n -> Long.valueOf(n)).toList();
+        List<Long> roomIds = Arrays.stream(createOrderDto.getRoomIds().split(",")).map(n -> Long.valueOf(n.trim())).toList();
         for (int i = 0; i < roomIds.size(); i++) {
             if (checkState(roomIds.get(i), createOrderDto.getStartDate(), createOrderDto.getEndDate())) {
                 Room room = roomRepository.findByRoomId(roomIds.get(i));
@@ -43,28 +43,41 @@ public class ReservarServiceImp implements ReservarService {
                         .room(room).build();
                 room.getStateRooms().add(stateRoom);
                 reservar.getStateRooms().add(stateRoom);
-                stateRoomRepository.save(stateRoom);
                 roomRepository.save(room);
                 reservarRepository.save(reservar);
+                stateRoomRepository.save(stateRoom);
             } else {
                 throw new CustomException("Phòng không đủ điều kiện đặt.");
             }
         }
-        reservar.callTotal();
-        reservarRepository.save(reservar);
+//        reservar.setTotal(callTotal(reservar.getStateRooms()));
+//        reservarRepository.save(reservar);
+    }
+    public int callTotal(Set<StateRoom> stateRooms) {
+        int total = 0;
+        int price = 0;
+        if (stateRooms != null) {
+            for (StateRoom stateRoom : stateRooms) {
+                price = stateRoom.getRoom().getCategory().getPrice();
+                total += Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays()*price;
+            }
+        }
+        return total;
     }
 
     public boolean checkState(Long roomId, LocalDate start, LocalDate end) {
         boolean check = true;
         Room room = roomRepository.findByRoomId(roomId);
         Set<StateRoom> states = room.getStateRooms();
-        for (StateRoom state : states) {
-            if (state.getStatus() == EStateRoom.BOOKED) {
-                if (start.isAfter(state.getEnd()) || end.isBefore(state.getStart())) {
-                    continue;
-                } else {
-                    check = false;
-                    break;
+        if (states != null) {
+            for (StateRoom state : states) {
+                if (state.getStatus() == EStateRoom.BOOKED) {
+                    if (start.isAfter(state.getEnd()) || end.isBefore(state.getStart())) {
+                        continue;
+                    } else {
+                        check = false;
+                        break;
+                    }
                 }
             }
         }
@@ -73,15 +86,13 @@ public class ReservarServiceImp implements ReservarService {
 
     public List<Room> searchRoom(LocalDate start, LocalDate end, int personCount) {
         List<Room> rooms = roomRepository.findAll();
+        List<Room> result = new ArrayList<>();
         for (Room room : rooms) {
-            if (!checkState(room.getRoomId(), start, end)) {
-                rooms.remove(room);
-            }
-            if (room.getCategory().getPerson() != personCount) {
-                rooms.remove(room);
+            if (checkState(room.getRoomId(), start, end) && room.getCategory().getPerson() == personCount) {
+                result.add(room);
             }
         }
-        return rooms;
+        return result;
     }
 
     public Set<ProviderDto> getSearchProviders(List<Room> rooms) {
@@ -90,16 +101,6 @@ public class ReservarServiceImp implements ReservarService {
             providers.add(Convert.convertProvider(room.getCategory().getProvider()));
         }
         return providers;
-    }
-
-    public Set<Room> getRooms(Long providerId, List<Room> rooms) {
-        Set<Room> roomProviders = new HashSet<>();
-        for (Room room : rooms) {
-            if (room.getCategory().getProvider().getProviderId() == providerId) {
-                roomProviders.add(room);
-            }
-        }
-        return roomProviders;
     }
 
     public Set<CategoryDto> getSearchCategories(Long providerId, List<Room> rooms) {

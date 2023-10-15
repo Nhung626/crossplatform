@@ -35,12 +35,5 @@ public class Reservar {
     private Set<StateRoom> stateRooms = new HashSet<>();
     @Column(name = "total")
     private int total;
-    public void callTotal(){
-        total = 0;
-        for (StateRoom stateRoom : stateRooms) {
-            total+= Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays()* stateRoom.getRoom().getCategory().getPrice();
-        }
-        total = (int) 110*total/100;
-    }
 
 }

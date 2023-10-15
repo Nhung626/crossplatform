@@ -23,7 +23,7 @@ public class ReservarController {
     private final ReservarService reservarService;
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @PostMapping(value = "/createOrder")
+    @PostMapping(value = "/create-order")
     public ResponseEntity<Object> createOrder(@RequestBody CreateReservarDto createOrderDto) {
         reservarService.createOrder(createOrderDto);
         return ResponseEntity.ok("success");

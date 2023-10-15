@@ -103,7 +103,7 @@ public class ProviderController {
                                           @RequestParam("description") String description,
                                           @RequestParam("price") int price,
                                           @RequestParam("roomNumbers") String roomNumbers) throws IOException {
-        List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n)).toList();
+        List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n.trim())).toList();
         CreateCategoryDto createCategoryDto = new CreateCategoryDto().builder()
                 .imgCategories(images)
                 .providerId(getProviderId(principal))
