@@ -6,17 +6,18 @@ import com.booking.dto.response.ProviderDto;
 import com.booking.entity.*;
 import com.booking.exception.CustomException;
 import com.booking.repository.*;
-import com.booking.service.interfaces.OrderService;
+import com.booking.service.interfaces.ReservarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class OrderServiceImp implements OrderService {
+public class ReservarServiceImp implements ReservarService {
     private final OrderRepository reservarRepository;
     private final StateRoomRepository stateRoomRepository;
     private final CustomerRepository customerRepository;
@@ -29,7 +30,7 @@ public class OrderServiceImp implements OrderService {
                 .reservarDate(LocalDateTime.now())
                 .customer(customer)
                 .stateReservar(EStateReservar.BOOKED)
-                .rooms(new HashSet<>()).build();
+                .stateRooms(new HashSet<>()).build();
         List<Long> roomIds = Arrays.stream(createOrderDto.getRoomIds().split(",")).map(n -> Long.valueOf(n)).toList();
         for (int i = 0; i < roomIds.size(); i++) {
             if (checkState(roomIds.get(i), createOrderDto.getStartDate(), createOrderDto.getEndDate())) {
@@ -38,10 +39,10 @@ public class OrderServiceImp implements OrderService {
                         .start(createOrderDto.getStartDate())
                         .end(createOrderDto.getEndDate())
                         .status(EStateRoom.BOOKED)
+                        .reservar(reservar)
                         .room(room).build();
                 room.getStateRooms().add(stateRoom);
-                room.getReservarRooms().add(reservar);
-                reservar.getRooms().add(room);
+                reservar.getStateRooms().add(stateRoom);
                 stateRoomRepository.save(stateRoom);
                 roomRepository.save(room);
                 reservarRepository.save(reservar);
@@ -49,6 +50,8 @@ public class OrderServiceImp implements OrderService {
                 throw new CustomException("Phòng không đủ điều kiện đặt.");
             }
         }
+        reservar.callTotal();
+        reservarRepository.save(reservar);
     }
 
     public boolean checkState(Long roomId, LocalDate start, LocalDate end) {
@@ -127,7 +130,8 @@ public class OrderServiceImp implements OrderService {
         }
         return roomCategories;
     }
-    public CategoryDto convertCategory2(Long categoryId,  Set<Room> rooms ) {
+
+    public CategoryDto convertCategory2(Long categoryId, Set<Room> rooms) {
         Category category = categoryRepository.findByCategoryId(categoryId);
         List<Long> imgIds = category.getImgRooms().stream().map(img -> img.getImgId()).toList();
         List<Integer> roomNumbers = rooms.stream().map(room -> room.getRoomNumber()).toList();

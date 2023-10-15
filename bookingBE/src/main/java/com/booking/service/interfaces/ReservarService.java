@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.List;
 
 @Service
-public interface OrderService {
+public interface ReservarService {
     void createOrder(CreateReservarDto createOrderDto);
     Set<ProviderDto> getSearchProviders(List<Room> rooms);
     Set<CategoryDto> getSearchCategories(Long providerId, List<Room> rooms);

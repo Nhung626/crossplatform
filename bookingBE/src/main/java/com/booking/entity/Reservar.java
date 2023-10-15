@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,20 +31,16 @@ public class Reservar {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = { CascadeType.PERSIST, CascadeType.MERGE },
-            mappedBy = "reservarRooms")
-    private Set<Room> rooms = new HashSet<>();
-
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "reservar")
+    private Set<StateRoom> stateRooms = new HashSet<>();
     @Column(name = "total")
     private int total;
-
-    public void calTotal(){
+    public void callTotal(){
         total = 0;
-        for (Room room : rooms) {
-            total+= room.getCategory().getPrice();
+        for (StateRoom stateRoom : stateRooms) {
+            total+= Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays()* stateRoom.getRoom().getCategory().getPrice();
         }
+        total = (int) 110*total/100;
     }
 
 }

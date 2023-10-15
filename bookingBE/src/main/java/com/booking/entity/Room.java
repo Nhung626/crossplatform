@@ -25,9 +25,5 @@ public class Room {
     private Category category;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "room")
     private Set<StateRoom> stateRooms = new HashSet<>();
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "reservar_room",
-            joinColumns = {@JoinColumn(name = "room_id")},
-            inverseJoinColumns = {@JoinColumn(name = "reservar_id")})
-    private Set<Reservar> reservarRooms = new HashSet<>();
+
 }
