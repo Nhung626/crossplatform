@@ -233,6 +233,24 @@ export const addFavoriteAPI = async (id, token) => {
     }
 }
 
-export const deleteFavorite = async (id, token)=>{
-
+export const deleteFavorite = async (id, token) => {
+    const formData = new FormData();
+    formData.append('providerId', id);
+    try {
+        const response = await axios({
+            method: 'DELETE',
+            url: `${BASE_URL}customer/del-favorite`,
+            data: formData,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.status === 200) {
+            console.log("Đã xóa khỏi yêu thích!");
+            return null
+        }
+    } catch (error) {
+        console.log(error);
+        return null
+    }
 }
