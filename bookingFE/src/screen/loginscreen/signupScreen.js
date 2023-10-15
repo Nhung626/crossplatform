@@ -53,7 +53,7 @@ function SignupScreen() {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Image
               style={[styles.imageLogo]}
-              source={require("../../assets/reservar-01.png")}
+              source={require("../../assets/logoReservar.png")}
             />
           </View>
           <View style={styles.container}>

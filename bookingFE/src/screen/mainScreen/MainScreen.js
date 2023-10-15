@@ -23,7 +23,7 @@ const screenOptions = {
 export default function MainScreen() {
   const route = useRoute()
   const { token, id } = route.params ?? {};
-
+  console.log(token, id)
   return (
     <Tab.Navigator screenOptions={screenOptions}>
 
@@ -50,7 +50,7 @@ export default function MainScreen() {
         }}
         name="HomeScreen"
         component={HomeScreen}
-        initialParams={{ token, id }}
+        initialParams={{ token }}
 
       />
       <Tab.Screen
@@ -74,7 +74,7 @@ export default function MainScreen() {
         }}
         name="Save"
         component={SaveScreen}
-        initialParams={{ token, id }}
+        initialParams={{ token }}
 
       />
       <Tab.Screen
@@ -98,7 +98,7 @@ export default function MainScreen() {
         }}
         name="Book"
         component={BookingScreen}
-        initialParams={{ token, id }}
+        initialParams={{ token }}
 
       />
       <Tab.Screen
@@ -123,7 +123,7 @@ export default function MainScreen() {
         }}
         name="User"
         component={UserScreen}
-        initialParams={{ token, id }}
+        initialParams={{ token }}
 
       />
     </Tab.Navigator>

@@ -17,7 +17,8 @@ export default function Calendar({ isVisible, onClose }) {
     const [startDayOfWeek, setStartDayOfWeek] = useState(null);
     const [endDayOfWeek, setEndDayOfWeek] = useState(null);
     const [countNight, setCountNight] = useState(null);
-    const a = 'hello';
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
 
     const onDateChange = (date, type) => {
         const newData = JSON.stringify(date);
@@ -26,6 +27,8 @@ export default function Calendar({ isVisible, onClose }) {
         const date1 = dates[0].split('-');
         const day = date1[2];
         const month = date1[1];
+        const year = date1[0];
+
 
         if (type === 'END_DATE') {
             if (day === undefined) {
@@ -34,6 +37,7 @@ export default function Calendar({ isVisible, onClose }) {
                 setEndDayOfWeek(null)
             } else {
                 setSelectedEndDate(day + ' Th' + month);
+                setEnd(year + '-' + month + '-' + day)
                 setCountDayEnd(date)
 
                 const dayOfWeek = new Date(date).getDay();
@@ -41,15 +45,16 @@ export default function Calendar({ isVisible, onClose }) {
             }
         } else {
             setSelectedStartDate(day + ' Th' + month);
+            setStart(year + '-' + month + '-' + day);
             setCountDayStart(date)
             setSelectedEndDate('DD/MM');
             setCountDayEnd(null)
 
             const dayOfWeek = new Date(date).getDay();
+            console.log(startDayOfWeek)
             setStartDayOfWeek(weekdays[dayOfWeek]);
         }
     };
-
     useEffect(() => {
         if (startDayOfWeek && endDayOfWeek) {
             const calculatedNight = calculateNightCount();
@@ -125,6 +130,7 @@ export default function Calendar({ isVisible, onClose }) {
                                 startDayOfWeek,
                                 endDayOfWeek,
                                 countNight,
+                                start, end
                             });
                         }}
 

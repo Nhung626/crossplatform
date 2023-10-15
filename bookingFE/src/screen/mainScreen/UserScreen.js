@@ -1,25 +1,23 @@
 import { Text, StyleSheet, Button, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons'
-import { getCustomerApi, getImgCustomerApi } from "../../services/useAPI";
-import { useRoute } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { Logout, getCustomerApi } from "../../services/useAPI";
+import { useState } from "react";
 import { getImgCustomerUrl } from "../../services/baseUrl";
+import ScreenNames from "../../utils/screenNames";
 //import { Logout } from "../services/authService";
 
 export default function UserScreen({ navigation, route }) {
     const [fullName, setFullName] = useState("");
-    const [imageUrl, setImageUrl] = useState("");
-    const { token, id } = route.params ?? {};
+    const [imageUrl, setImageUrl] = useState();
+    const [logout, setLogout] = useState(false);
+    const { token } = route.params ?? {};
 
-    console.log(id)
     const fetchData = async () => {
         try {
-            const response = await getCustomerApi(token, id);
-            if (response.status === 200) {
-                console.log('ok')
+            const response = await getCustomerApi(token);
+            if (response) {
                 setFullName(response.data.fullName);
-                console.log(response.data.avatarId)
                 setImageUrl(getImgCustomerUrl.concat(`?imageId=${response.data.avatarId}`))
             } else {
                 console.error('Request was not successful:', response.status);
@@ -30,13 +28,16 @@ export default function UserScreen({ navigation, route }) {
         }
     };
     fetchData();
-
+    const handleLogout = async () => {
+        await Logout();
+        navigation.navigate(ScreenNames.LOGIN);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Image source={{ uri: imageUrl }}
-                    style={{ height: 180, width: 180, resizeMode: "center", borderRadius: 100, }} />
+                    style={{ height: 180, width: 180, borderRadius: 100, }} />
                 <Text style={{ fontSize: 28, fontWeight: "bold", color: "#fff", marginTop: 10, }}>{fullName}</Text>
             </View>
 
@@ -87,7 +88,7 @@ export default function UserScreen({ navigation, route }) {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleLogout}>
                         <View style={styles.fix}>
                             <Ionicons style={styles.icon} name="log-out-outline" />
                             <Text style={styles.Text}>

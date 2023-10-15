@@ -14,6 +14,7 @@ export default function ShowHotel({
     description,
     address,
     providerPhone,
+    start, end, person, token
 }) {
     const navigation = useNavigation();
 
@@ -25,6 +26,7 @@ export default function ShowHotel({
             description,
             address,
             providerPhone,
+            start, end, person, token
         })} style={{ marginHorizontal: 10 }}>
             <View style={{
                 borderBottomWidth: 1,

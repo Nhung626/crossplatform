@@ -2,9 +2,11 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import axios from 'axios';
 import moment from 'moment';
-export const updateCustomer = (
+import { BASE_URL } from './baseUrl';
+
+
+export const updateCustomer = async (
     token,
-    id,
     image,
     fullName,
     gender,
@@ -26,10 +28,12 @@ export const updateCustomer = (
     formData.append('address', address);
     formData.append('customerCode', customerCode);
     formData.append('dateOfBirth', moment(dateOfBirth).format('YYYY-MM-DD'));
+    console.log("formData nè", formData)
     try {
-        const response = axios({
+        //const token = getToken()
+        const response = await axios({
             method: "POST",
-            url: `${BASE_URL}customer/update/${id}`,
+            url: `${BASE_URL}customer/update`,
             data: formData,
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -37,6 +41,7 @@ export const updateCustomer = (
             }
         })
         if (response.status === 200) {
+            console.log("đăng ký thành công!")
             return response
         }
     }
@@ -45,3 +50,4 @@ export const updateCustomer = (
         return null
     }
 }
+

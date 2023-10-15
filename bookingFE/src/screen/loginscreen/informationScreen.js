@@ -35,7 +35,6 @@ export default function InformationScreen() {
   const [image, setImage] = useState(null);
 
   const [token, setToken] = useState("")
-  const [customerId, setCustomerId] = useState(0)
 
   // const route = useRoute();
   // const { token, id } = route.params ?? {};
@@ -46,20 +45,16 @@ export default function InformationScreen() {
   useEffect(() => {
     const getTokenId = async () => {
       const token = await getToken();
+      
       setToken(token)
-
-      const id = await getIdCustm()
-      setCustomerId(id)
     }
     getTokenId();
 
   }, [])
   console.log("token: ", token)
-  console.log("id: ", customerId)
 
   const handleSaveInformation = async () => {
     const update = await updateCustomer(token,
-      customerId,
       image,
       fullName,
       gender,
@@ -67,8 +62,11 @@ export default function InformationScreen() {
       address,
       customerCode,
       dateOfBirth)
+
     navigation.navigate("MainScreen")
-  };
+  }; 
+  console.log('từ info',
+  dateOfBirth)
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({

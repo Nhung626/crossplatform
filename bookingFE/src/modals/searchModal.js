@@ -1,14 +1,17 @@
 import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Icon from "react-native-feather"
 import NumOfPeople from './numOfPeople'
 import { themeColor } from '../utils/theme'
 import Calendar from './calendarPicker'
+import ScreenNames from '../utils/screenNames'
+import { getToken } from '../services/useAPI'
 export default function SearchModal() {
-    const navigation = useNavigation()
+    const navigation = useNavigation();
+    const [token, setToken] = useState('');
     const route = useRoute;
-    const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount, countNight } = route.params ?? {};
+    const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount, countNight, start, end } = route.params ?? {};
     const [numOfPeopleModalVisible, setNumOfPeopleModalVisible] = useState(false);
     const [calendarModalVisible, setCalendarModalVisible] = useState(false)
     const [numOfPeopleData, setNumOfPeopleData] = useState({
@@ -16,8 +19,16 @@ export default function SearchModal() {
         peopleCount
     });
     const [calendarData, setCalendarData] = useState({
-        startDate, endDate, startDayOfWeek, countNight, endDayOfWeek
+        startDate, endDate, startDayOfWeek, countNight, endDayOfWeek, start, end
     });
+    useEffect(() => {
+        const getTokenId = async () => {
+            const token = await getToken();
+            setToken(token)
+        }
+        getTokenId();
+
+    }, [])
     const handleNumOfPeopleClose = (data) => {
         setNumOfPeopleData(data);
         setNumOfPeopleModalVisible(false);
@@ -26,6 +37,17 @@ export default function SearchModal() {
         setCalendarData(data);
         setCalendarModalVisible(false);
     }
+    console.log(calendarData.start, calendarData.end)
+    console.log(numOfPeopleData.peopleCount)
+    const handleSearch = () => {
+        navigation.navigate(ScreenNames.SEARCHVALUE, {
+            start: calendarData.start,
+            end: calendarData.end,
+            person: numOfPeopleData.peopleCount,
+            token: token
+        })
+    }
+
     return (
         <View style={{ borderWidth: 2, borderColor: themeColor.bgColor, borderRadius: 6, marginHorizontal: 10 }}>
             <TouchableOpacity style={styles.searchContainer}
@@ -65,7 +87,7 @@ export default function SearchModal() {
                 onPress={() => setNumOfPeopleModalVisible(true)}>
                 <Icon.User height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
                 <Text style={styles.searchText}>
-                    {numOfPeopleData.roomCount ? (
+                    {numOfPeopleData.peopleCount ? (
                         <>
                             <Text> {numOfPeopleData.roomCount} Phòng </Text>
                             <Text> • </Text>
@@ -83,7 +105,7 @@ export default function SearchModal() {
                 />
             )}
             <TouchableOpacity
-                onPress={() => navigation.navigate('SearchValue')}
+                onPress={handleSearch}
                 style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor, borderBottomEndRadius: 5, borderBottomStartRadius: 5 }}
             >
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Tìm</Text>

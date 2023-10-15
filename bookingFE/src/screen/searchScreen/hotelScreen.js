@@ -5,9 +5,11 @@ import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getImgCustomerUrl } from '../../services/baseUrl';
-import { getAllCategoryAPI } from '../../services/useAPI';
-import FeaturedRow from '../../components/showHotel';
 import ShowRoom from '../../components/showRoom';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectHotel, selectSelectedHotel } from '../../redux/slices/hotelSlice';
+import { addFavoriteAPI, getAllRoomAPI } from '../../services/useAPI';
+
 export default function HotelScreen() {
     const { params: {
         id,
@@ -15,40 +17,58 @@ export default function HotelScreen() {
         imageHotel,
         description,
         address,
+        start, end, person, token
+
     } } = useRoute();
+
     const navigation = useNavigation();
     const [data, setData] = useState("");
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await getAllCategoryAPI(id);
-                if (response.status === 200) {
-                    setData(response.data)
-                } else {
-                    console.log(response.status)
-                }
-            } catch (error) {
-                console.error(error)
-            }
-        }
-        fetchData();
-    }, []);
-    const [selectedRooms, setSelectedRooms] = useState([]);
-    const handleSelectRoom = (room) => {
-        if (!selectedRooms.includes(room.id)) {
-            // Nếu phòng chưa được chọn, thêm vào danh sách
-            setSelectedRooms([...selectedRooms, room.id]);
+    const [favorite, setFavorite] = useState(false);
 
-            // Chuyển đến màn hình thanh toán và truyền thông tin phòng
-            navigation.navigate('PaymentScreen', { selectedRoom: room });
+    const hotel = useSelector(selectSelectedHotel);
+
+    let dispatch = useDispatch();
+
+    console.log(" datat", id, start, end, person, token)
+
+    useEffect(() => {
+        if (token && person && start && end) {
+            const fetchDataFromAPI = async () => {
+                const response = await getAllRoomAPI(id, start, end, person, token);
+                if (response) {
+                    dispatch(selectHotel({
+                        id,
+                        name,
+                        imageHotel,
+                        description,
+                        address,
+                    }));
+                    setData(response);
+                    console.log(data)
+                }
+            };
+            fetchDataFromAPI();
         }
-    };
+    }, []);
+
+    const handleFavotite = async () => {
+        await addFavoriteAPI(id, token);
+
+    }
     const screenWidth = Dimensions.get("window").width;
     return (
         <SafeAreaView style={{ backgroundColor: themeColor.bgModalColor }}>
 
             <StatusBar style='light' backgroundColor={themeColor.bgColor} />
-
+            <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 50, zIndex: 1000, paddingHorizontal: 10 }}>
+                <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>
+                    <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleFavotite}
+                    style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }}>
+                    <Icon.Heart height={30} width={30} strokeWidth="2" stroke="white" style={{ marginHorizontal: 10 }} fill='white' />
+                </TouchableOpacity>
+            </View>
             {/* Header bar */}
             <ScrollView>
                 <ScrollView horizontal
@@ -71,14 +91,7 @@ export default function HotelScreen() {
                 <View style={styles.container}>
 
 
-                    <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10 }}>
-                        <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>
-                            <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
-                        </TouchableOpacity>
-                        <View style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }}>
-                            <Icon.Heart height={30} width={30} strokeWidth="2" stroke="white" style={{ marginHorizontal: 10 }} fill='white' />
-                        </View>
-                    </View>
+
                     {/* Content */}
                     <View style={{
                         backgroundColor: 'white', paddingTop: 24
