@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons';
 import SearchModal from "../../modals/searchModal";
@@ -7,6 +7,8 @@ import { themeColor } from "../../utils/theme";
 export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style='light' backgroundColor={themeColor.bgColor} />
+
       <View style={styles.header}>
         <Text style={styles.headerText}>Reservar</Text>
         <Ionicons style={styles.Icon1} name="chatbubble-outline"></Ionicons>

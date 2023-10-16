@@ -70,7 +70,6 @@ export default function HotelScreen() {
     const screenWidth = Dimensions.get("window").width;
     return (
         <SafeAreaView style={{ backgroundColor: themeColor.bgModalColor }}>
-
             <StatusBar style='light' backgroundColor={themeColor.bgColor} />
             <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 50, zIndex: 1000, paddingHorizontal: 10 }}>
                 <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>

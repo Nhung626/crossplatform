@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, Image } from 'react-native'
+import { View, Text, ImageBackground, Image, StatusBar } from 'react-native'
 import React, { useEffect } from 'react'
 import { getToken } from '../../services/useAPI'
 import ScreenNames from '../../utils/screenNames';
@@ -26,6 +26,8 @@ export default function LoadingScreen({ navigation }) {
     }, []);
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <StatusBar style='light' backgroundColor={themeColor.bgColor} />
+
             <ImageBackground
                 style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
                 source={require('../../assets/images/background/background.png')}>

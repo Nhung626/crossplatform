@@ -5,6 +5,7 @@ const ScreenNames = {
     INFOCUSTOMER: "InformationScreen",
 
     MAIN: "MainScreen",
+    HOME: "HomeScreen",
     USER: "UserScreen",
     SAVE: "SaveScreen",
     BOOKING: "BookingScreen",

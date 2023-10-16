@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./homeScreen";
 import { themeColor } from "../../utils/theme";
 import { useRoute } from "@react-navigation/native";
+import ScreenNames from "../../utils/screenNames";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -22,10 +23,10 @@ const screenOptions = {
 }
 export default function MainScreen() {
   const route = useRoute()
-  const { token, id } = route.params ?? {};
-  console.log(token, id)
+  const { token } = route.params ?? {};
+  console.log(token)
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator screenOptions={screenOptions} initialRouteName={ScreenNames.HOME}>
 
       <Tab.Screen
         options={{
