@@ -2,7 +2,7 @@ import { Text, StyleSheet, StatusBar, View, Image, TouchableOpacity, ScrollView 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons'
 import { Logout, getCustomerApi } from "../../services/useAPI";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getImgCustomerUrl } from "../../services/baseUrl";
 import ScreenNames from "../../utils/screenNames";
 import { themeColor } from "../../utils/theme";
@@ -14,21 +14,24 @@ export default function UserScreen({ navigation, route }) {
     const [logout, setLogout] = useState(false);
     const { token } = route.params ?? {};
 
-    const fetchData = async () => {
-        try {
-            const response = await getCustomerApi(token);
-            if (response) {
-                setFullName(response.data.fullName);
-                setImageUrl(getImgCustomerUrl.concat(`?imageId=${response.data.avatarId}`))
-            } else {
-                console.error('Request was not successful:', response.status);
-            }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await getCustomerApi(token);
+                if (response) {
+                    setFullName(response.data.fullName);
+                    setImageUrl(getImgCustomerUrl.concat(`?imageId=${response.data.avatarId}`))
+                } else {
+                    console.error('Request was not successful:', response.status);
+                }
 
-        } catch (error) {
-            console.error('There was a problem with the request:', error);
-        }
-    };
-    fetchData();
+            } catch (error) {
+                console.error('There was a problem with the request:', error);
+            }
+        };
+        fetchData();
+    }, [fullName])
+
     const handleLogout = async () => {
         await Logout();
         navigation.navigate(ScreenNames.LOGIN);
