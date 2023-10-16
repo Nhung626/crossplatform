@@ -1,10 +1,11 @@
-import { Text, StyleSheet, Button, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import { Text, StyleSheet, StatusBar, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons'
 import { Logout, getCustomerApi } from "../../services/useAPI";
 import { useState } from "react";
 import { getImgCustomerUrl } from "../../services/baseUrl";
 import ScreenNames from "../../utils/screenNames";
+import { themeColor } from "../../utils/theme";
 //import { Logout } from "../services/authService";
 
 export default function UserScreen({ navigation, route }) {
@@ -35,6 +36,8 @@ export default function UserScreen({ navigation, route }) {
 
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar style='light' backgroundColor={themeColor.bgColor} />
+
             <View style={styles.header}>
                 <Image source={{ uri: imageUrl }}
                     style={{ height: 180, width: 180, borderRadius: 100, }} />
@@ -43,7 +46,7 @@ export default function UserScreen({ navigation, route }) {
 
             <View style={styles.body}>
                 <ScrollView style={styles.scroll}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate(ScreenNames.INFOCUSTOMER, { token: token })}>
                         <View style={styles.fix}>
                             <Ionicons style={styles.icon} name="person-circle-outline" />
                             <Text style={styles.Text}>

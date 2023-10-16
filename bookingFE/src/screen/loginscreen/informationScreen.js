@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
-  Image
+  Image,
+  StatusBar
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -18,6 +19,7 @@ import { themeColor } from "../../utils/theme";
 import moment from "moment";
 import * as ImagePicker from 'expo-image-picker';
 import { updateCustomer } from "../../services/userServices";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function InformationScreen() {
@@ -45,7 +47,7 @@ export default function InformationScreen() {
   useEffect(() => {
     const getTokenId = async () => {
       const token = await getToken();
-      
+
       setToken(token)
     }
     getTokenId();
@@ -64,9 +66,9 @@ export default function InformationScreen() {
       dateOfBirth)
 
     navigation.navigate("MainScreen")
-  }; 
+  };
   console.log('từ info',
-  dateOfBirth)
+    dateOfBirth)
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -82,7 +84,9 @@ export default function InformationScreen() {
     }
   };
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar style='light' backgroundColor={themeColor.bgColor} />
+
       <ImageBackground
         resizeMode="cover"
         source={require("../../assets/images/background/background.png")}
@@ -194,7 +198,7 @@ export default function InformationScreen() {
 
         </ScrollView>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 };
 

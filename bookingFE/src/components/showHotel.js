@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import { themeColor } from '../utils/theme'
 import * as Icon from "react-native-feather";
@@ -19,50 +19,76 @@ export default function ShowHotel({
     const navigation = useNavigation();
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('Hotel', {
-            id,
-            name,
-            imageHotel,
-            description,
-            address,
-            providerPhone,
-            start, end, person, token
-        })} style={{ marginHorizontal: 10 }}>
-            <View style={{
-                borderBottomWidth: 1,
-                borderBottomColor: 'gray',
-            }}>
-                <View style={{
-                    flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginLeft: 10, marginRight: 10,
-                    marginBottom: 10, marginTop: 10
-                }}>
+        <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.navigate('Hotel', {
+                id,
+                name,
+                imageHotel,
+                description,
+                address,
+                providerPhone,
+                start, end, person, token
+            })} >
+                <View style={styles.boxStyle}>
                     <View style={{ alignItems: 'center', marginRight: 4 }}>
                         <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={{ uri: getImgCustomerUrl.concat(`?imageId=${imageHotel[0]}`) }} />
                     </View>
-                    <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <View >
+                    <View style={{ flex: 1 }}>
+                        <View style={{ rowGap: 5 }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap' }}>{name}</Text>
-                            <Text>{address}</Text>
-                            <Text>{description}</Text>
-                            <Text>{providerPhone}</Text>
-                            <Text></Text>
+                            <View style={styles.boxText}>
+                                <Icon.Info color={'gray'} width={15} height={15} />
+                                <Text style={styles.textInfo}>{description}</Text>
 
+                            </View>
 
-                            <View style={{ flexDirection: 'row' }}>
-                                <Icon.MapPin color='gray' width={15} height={15} style={{ marginHorizontal: 5 }} />
-                                <View style={{ flex: 1, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                            <View style={styles.boxText}>
+                                <Icon.Phone color={'gray'} width={15} height={15} />
+                                <Text style={styles.textInfo}>{providerPhone}</Text>
 
-                                </View>
+                            </View>
+                            <View style={styles.boxText}>
+                                <Icon.MapPin color='gray' width={15} height={15} />
+                                <Text style={styles.textInfo}>{address}</Text>
                             </View>
                         </View>
                     </View>
 
                 </View>
-            </View>
 
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </View>
+
 
 
 
     )
 }
+const styles = StyleSheet.create({
+    container: {
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 5, // Cho Android
+        marginVertical: 10,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        marginHorizontal: 10,
+    },
+    boxStyle: {
+        margin: 10,
+        flexDirection: "row"
+    },
+    boxText: {
+        flex: 1,
+        flexDirection: 'row',
+        columnGap: 10,
+        alignItems: 'center',
+    },
+    textInfo: {
+        flex: 1,
+        flexWrap: 'wrap',
+        textAlign: 'left'
+    },
+
+});
