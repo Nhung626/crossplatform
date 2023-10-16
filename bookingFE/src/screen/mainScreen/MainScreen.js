@@ -26,7 +26,7 @@ export default function MainScreen() {
   const { token } = route.params ?? {};
   console.log(token)
   return (
-    <Tab.Navigator screenOptions={screenOptions} initialRouteName={ScreenNames.HOME}>
+    <Tab.Navigator screenOptions={screenOptions} initialRouteName={"HomeScreen"}>
 
       <Tab.Screen
         options={{

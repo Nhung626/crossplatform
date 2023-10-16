@@ -67,8 +67,7 @@ export default function InformationScreen() {
 
     navigation.navigate("MainScreen")
   };
-  console.log('từ info',
-    dateOfBirth)
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
