@@ -1,46 +1,35 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import config from '../api-config';
+import { useNavigation } from '@react-navigation/native'; 
 
-const apiUrl = `${config.apiHost}:${config.apiPort}`;
+import { loginApi } from "../services/useAPI";
+
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  // const [token, setToken] = useState('');
+  
   const handleLogin = async () => {
-    if (!email || !password) {
-      alert("Vui lòng nhập tài khoản và mật khẩu.");
-      return;
-    }
+    const user = {
+      email: email,
+      password: password,
+    };
+    console.log(user)
 
     try {
-      const data = {
-        email: email,
-        password: password,
-      };
-
-      const response = await fetch(
-        `${apiUrl}/api/v1/customer/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (response.ok) {
-        // Đăng nhập thành công, bạn có thể xử lý phản hồi ở đây
-        // Ví dụ: chuyển hướng người dùng đến màn hình chính
-        navigation.navigate('CreateroomScreen');
-      } else {
-        // Đăng nhập thất bại, hiển thị thông báo lỗi
-        Alert.alert('Lỗi', 'Đăng nhập thất bại. Vui lòng kiểm tra tài khoản và mật khẩu.');
+      const response = await loginApi(user)
+      // console.log(response.data.token)
+      if (response.status === 200) {
+        const token = response.data.token
+        // const id = response.data.id;
+        navigation.navigate('CreateroomScreen', {token})
+        console.log("Đăng nhập thành công", token);
       }
     } catch (error) {
-      console.error('Lỗi khi thực hiện đăng nhập:', error);
+      console.error("Lỗi khi gửi yêu cầu đăng nhập:", error.response);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     }
   };
 

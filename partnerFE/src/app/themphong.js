@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useRoute,useNavigation } from "@react-navigation/native";
+import { providerAddRoom } from "../services/useAPI";
 
 export default function Themphong() {
-  const [images, setImages] = useState([]);
-  const [hotelName, setHotelName] = useState('');
-  const [location, setLocation] = useState('');
-  const [roomName, setRoomName] = useState('');
+  const [imgCategories, setImgCategories] = useState([]);
+  const [categoryName, setCategoryName] = useState('');
+  const [person, setPerson] = useState('');
   const [area, setArea] = useState('');
-  const [beds, setBeds] = useState('');
-  const [convenients, setConvenients] = useState('');
-  const [availability, setAvailability] = useState('');
+  const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [roomNumbers, setRoomNumbers] = useState('');
+  const [bedType, setBedType] = useState('');
 
-  const handleImagePick = async () => {
+  const route = useRoute();
+  const { token } = route.params ?? {};
+  // console.log(token, id); 
+
+  const handleImagePickRoom = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
@@ -26,64 +31,88 @@ export default function Themphong() {
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
     } else {
-      // Lấy danh sách ảnh đã chọn
       const selectedImages = result.assets.map((asset) => asset.uri);
-      setImages([...images, ...selectedImages]);
+      setImgCategories([...imgCategories, ...selectedImages]);
     }
   };
 
   const handleRemoveImage = (indexToRemove) => {
-    const updatedImages = [...images];
-    updatedImages.splice(indexToRemove, 1);
-    setImages(updatedImages);
+    const updatedImgCategories = [...imgCategories];
+    updatedImgCategories.splice(indexToRemove, 1);
+    setImgCategories(updatedImgCategories);
   };
 
-  const handleAddHotel = () => {
-    // Thực hiện việc lưu thông tin khách sạn vào cơ sở dữ liệu hoặc thực hiện các hành động khác ở đây
+  const renderItem = ({ item, index }) => (
+    <View style={styles.imageItem}>
+      <Image source={{ uri: item }} style={styles.selectedImage} />
+      <TouchableOpacity
+        onPress={() => handleRemoveImage(index)}
+        style={styles.removeButton}
+      >
+        <Text style={styles.removeButtonText}>Xóa</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const handleAddRoom = async () => {
+    const navigation = useNavigation();
+    const formData = new FormData();
+    
+    imgCategories.forEach((img, index) => {
+      formData.append(`imgCategories`, {
+        uri: img,
+        type: 'image/png', // Thay đổi loại hình ảnh nếu cần
+        name: `image_${index}.png`,
+      });
+    });
+    formData.append('categoryName', categoryName);
+    formData.append('person', person);
+    formData.append('area', area);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('roomNumbers', roomNumbers);   
+    formData.append('bedType', bedType);
+
+    try {
+      const response = await providerAddRoom(formData, token);
+        
+      if (response.status === 200) {
+        console.log("Thông tin đã được lưu thành công.");
+        navigation.navigate('CreateroomScreen')
+      } else {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error);
+    }
   };
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.imageContainer}>
-        {images.map((imageUri, index) => (
-          <View key={index} style={styles.imageItem}>
-            <Image source={{ uri: imageUri }} style={styles.selectedImage} />
-            <TouchableOpacity
-              onPress={() => handleRemoveImage(index)}
-              style={styles.removeButton}
-            >
-              <Text style={styles.removeButtonText}>Xóa</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+      <FlatList
+        style={{ top: 40 }}
+        data={imgCategories}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal
+      />
 
-        <TouchableOpacity
-          onPress={handleImagePick}
-          style={[styles.buttonThem, { backgroundColor: '#DE5223', width: 100, height: 50 }]}
-        >
-          <Text style={[styles.textInput, { fontSize: 15, color: '#fff', textAlign: 'center', alignSelf: 'center', paddingTop: 13 }]}>
-            Nhập ảnh
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={handleImagePickRoom}>
+        <Image source={require('../assets/add-img-icon.png')} style={styles.addImageIcon} />
+      </TouchableOpacity>
 
       <TextInput
-        style={styles.input}
-        placeholder="Tên khách sạn"
-        value={hotelName}
-        onChangeText={(text) => setHotelName(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Vị trí khách sạn"
-        value={location}
-        onChangeText={(text) => setLocation(text)}
-      />
-       <TextInput
         style={styles.input}
         placeholder="Tên phòng"
-        value={roomName}
-        onChangeText={(text) => setRoomName(text)}
+        value={categoryName}
+        onChangeText={(text) => setCategoryName(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Số người"
+        value={person}
+        onChangeText={(text) => setPerson(text)}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
@@ -95,23 +124,21 @@ export default function Themphong() {
       <TextInput
         style={styles.input}
         placeholder="Loại giường"
-        value={beds}
-        onChangeText={(text) => setBeds(text)}
+        value={bedType}
+        onChangeText={(text) => setBedType(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Số phòng"
+        value={roomNumbers}
+        onChangeText={(text) => setRoomNumbers(text)}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
-        placeholder="Tiện nghi"
-        value={convenients}
-        onChangeText={(text) => setConvenients(text)}
-        keyboardType="text"
-      />
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Tình trạng phòng (Còn/Hết/Đang sử chữa)"
-        value={availability}
-        onChangeText={(text) => setAvailability(text)}
+        placeholder="Mô tả thêm"
+        value={description}
+        onChangeText={(text) => setDescription(text)}
       />
       <TextInput
         style={styles.input}
@@ -120,15 +147,12 @@ export default function Themphong() {
         onChangeText={(text) => setPrice(text)}
         keyboardType="numeric"
       />
-      
-      
+
       <TouchableOpacity
-        onPress={handleAddHotel}
-        style={[styles.buttonThem, { backgroundColor: '#DE5223' }]}
+        onPress={handleAddRoom}
+        style={styles.addButton}
       >
-        <Text style={[styles.textInput, { fontSize: 20, color: '#fff', textAlign: 'center', alignSelf: 'center', paddingTop: 5 }]}>
-          Thêm phòng
-        </Text>
+        <Text style={styles.addButtonText}>Thêm phòng</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -139,47 +163,55 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  imageContainer: {
-    marginTop: 50,
-    alignItems: 'center',
-    marginBottom: 16,
-    marginTop: 100,
-    flexDirection: 'row', // Hiển thị ảnh theo hàng ngang
-    flexWrap: 'wrap',     // Cho phép các ảnh tràn hàng
-  },
   imageItem: {
-    marginRight: 10,      // Khoảng cách giữa các ảnh ngang
-    marginBottom: 10,     // Khoảng cách giữa các ảnh dọc
-    position: 'relative', // Cho phép sử dụng position
+    marginRight: 10,
+    marginBottom: 10,
+    position: 'relative',
   },
   selectedImage: {
-    width: 100,            // Kích thước ảnh
+    width: 100,
     height: 100,
   },
   removeButton: {
-    backgroundColor: 'red',      // Màu nền của nút xóa
-    width: 60,                   // Kích thước nút xóa
+    backgroundColor: 'red',
+    width: 60,
     height: 30,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    position: 'absolute',        // Vị trí tuyệt đối để đặt nút xóa
-    top: 0,                      // Đặt nút xóa ở góc trên cùng bên phải của ảnh
+    position: 'absolute',
+    top: 0,
     right: 0,
   },
   removeButtonText: {
-    color: 'white',             // Màu văn bản của nút xóa
+    color: 'white',
+  },
+  addImageIcon: {
+    width: 100,
+    height: 100,
+    bottom: 10,
+    left: 130,
+    top: 50,
+    marginBottom: 40,
   },
   input: {
-    height: 40,
+    height: 50,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 10,
+    marginBottom: 20,
     paddingHorizontal: 10,
+    borderRadius: 10,
   },
-  buttonThem: {
+  addButton: {
     height: 40,
     borderRadius: 10,
     borderWidth: 1,
+    backgroundColor: '#DE5223',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addButtonText: {
+    fontSize: 20,
+    color: '#fff',
   },
 });

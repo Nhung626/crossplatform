@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 // import config from '../utils/api-config.json';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import { signUpApi } from "../services/useAPI";
+
 // const apiUrl = `${config.apiHost}:${config.apiPort}`;
 const CreateAccount = () => {
   const navigation = useNavigation();
@@ -30,37 +32,19 @@ const CreateAccount = () => {
       alert("Mật khẩu và xác nhận mật khẩu không khớp.");
       return;
     }
-
     const user = {
       email: email,
       password: password,
     };
-    // dispatch(registerUser(user));
     try {
-      const response = await fetch(
-        `http://192.168.0.240:3000/api/v1/customer/auth/sign-up`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        }
-      );
-
-      if (response.ok) {
-        // Lưu trữ token vào AsyncStorage sau khi đăng ký thành công
-        // const tokenData = await response.json();
-        // await AsyncStorage.setItem("authToken", tokenData.token);
-        navigation.navigate("CreateroomScreen");
-      }
-      else {
-        const errorData = await response.json();
-        alert(`Đăng ký thất bại: ${errorData.message}`);
+      const response = await signUpApi(user);
+      if (response.status === 200) {
+        console.log('Đăng ký thành công')
+        navigation.navigate("CreateroomScreen", { user })
       }
     } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu đăng ký:", error);
-      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      console.log(user)
+      console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error);
     }
   };
 
