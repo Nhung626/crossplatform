@@ -23,7 +23,7 @@ public class FavoriteServiceImp implements FavoriteService {
         Favorite favorite = favoriteRepository.findByCustomerId(customerId);
         Provider provider = providerRepository.findByProviderId(providerId);
         favorite.getProviders().add(provider);
-        favoriteRepository.save(favorite);
+//        favoriteRepository.save(favorite);
         provider.getFavoriteCustomers().add(favorite);
         providerRepository.save(provider);
     }
@@ -32,7 +32,7 @@ public class FavoriteServiceImp implements FavoriteService {
         Favorite favorite = favoriteRepository.findByCustomerId(customerId);
         Provider provider = providerRepository.findByProviderId(providerId);
         favorite.getProviders().remove(provider);
-        favoriteRepository.save(favorite);
+//        favoriteRepository.save(favorite);
         provider.getFavoriteCustomers().remove(favorite);
         providerRepository.save(provider);
     }

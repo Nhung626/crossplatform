@@ -12,13 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
-
+import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class ReservarServiceImp implements ReservarService {
-    private final OrderRepository reservarRepository;
+    private final ReservarRepository reservarRepository;
     private final StateRoomRepository stateRoomRepository;
     private final CustomerRepository customerRepository;
     private final RoomRepository roomRepository;
@@ -31,10 +30,11 @@ public class ReservarServiceImp implements ReservarService {
                 .customer(customer)
                 .stateReservar(EStateReservar.BOOKED)
                 .stateRooms(new HashSet<>()).build();
-        List<Long> roomIds = Arrays.stream(createOrderDto.getRoomIds().split(",")).map(n -> Long.valueOf(n.trim())).toList();
-        for (int i = 0; i < roomIds.size(); i++) {
-            if (checkState(roomIds.get(i), createOrderDto.getStartDate(), createOrderDto.getEndDate())) {
-                Room room = roomRepository.findByRoomId(roomIds.get(i));
+        reservarRepository.save(reservar);
+        List<Room> rooms = getRoomReservar(createOrderDto.getCategory(), createOrderDto.getRoomCount());
+        for (int i = 0; i < rooms.size(); i++) {
+            if (checkState(rooms.get(i), createOrderDto.getStartDate(), createOrderDto.getEndDate())) {
+                Room room = rooms.get(i);
                 StateRoom stateRoom = new StateRoom().builder()
                         .start(createOrderDto.getStartDate())
                         .end(createOrderDto.getEndDate())
@@ -42,32 +42,30 @@ public class ReservarServiceImp implements ReservarService {
                         .reservar(reservar)
                         .room(room).build();
                 room.getStateRooms().add(stateRoom);
-                reservar.getStateRooms().add(stateRoom);
                 roomRepository.save(room);
+                reservar.getStateRooms().add(stateRoom);
                 reservarRepository.save(reservar);
-                stateRoomRepository.save(stateRoom);
             } else {
                 throw new CustomException("Phòng không đủ điều kiện đặt.");
             }
         }
-//        reservar.setTotal(callTotal(reservar.getStateRooms()));
-//        reservarRepository.save(reservar);
+        reservar.callTotal();
+        reservarRepository.save(reservar);
     }
-    public int callTotal(Set<StateRoom> stateRooms) {
-        int total = 0;
-        int price = 0;
-        if (stateRooms != null) {
-            for (StateRoom stateRoom : stateRooms) {
-                price = stateRoom.getRoom().getCategory().getPrice();
-                total += Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays()*price;
-            }
+    public List<Room> getRoomReservar(CategoryDto categoryDto, int n) {
+        List<Room> roomReservars = new ArrayList<>();
+        List<Integer> roomNumbers = categoryDto.getRoomNumbers();
+        Random random = new Random();
+        for (int i = 0; i < n; i++) {
+            int randomIndex = random.nextInt(roomNumbers.size()); // Sinh một số ngẫu nhiên từ 0 đến (số phần tử trong mảng - 1)
+            Room room = roomRepository.findByNumber(categoryDto.getCategoryId(),roomNumbers.get(randomIndex));
+            roomReservars.add(room);
         }
-        return total;
+        return  roomReservars;
     }
 
-    public boolean checkState(Long roomId, LocalDate start, LocalDate end) {
+    public boolean checkState(Room room, LocalDate start, LocalDate end) {
         boolean check = true;
-        Room room = roomRepository.findByRoomId(roomId);
         Set<StateRoom> states = room.getStateRooms();
         if (states != null) {
             for (StateRoom state : states) {
@@ -88,7 +86,7 @@ public class ReservarServiceImp implements ReservarService {
         List<Room> rooms = roomRepository.findAll();
         List<Room> result = new ArrayList<>();
         for (Room room : rooms) {
-            if (checkState(room.getRoomId(), start, end) && room.getCategory().getPerson() == personCount) {
+            if (checkState(room, start, end) && room.getCategory().getPerson() == personCount) {
                 result.add(room);
             }
         }

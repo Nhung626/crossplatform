@@ -36,9 +36,9 @@ public class Provider {
             inverseJoinColumns = {@JoinColumn(name = "favorite_id")})
     private Set<Favorite> favoriteCustomers = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "provider")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "provider")
     private Set<Category> categories = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "provider")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "provider")
     private Set<Image> imgProviders = new HashSet<>();
 
 

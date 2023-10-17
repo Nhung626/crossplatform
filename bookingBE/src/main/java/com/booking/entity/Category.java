@@ -33,8 +33,8 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "provider_id")
     private Provider provider;
-    @OneToMany (fetch = FetchType.LAZY, mappedBy = "category")
+    @OneToMany (fetch = FetchType.LAZY , cascade = CascadeType.ALL, mappedBy = "category")
     private Set<Image> imgRooms = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "category")
     private Set<Room> rooms = new HashSet<>();
 }

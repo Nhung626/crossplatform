@@ -31,9 +31,19 @@ public class Reservar {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "reservar")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "reservar")
     private Set<StateRoom> stateRooms = new HashSet<>();
     @Column(name = "total")
     private int total;
 
+    public void callTotal() {
+        int price;
+        if (stateRooms.size() != 0) {
+            for (StateRoom stateRoom : stateRooms) {
+                price = stateRoom.getRoom().getCategory().getPrice();
+                total += Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays() * price;
+            }
+        }
+        total= 110/100*total;
+    }
 }

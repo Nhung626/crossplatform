@@ -13,6 +13,7 @@ import java.util.List;
 @Service
 public interface ReservarService {
     void createOrder(CreateReservarDto createOrderDto);
+//    void callTotal(Long reservarId);
     Set<ProviderDto> getSearchProviders(List<Room> rooms);
     Set<CategoryDto> getSearchCategories(Long providerId, List<Room> rooms);
     Set<Room> getSearchRooms(Long categoryId,  Set<Room> rooms);

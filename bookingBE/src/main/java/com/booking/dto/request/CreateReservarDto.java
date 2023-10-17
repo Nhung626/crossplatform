@@ -1,6 +1,7 @@
 package com.booking.dto.request;
 import java.time.LocalDate;
 
+import com.booking.dto.response.CategoryDto;
 import lombok.*;
 
 @Builder
@@ -10,7 +11,8 @@ import lombok.*;
 @Getter
 public class CreateReservarDto {
     private Long customerId;
-    private String roomIds;
+    private CategoryDto category;
+    private int roomCount;
     private LocalDate startDate;
     private LocalDate endDate;
 }
