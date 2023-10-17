@@ -30,9 +30,6 @@ import TestHotelScreen from './src/screen/testScreen/testHotelScreen';
 import InfoRoomScreen from './src/screen/searchScreen/infoRoomScreen';
 import ScreenNames from './src/utils/screenNames';
 import LoadingScreen from './src/screen/loginscreen/loadingScreen';
-import { Provider } from 'react-redux';
-import { store } from './store'
-import hotelSlice from './src/redux/slices/hotelSlice';
 
 const Stack = createNativeStackNavigator();
 const HidenHeader = {
@@ -40,45 +37,43 @@ const HidenHeader = {
 }
 export default function Navigations() {
     return (
-        <Provider store={store}>
-            <NavigationContainer>
-                <Stack.Navigator screenOptions={HidenHeader} initialRouteName={ScreenNames.LOADING
-                }>
-                    <Stack.Screen name="Notice" component={Notice} />
-                    <Stack.Screen name="LoginScreen" component={LoginScreen} />
-                    <Stack.Screen name="StartScreen" component={StartScreen} />
-                    <Stack.Screen name="SignupScreen" component={SignupScreen} />
-                    <Stack.Screen name="InformationScreen" component={InformationScreen} />
-                    <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-                    <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
-                    <Stack.Screen name={ScreenNames.LOADING} component={LoadingScreen} />
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={HidenHeader} initialRouteName={ScreenNames.LOADING
+            }>
+                <Stack.Screen name="Notice" component={Notice} />
+                <Stack.Screen name="LoginScreen" component={LoginScreen} />
+                <Stack.Screen name="StartScreen" component={StartScreen} />
+                <Stack.Screen name="SignupScreen" component={SignupScreen} />
+                <Stack.Screen name="InformationScreen" component={InformationScreen} />
+                <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+                <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+                <Stack.Screen name={ScreenNames.LOADING} component={LoadingScreen} />
 
 
-                    <Stack.Screen name='MainScreen' component={MainScreen} />
-                    <Stack.Screen name='SaveScreen' component={SaveScreen} />
-                    <Stack.Screen name='BookingScreen' component={BookingScreen} />
-                    <Stack.Screen name='UserScreen' component={UserScreen} />
-                    <Stack.Screen name='Map' component={MapScreen} />
-                    <Stack.Screen name='InforRoomScreen' component={inforRoomScreen} />
-                    <Stack.Screen name="SearchValue" component={SearchValuesScreen} />
-                    <Stack.Screen name="Hotel" component={HotelScreen} />
-                    <Stack.Screen name="SearchIcon" component={SearchIcon} options={{ presentation: 'modal' }} />
-                    <Stack.Screen name="Slider" component={SlidersScreen} />
-                    <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
-                    <Stack.Screen name='CheckReservar' component={CheckReservar} />
-                    <Stack.Screen name='InfoRoom' component={InfoRoomScreen} />
+                <Stack.Screen name='MainScreen' component={MainScreen} />
+                <Stack.Screen name='SaveScreen' component={SaveScreen} />
+                <Stack.Screen name='BookingScreen' component={BookingScreen} />
+                <Stack.Screen name='UserScreen' component={UserScreen} />
+                <Stack.Screen name='Map' component={MapScreen} />
+                <Stack.Screen name='InforRoomScreen' component={inforRoomScreen} />
+                <Stack.Screen name="SearchValue" component={SearchValuesScreen} />
+                <Stack.Screen name="Hotel" component={HotelScreen} />
+                <Stack.Screen name="SearchIcon" component={SearchIcon} />
+                <Stack.Screen name="Slider" component={SlidersScreen} />
+                <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
+                <Stack.Screen name='CheckReservar' component={CheckReservar} />
+                <Stack.Screen name='InfoRoom' component={InfoRoomScreen} />
 
 
-                    <Stack.Screen name='GetAll' component={GetProvider} />
-                    <Stack.Screen name='TestHotel' component={TestHotelScreen} />
-
-
+                <Stack.Screen name='GetAll' component={GetProvider} />
+                <Stack.Screen name='TestHotel' component={TestHotelScreen} />
 
 
 
-                </Stack.Navigator>
-            </NavigationContainer>
-        </Provider>
+
+
+            </Stack.Navigator>
+        </NavigationContainer>
 
     );
 }

@@ -17,7 +17,7 @@ export const updateCustomer = async (
     const formData = new FormData();
     if (image) {
         formData.append('avatar', {
-            uri: image.uri,
+            uri: image,
             type: 'image/png',
             name: 'avatar.png',
         });
@@ -29,6 +29,7 @@ export const updateCustomer = async (
     formData.append('customerCode', customerCode);
     formData.append('dateOfBirth', moment(dateOfBirth).format('YYYY-MM-DD'));
     console.log("formData nè", formData)
+
     try {
         //const token = getToken()
         const response = await axios({
