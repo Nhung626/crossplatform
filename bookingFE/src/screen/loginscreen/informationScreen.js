@@ -53,7 +53,6 @@ export default function InformationScreen() {
     getTokenId();
 
   }, [])
-  console.log("token: ", token)
 
   const handleSaveInformation = async () => {
     const update = await updateCustomer(token,
@@ -67,7 +66,6 @@ export default function InformationScreen() {
 
     navigation.navigate("MainScreen")
   };
-
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -78,7 +76,7 @@ export default function InformationScreen() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]);
+      setImage(result.assets[0].uri);
       return
     }
   };
@@ -95,7 +93,7 @@ export default function InformationScreen() {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <TouchableOpacity onPress={() => pickImage()} style={{ marginVertical: 30 }}>
               {image ? (
-                <Image source={{ uri: image.uri }} style={styles.imgAvt} />
+                <Image source={{ uri: image }} style={styles.imgAvt} />
               ) : (
                 <Image style={styles.imgAvt}
                   source={require("../../assets/images/icons/image.png")}

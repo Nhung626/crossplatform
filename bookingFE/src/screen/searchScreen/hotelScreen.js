@@ -25,26 +25,11 @@ export default function HotelScreen() {
     const [data, setData] = useState("");
     const [favorite, setFavorite] = useState(false);
 
-    const hotel = useSelector(selectSelectedHotel);
-
-    let dispatch = useDispatch();
-
-
     useEffect(() => {
         if (token && person && start && end) {
             const fetchDataFromAPI = async () => {
                 const response = await getAllRoomAPI(id, start, end, person, token);
-                if (response) {
-                    dispatch(selectHotel({
-                        id,
-                        name,
-                        imageHotel,
-                        description,
-                        address,
-                    }));
-                    setData(response);
-                    console.log(data)
-                }
+                setData(response)
             };
             fetchDataFromAPI();
         }
