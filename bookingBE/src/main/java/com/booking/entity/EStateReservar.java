@@ -2,7 +2,7 @@ package com.booking.entity;
 
 public enum EStateReservar {
     BOOKED,
-    CANCELLED,
+    CANCELED,
     CHECK_IN,
     CHECK_OUT,
 }

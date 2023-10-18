@@ -53,18 +53,31 @@ public class RoomServiceImp implements RoomService {
             imageRepository.save(image);
         }
         List<Integer> roomNumbers = createCategoryDto.getRoomNumbers();
-        ArrayList<Room> rooms = new ArrayList<Room>(roomNumbers.size());
+        ArrayList<Room> rooms= new ArrayList<Room>(roomNumbers.size());
         for (int i = 0; i < roomNumbers.size(); i++) {
-            rooms.add(new Room().builder()
-                    .roomNumber(roomNumbers.get(i))
-                    .category(category)
-                    .build());
-            if (roomRepository.findByRoomNumber(roomNumbers.get(i)) != null) {
+            if (!checkRoomNumber(roomNumbers.get(i), getAllRoomNumber(createCategoryDto.getProviderId()))) {
                 throw new CustomException("room exit");
             } else {
+                rooms.add(new Room().builder()
+                        .roomNumber(roomNumbers.get(i))
+                        .category(category)
+                        .build());
                 roomRepository.save(rooms.get(i));
             }
         }
     }
 
+    public List<Integer> getAllRoomNumber(Long providerId) {
+        return roomRepository.findByProviderId(providerId).stream().map(room -> room.getRoomNumber()).toList();
+    }
+
+    public boolean checkRoomNumber(int roomNumber, List<Integer> roomNumbers) {
+        boolean check = true;
+        for (int number : roomNumbers) {
+            if (roomNumber==number){
+                check = false;
+            }
+        }
+        return check;
+    }
 }

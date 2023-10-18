@@ -12,7 +12,7 @@ public interface StateRoomRepository extends JpaRepository<StateRoom, Long> {
     List<StateRoom> getAllCancel(Long providerId);
 
     @Query("SELECT s FROM StateRoom s WHERE s.room.category.provider.providerId = ?1" +
-            " AND s.reservar.stateReservar = 0")
+            " AND s.reservar.stateReservar = 0 OR s.reservar.stateReservar = 2")
     List<StateRoom> getAllBooked(Long providerId);
 
     @Query("SELECT s FROM StateRoom s WHERE s.room.category.provider.providerId = ?1" +

@@ -7,6 +7,7 @@ import com.booking.dto.request.UpdateProviderDto;
 import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.JwtUserResponse;
 import com.booking.dto.response.ProviderDto;
+import com.booking.dto.response.ReservarDto;
 import com.booking.entity.Category;
 import com.booking.entity.Customer;
 import com.booking.entity.Provider;
@@ -14,6 +15,7 @@ import com.booking.repository.ProviderRepository;
 import com.booking.security.jwt.JwtUtil;
 import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.ProviderService;
+import com.booking.service.interfaces.ReservarService;
 import com.booking.service.interfaces.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ import java.util.stream.Collectors;
 public class ProviderController {
     private final ProviderService providerService;
     private final RoomService roomService;
+    private final ReservarService reservarService;
+
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -136,9 +140,46 @@ public class ProviderController {
         return ResponseEntity.ok(providerService.getProvider(getProviderId(principal)));
     }
 
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/list-cancel")
+    public List<ReservarDto> getCancel(Principal principal) {
+        return providerService.getCancel(getProviderId(principal));
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/list-booked")
+    public List<ReservarDto> getBooking(Principal principal) {
+        return providerService.getBooking(getProviderId(principal));
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/list-checkin")
+    public List<ReservarDto> getCheckin(Principal principal){
+        return providerService.getCheckin(getProviderId(principal));
+    }
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/list-checkout")
+    public List<ReservarDto> getCheckout(Principal principal){
+        return providerService.getCheckout(getProviderId(principal));
+    }
+
     public Long getProviderId(Principal principal) {
         UserDetailsImpl userDetails = (UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         Provider provider = providerRepository.findByUserId(userDetails.getId());
         return provider.getProviderId();
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/checkin")
+    public ResponseEntity<Object> checkin(Principal principal, @RequestParam("reservarId") Long reservarId) {
+        reservarService.changeStateCheckin(reservarId);
+        return ResponseEntity.ok("Checkin thành công");
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/checkout")
+    public ResponseEntity<Object> checkout(Principal principal, @RequestParam("reservarId") Long reservarId) {
+        reservarService.changeStateCheckout(reservarId);
+        return ResponseEntity.ok("Checkout thành công");
     }
 }

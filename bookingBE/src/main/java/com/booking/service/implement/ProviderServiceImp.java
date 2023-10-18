@@ -1,9 +1,11 @@
 package com.booking.service.implement;
 
+import com.booking.dto.Convert;
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.UpdateProviderDto;
 import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.ProviderDto;
+import com.booking.dto.response.ReservarDto;
 import com.booking.dto.response.RoomDto;
 import com.booking.entity.*;
 import com.booking.exception.CustomException;
@@ -12,7 +14,6 @@ import com.booking.service.interfaces.ImageService;
 import com.booking.service.interfaces.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ public class ProviderServiceImp implements ProviderService {
     private final CategoryRepository categoryRepository;
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
+    private final ReservarRepository reservarRepository;
     @Autowired
     PasswordEncoder encoder;
     @Autowired
@@ -94,16 +96,54 @@ public class ProviderServiceImp implements ProviderService {
         }
         return categoryDtos;
     }
+
     @Override
     public CategoryDto getCategory(long categoryId) {
         Category category = categoryRepository.findByCategoryId(categoryId);
         return Convert.convertCategory(category);
     }
 
+    public List<Integer> getAllRoomNumber(Long providerId) {
+        List<Integer> roomNumbers = roomRepository.findByProviderId(providerId).stream().map(room->room.getRoomNumber()).toList();
+        return  roomNumbers;
+    }
     public RoomDto getRoom(long roomId) {
         Room room = roomRepository.findByRoomId(roomId);
         return Convert.convertRoom(room);
     }
 
 
+    public List<ReservarDto> getCheckout(Long providerId) {
+        List<ReservarDto> reservarDtos = new ArrayList<>();
+        List<Reservar> reservars = reservarRepository.getAllCheckout(providerId);
+        for (Reservar reservar : reservars) {
+            reservarDtos.add(Convert.convertReservarDto(reservar));
+        }
+        return reservarDtos;
+    }
+    public List<ReservarDto> getCheckin(Long providerId) {
+        List<ReservarDto> reservarDtos = new ArrayList<>();
+        List<Reservar> reservars = reservarRepository.getAllCheckin(providerId);
+        for (Reservar reservar : reservars) {
+            reservarDtos.add(Convert.convertReservarDto(reservar));
+        }
+        return reservarDtos;
+    }
+    public List<ReservarDto> getBooking(Long providerId) {
+        List<ReservarDto> reservarDtos = new ArrayList<>();
+        List<Reservar> reservars = reservarRepository.getAllBooked(providerId);
+        for (Reservar reservar : reservars) {
+            reservarDtos.add(Convert.convertReservarDto(reservar));
+        }
+        return reservarDtos;
+    }
+
+    public List<ReservarDto> getCancel(Long providerId) {
+        List<ReservarDto> reservarDtos = new ArrayList<>();
+        List<Reservar> reservars = reservarRepository.getAllCancel(providerId);
+        for (Reservar reservar : reservars) {
+            reservarDtos.add(Convert.convertReservarDto(reservar));
+        }
+        return reservarDtos;
+    }
 }

@@ -1,9 +1,15 @@
 package com.booking.dto.response;
 
 import com.booking.entity.EStateReservar;
+import lombok.*;
 
 import java.time.LocalDateTime;
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@EqualsAndHashCode
 public class ReservarDto {
     private Long reservarId;
     private String customerName;
@@ -13,6 +19,6 @@ public class ReservarDto {
     private LocalDateTime checkin;
     private LocalDateTime checkout;
     private LocalDateTime reservarDate;
-    private EStateReservar stateReservar;
+    private String stateReservar;
 
 }

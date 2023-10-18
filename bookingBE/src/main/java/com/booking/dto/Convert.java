@@ -1,10 +1,12 @@
-package com.booking.service.implement;
+package com.booking.dto;
 
 import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.ProviderDto;
+import com.booking.dto.response.ReservarDto;
 import com.booking.dto.response.RoomDto;
 import com.booking.entity.Category;
 import com.booking.entity.Provider;
+import com.booking.entity.Reservar;
 import com.booking.entity.Room;
 import com.booking.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +48,22 @@ public class Convert {
         return new RoomDto(room.getRoomId(), room.getRoomNumber(), category);
     }
 
-
+    public static ReservarDto convertReservarDto(Reservar reservar){
+        String roomReservar = "";
+        List<Room> rooms = reservar.getStateRooms().stream().map(stateRoom -> stateRoom.getRoom()).toList();
+        for(Room room: rooms){
+            roomReservar+=room.getRoomNumber() + " ";
+        }
+        ReservarDto reservarDto = new ReservarDto().builder()
+                .reservarId(reservar.getReservarId())
+                .customerName(reservar.getCustomer().getFullName())
+                .customerCode(reservar.getCustomer().getCustomerCode())
+                .customerPhone(reservar.getCustomer().getPhoneNumber())
+                .checkin(reservar.getCheckin())
+                .checkout(reservar.getCheckout())
+                .stateReservar(reservar.getStateReservar().toString())
+                .reservarDate(reservar.getReservarDate())
+                .rooms(roomReservar.trim()).build();
+        return reservarDto;
+    }
 }

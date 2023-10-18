@@ -1,29 +1,32 @@
 package com.booking.service.implement;
 
+import com.booking.dto.Convert;
 import com.booking.dto.request.CreateReservarDto;
 import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.ProviderDto;
+import com.booking.dto.response.ReservarDto;
 import com.booking.entity.*;
 import com.booking.exception.CustomException;
 import com.booking.repository.*;
 import com.booking.service.interfaces.ReservarService;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
 public class ReservarServiceImp implements ReservarService {
     private final ReservarRepository reservarRepository;
-    private final StateRoomRepository stateRoomRepository;
     private final CustomerRepository customerRepository;
     private final RoomRepository roomRepository;
     private final CategoryRepository categoryRepository;
 
-    public void createOrder(CreateReservarDto createOrderDto) {
+    public ReservarDto createOrder(CreateReservarDto createOrderDto) {
         Customer customer = customerRepository.findByCustomerId(createOrderDto.getCustomerId());
         Reservar reservar = new Reservar().builder()
                 .reservarDate(LocalDateTime.now())
@@ -51,17 +54,19 @@ public class ReservarServiceImp implements ReservarService {
         }
         reservar.callTotal();
         reservarRepository.save(reservar);
+        return Convert.convertReservarDto(reservar);
     }
+
     public List<Room> getRoomReservar(CategoryDto categoryDto, int n) {
         List<Room> roomReservars = new ArrayList<>();
         List<Integer> roomNumbers = categoryDto.getRoomNumbers();
         Random random = new Random();
         for (int i = 0; i < n; i++) {
             int randomIndex = random.nextInt(roomNumbers.size()); // Sinh một số ngẫu nhiên từ 0 đến (số phần tử trong mảng - 1)
-            Room room = roomRepository.findByNumber(categoryDto.getCategoryId(),roomNumbers.get(randomIndex));
+            Room room = roomRepository.findByNumber(categoryDto.getCategoryId(), roomNumbers.get(randomIndex));
             roomReservars.add(room);
         }
-        return  roomReservars;
+        return roomReservars;
     }
 
     public boolean checkState(Room room, LocalDate start, LocalDate end) {
@@ -147,4 +152,73 @@ public class ReservarServiceImp implements ReservarService {
                 .categoryId(category.getCategoryId()).build();
         return categoryDto;
     }
+
+    public void changeStateCheckin(Long reservarId) {
+        Reservar reservar = reservarRepository.findByReservarId(reservarId);
+        if (true) {
+            reservar.setCheckin(LocalDateTime.now());
+            reservar.setStateReservar(EStateReservar.CHECK_IN);
+            reservarRepository.save(reservar);
+        } else {
+            throw new CustomException("Not authentication");
+        }
+    }
+
+    public void changeStateCheckout(Long reservarId) {
+        Reservar reservar = reservarRepository.findByReservarId(reservarId);
+        if (true) {
+            reservar.setCheckout(LocalDateTime.now());
+            reservar.setStateReservar(EStateReservar.CHECK_OUT);
+            reservarRepository.save(reservar);
+        } else {
+            throw new CustomException("Not authentication");
+        }
+    }
+
+    public boolean changeStateCancel(Long reservarId, Long customerId) {
+        boolean check = false;
+        Reservar reservar = reservarRepository.findByReservarId(reservarId);
+        if (customerId == reservar.getCustomer().getCustomerId()) {
+            List<StateRoom> stateRooms = reservar.getStateRooms().stream().toList();
+            if (LocalDate.now().isBefore(stateRooms.get(0).getStart())) {
+                reservar.setStateReservar(EStateReservar.CANCELED);
+                for (StateRoom stateRoom : stateRooms) {
+                    stateRoom.setStatus(EStateRoom.AVAILABLE);
+                }
+                reservarRepository.save(reservar);
+                check = true;
+            }
+        } else {
+            throw new CustomException("Not authentication");
+        }
+        return check;
+    }
+
+    public List<ReservarDto> getCheckout(Long customerId) {
+        List<ReservarDto> reservarDtos = new ArrayList<>();
+        List<Reservar> reservars = reservarRepository.getCheckout(customerId);
+        for (Reservar reservar : reservars) {
+            reservarDtos.add(Convert.convertReservarDto(reservar));
+        }
+        return reservarDtos;
+    }
+
+    public List<ReservarDto> getBooking(Long customerId) {
+        List<ReservarDto> reservarDtos = new ArrayList<>();
+        List<Reservar> reservars = reservarRepository.getBooked(customerId);
+        for (Reservar reservar : reservars) {
+            reservarDtos.add(Convert.convertReservarDto(reservar));
+        }
+        return reservarDtos;
+    }
+
+    public List<ReservarDto> getCancel(Long customerId) {
+        List<ReservarDto> reservarDtos = new ArrayList<>();
+        List<Reservar> reservars = reservarRepository.getCancel(customerId);
+        for (Reservar reservar : reservars) {
+            reservarDtos.add(Convert.convertReservarDto(reservar));
+        }
+        return reservarDtos;
+    }
 }
+
