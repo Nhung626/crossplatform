@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 public interface ReservarService {
     ReservarDto createOrder(CreateReservarDto createOrderDto);
-//    void callTotal(Long reservarId);
     Set<ProviderDto> getSearchProviders(List<Room> rooms);
     Set<CategoryDto> getSearchCategories(Long providerId, List<Room> rooms);
     Set<Room> getSearchRooms(Long categoryId,  Set<Room> rooms);
@@ -22,7 +21,7 @@ public interface ReservarService {
     void changeStateCheckin(Long reservarId);
     void changeStateCheckout(Long reservarId);
     boolean changeStateCancel(Long reservarId, Long customerId);
-
+    boolean changeCancel(Long reservarId, Long providerId);
     List<ReservarDto> getCancel(Long customerId);
     List<ReservarDto> getCheckout(Long customerId);
     List<ReservarDto> getBooking(Long customerId);

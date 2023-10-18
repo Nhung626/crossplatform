@@ -61,7 +61,7 @@ public class ReservarController {
         if (reservarService.changeStateCancel(reservarId, getCustomerId(principal))) {
             return ResponseEntity.ok("Hủy thành công");
         } else {
-            return ResponseEntity.ok("Không đủ điều kiện hủy. Vui lòng liên hệ với khách sạn để xử lý.");
+            return ResponseEntity.status(400).body("Không đủ điều kiện hủy. Vui lòng liên hệ với khách sạn để xử lý.");
         }
     }
 

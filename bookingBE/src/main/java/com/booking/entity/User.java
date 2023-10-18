@@ -3,9 +3,6 @@ package com.booking.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,10 +15,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private  Long id;
+
     @Column(name = "email")
     private String email;
+
     @Column(name = "password")
     private String password;
+
     @Column(name = "role")
     private ERole role;
 

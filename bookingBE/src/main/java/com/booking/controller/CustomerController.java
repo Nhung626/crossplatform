@@ -1,12 +1,10 @@
 package com.booking.controller;
 
+import com.booking.dto.request.CreateReviewDto;
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.LoginUserDto;
 import com.booking.dto.request.UpdateCustomerDto;
-import com.booking.dto.response.CategoryDto;
-import com.booking.dto.response.CustomerDto;
-import com.booking.dto.response.JwtUserResponse;
-import com.booking.dto.response.ProviderDto;
+import com.booking.dto.response.*;
 import com.booking.entity.Customer;
 import com.booking.repository.CustomerRepository;
 import com.booking.security.jwt.JwtUtil;
@@ -14,13 +12,14 @@ import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.CustomerService;
 import com.booking.service.interfaces.FavoriteService;
 import com.booking.service.interfaces.ProviderService;
+import com.booking.service.interfaces.ReviewService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +29,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/customer")
@@ -39,13 +36,10 @@ public class CustomerController {
     private final CustomerService customerService;
     private final FavoriteService favoriteService;
     private final ProviderService providerService;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    JwtUtil jwtUtil;
-    @Autowired
-    CustomerRepository customerRepository;
+    private final ReviewService reviewService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final CustomerRepository customerRepository;
 
     @PostMapping(value = "/auth/sign-up")
     public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createUserDto) throws IOException {
@@ -63,8 +57,7 @@ public class CustomerController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority).toList();
         String role = roles.get(0);
         Customer customer = customerRepository.findByUserId(userDetails.getId());
         return ResponseEntity.ok(new JwtUserResponse().builder()
@@ -91,7 +84,7 @@ public class CustomerController {
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/add-favorite")
-    public ResponseEntity addFavorite(Principal principal, @RequestParam("providerId") Long providerId) {
+    public ResponseEntity<Object> addFavorite(Principal principal, @RequestParam("providerId") Long providerId) {
         favoriteService.addFavoriteProvider(getCustomerId(principal), providerId);
         return ResponseEntity.status(200).build();
     }
@@ -105,7 +98,7 @@ public class CustomerController {
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @DeleteMapping(value = "/del-favorite")
-    public ResponseEntity removeFavorite(Principal principal, @RequestParam("providerId") Long providerId) {
+    public ResponseEntity<Object> removeFavorite(Principal principal, @RequestParam("providerId") Long providerId) {
         favoriteService.removeFavoriteProvider(getCustomerId(principal), providerId);
         return ResponseEntity.status(200).build();
     }
@@ -114,6 +107,19 @@ public class CustomerController {
     @GetMapping(value = "/get-favorite")
     public ResponseEntity<List<ProviderDto>> getFavorites(Principal principal) {
         return ResponseEntity.ok(favoriteService.getFavoriteProvider(getCustomerId(principal)));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping(value = "/review")
+    public ResponseEntity<Object> createReview(@RequestBody CreateReviewDto createReviewDto){
+        reviewService.createReview(createReviewDto);
+        return ResponseEntity.ok("Success");
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping(value = "/reviews")
+    public ResponseEntity<List<ReviewDto>> getReview(Principal principal){
+        return ResponseEntity.ok(reviewService.getCustomerReviews(getCustomerId(principal)));
     }
 
     public Long getCustomerId(Principal principal) {
@@ -133,7 +139,6 @@ public class CustomerController {
     public ResponseEntity<CategoryDto> getCategory(@RequestParam("categoryId") Long categoryId) {
         return ResponseEntity.ok(providerService.getCategory(categoryId));
     }
-
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/get-provider")

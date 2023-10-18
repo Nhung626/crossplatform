@@ -19,26 +19,36 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private Long customerId;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @Column(name = "full_name")
     private String fullName;
+
     @Column(name = "gender")
     private String gender;
+
     @Column(name = "phone_number")
     private String phoneNumber;
+
     @Column(name = "address")
     private String address;
+
     @Column(name = "code")
     private String customerCode;
+
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "img_id")
     private Image avatar;
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "customer")
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "customer")
     private Set<Reservar> reservar = new HashSet<>();
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "customer")
     private Set<Review> reviews = new HashSet<>();
 }

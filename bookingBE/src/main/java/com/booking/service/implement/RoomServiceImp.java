@@ -21,18 +21,17 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RoomServiceImp implements RoomService {
     private final CategoryRepository categoryRepository;
     private final RoomRepository roomRepository;
-    @Autowired
-    private ProviderRepository providerRepository;
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private ImageRepository imageRepository;
+
+    private final ProviderRepository providerRepository;
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     public void addCategory(CreateCategoryDto createCategoryDto) throws IOException {
         Provider provider = providerRepository.findByProviderId(createCategoryDto.getProviderId());
@@ -44,16 +43,17 @@ public class RoomServiceImp implements RoomService {
                 .description(createCategoryDto.getDescription())
                 .price(createCategoryDto.getPrice())
                 .provider(provider).build();
+        category.setImgRooms(createCategoryDto.getImgCategories().stream().map(data-> {
+            try {
+                return imageService.saveUploadedFile(data);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toSet()));
         categoryRepository.save(category);
 
-        List<MultipartFile> images = createCategoryDto.getImgCategories();
-        for (MultipartFile img : images) {
-            Image image = imageService.saveUploadedFile(img);
-            image.setCategory(category);
-            imageRepository.save(image);
-        }
         List<Integer> roomNumbers = createCategoryDto.getRoomNumbers();
-        ArrayList<Room> rooms= new ArrayList<Room>(roomNumbers.size());
+        ArrayList<Room> rooms= new ArrayList<>(roomNumbers.size());
         for (int i = 0; i < roomNumbers.size(); i++) {
             if (!checkRoomNumber(roomNumbers.get(i), getAllRoomNumber(createCategoryDto.getProviderId()))) {
                 throw new CustomException("room exit");
@@ -68,7 +68,7 @@ public class RoomServiceImp implements RoomService {
     }
 
     public List<Integer> getAllRoomNumber(Long providerId) {
-        return roomRepository.findByProviderId(providerId).stream().map(room -> room.getRoomNumber()).toList();
+        return roomRepository.findByProviderId(providerId).stream().map(Room::getRoomNumber).toList();
     }
 
     public boolean checkRoomNumber(int roomNumber, List<Integer> roomNumbers) {

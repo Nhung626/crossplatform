@@ -30,7 +30,7 @@ public class ImageController {
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_PROVIDER')")
     @PostMapping("/api/v1/image/upload")
-    public ResponseEntity uploadImage(@RequestParam("images") List<MultipartFile> images) throws IOException {
+    public ResponseEntity<Object> uploadImage(@RequestParam("images") List<MultipartFile> images) throws IOException {
         for (MultipartFile img : images) {
             imageService.saveUploadedFile(img);
         }

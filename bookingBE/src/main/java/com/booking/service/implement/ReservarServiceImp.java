@@ -10,7 +10,6 @@ import com.booking.exception.CustomException;
 import com.booking.repository.*;
 import com.booking.service.interfaces.ReservarService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -137,9 +136,9 @@ public class ReservarServiceImp implements ReservarService {
 
     public CategoryDto convertCategory2(Long categoryId, Set<Room> rooms) {
         Category category = categoryRepository.findByCategoryId(categoryId);
-        List<Long> imgIds = category.getImgRooms().stream().map(img -> img.getImgId()).toList();
-        List<Integer> roomNumbers = rooms.stream().map(room -> room.getRoomNumber()).toList();
-        CategoryDto categoryDto = new CategoryDto().builder()
+        List<Long> imgIds = category.getImgRooms().stream().map(Image::getImgId).toList();
+        List<Integer> roomNumbers = rooms.stream().map(Room::getRoomNumber).toList();
+        return new CategoryDto().builder()
                 .imgIdCategories(imgIds)
                 .categoryName(category.getCategoryName())
                 .price(category.getPrice())
@@ -150,29 +149,20 @@ public class ReservarServiceImp implements ReservarService {
                 .roomNumbers(roomNumbers)
                 .countRoom(rooms.size())
                 .categoryId(category.getCategoryId()).build();
-        return categoryDto;
     }
 
     public void changeStateCheckin(Long reservarId) {
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        if (true) {
-            reservar.setCheckin(LocalDateTime.now());
-            reservar.setStateReservar(EStateReservar.CHECK_IN);
-            reservarRepository.save(reservar);
-        } else {
-            throw new CustomException("Not authentication");
-        }
+        reservar.setCheckin(LocalDateTime.now());
+        reservar.setStateReservar(EStateReservar.CHECK_IN);
+        reservarRepository.save(reservar);
     }
 
     public void changeStateCheckout(Long reservarId) {
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        if (true) {
-            reservar.setCheckout(LocalDateTime.now());
-            reservar.setStateReservar(EStateReservar.CHECK_OUT);
-            reservarRepository.save(reservar);
-        } else {
-            throw new CustomException("Not authentication");
-        }
+        reservar.setCheckout(LocalDateTime.now());
+        reservar.setStateReservar(EStateReservar.CHECK_OUT);
+        reservarRepository.save(reservar);
     }
 
     public boolean changeStateCancel(Long reservarId, Long customerId) {
@@ -180,7 +170,7 @@ public class ReservarServiceImp implements ReservarService {
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
         if (customerId == reservar.getCustomer().getCustomerId()) {
             List<StateRoom> stateRooms = reservar.getStateRooms().stream().toList();
-            if (LocalDate.now().isBefore(stateRooms.get(0).getStart())) {
+            if (LocalDate.now().isBefore(reservar.getStart())) {
                 reservar.setStateReservar(EStateReservar.CANCELED);
                 for (StateRoom stateRoom : stateRooms) {
                     stateRoom.setStatus(EStateRoom.AVAILABLE);
@@ -193,6 +183,26 @@ public class ReservarServiceImp implements ReservarService {
         }
         return check;
     }
+
+    public boolean changeCancel(Long reservarId, Long providerId) {
+        boolean check = false;
+        Reservar reservar = reservarRepository.findByReservarId(reservarId);
+        if (providerId == reservar.getProvider().getProviderId()) {
+            List<StateRoom> stateRooms = reservar.getStateRooms().stream().toList();
+            if (LocalDateTime.now().isAfter(reservar.getStart().atTime(14, 0))) {
+                reservar.setStateReservar(EStateReservar.CANCELED);
+                for (StateRoom stateRoom : stateRooms) {
+                    stateRoom.setStatus(EStateRoom.AVAILABLE);
+                }
+                reservarRepository.save(reservar);
+                check = true;
+            }
+        } else {
+            throw new CustomException("Not authentication");
+        }
+        return check;
+    }
+
 
     public List<ReservarDto> getCheckout(Long customerId) {
         List<ReservarDto> reservarDtos = new ArrayList<>();

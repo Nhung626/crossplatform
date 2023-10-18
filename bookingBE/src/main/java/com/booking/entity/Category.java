@@ -18,23 +18,32 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long categoryId;
+
     @Column(name = "category_name")
     private String categoryName;
+
     @Column(name="person")
     private int person;
+
     @Column(name = "area")
     private float area;
+
     @Column(name = "bed_type")
     private String bedType;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "price")
     private int price;
+
     @ManyToOne
     @JoinColumn(name = "provider_id")
     private Provider provider;
+
     @OneToMany (fetch = FetchType.LAZY , cascade = CascadeType.ALL, mappedBy = "category")
     private Set<Image> imgRooms = new HashSet<>();
+
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "category")
     private Set<Room> rooms = new HashSet<>();
 }

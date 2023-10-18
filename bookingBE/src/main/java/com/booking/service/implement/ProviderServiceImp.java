@@ -13,7 +13,6 @@ import com.booking.repository.*;
 import com.booking.service.interfaces.ImageService;
 import com.booking.service.interfaces.ProviderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,19 +30,14 @@ public class ProviderServiceImp implements ProviderService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final ReservarRepository reservarRepository;
-    @Autowired
-    PasswordEncoder encoder;
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private ImageRepository imageRepository;
+    private final PasswordEncoder encoder;
+    private  final ImageService imageService;
 
     @Override
     public void addProvider(CreateUserDto userDto) {
         if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new CustomException("Error: Email is already in use!");
         }
-        // Create new user's account
         User user = new User().builder()
                 .email(userDto.getEmail())
                 .password(encoder.encode(userDto.getPassword()))
@@ -60,13 +55,14 @@ public class ProviderServiceImp implements ProviderService {
         provider.setProviderPhone(updateProviderDto.getProviderPhone());
         provider.setAddress(updateProviderDto.getAddress());
         provider.setDescription(updateProviderDto.getDescription());
+        provider.setImgProviders(updateProviderDto.getImgProviders().stream().map(data-> {
+            try {
+                return imageService.saveUploadedFile(data);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toSet()));
         providerRepository.save(provider);
-        List<MultipartFile> images = updateProviderDto.getImgProviders();
-        for (MultipartFile img : images) {
-            Image image = imageService.saveUploadedFile(img);
-            image.setProvider(provider);
-            imageRepository.save(image);
-        }
     }
 
     public List<ProviderDto> getAllProviders() {
@@ -84,17 +80,10 @@ public class ProviderServiceImp implements ProviderService {
         return Convert.convertProvider(provider);
     }
 
-
-
     @Override
     public List<CategoryDto> getAllCategories(Long providerId) {
         Provider provider = providerRepository.findByProviderId(providerId);
-        List<Category> categories = provider.getCategories().stream().toList();
-        List<CategoryDto> categoryDtos = new ArrayList<>();
-        for (Category category : categories) {
-            categoryDtos.add(Convert.convertCategory(category));
-        }
-        return categoryDtos;
+        return provider.getCategories().stream().map(Convert::convertCategory).toList();
     }
 
     @Override
@@ -104,46 +93,31 @@ public class ProviderServiceImp implements ProviderService {
     }
 
     public List<Integer> getAllRoomNumber(Long providerId) {
-        List<Integer> roomNumbers = roomRepository.findByProviderId(providerId).stream().map(room->room.getRoomNumber()).toList();
-        return  roomNumbers;
+        return roomRepository.findByProviderId(providerId).stream().map(Room::getRoomNumber).toList();
     }
+
     public RoomDto getRoom(long roomId) {
         Room room = roomRepository.findByRoomId(roomId);
         return Convert.convertRoom(room);
     }
 
-
     public List<ReservarDto> getCheckout(Long providerId) {
-        List<ReservarDto> reservarDtos = new ArrayList<>();
         List<Reservar> reservars = reservarRepository.getAllCheckout(providerId);
-        for (Reservar reservar : reservars) {
-            reservarDtos.add(Convert.convertReservarDto(reservar));
-        }
-        return reservarDtos;
+        return reservars.stream().map(Convert::convertReservarDto).collect(Collectors.toList());
     }
+
     public List<ReservarDto> getCheckin(Long providerId) {
-        List<ReservarDto> reservarDtos = new ArrayList<>();
         List<Reservar> reservars = reservarRepository.getAllCheckin(providerId);
-        for (Reservar reservar : reservars) {
-            reservarDtos.add(Convert.convertReservarDto(reservar));
-        }
-        return reservarDtos;
+        return reservars.stream().map(Convert::convertReservarDto).collect(Collectors.toList());
     }
+
     public List<ReservarDto> getBooking(Long providerId) {
-        List<ReservarDto> reservarDtos = new ArrayList<>();
         List<Reservar> reservars = reservarRepository.getAllBooked(providerId);
-        for (Reservar reservar : reservars) {
-            reservarDtos.add(Convert.convertReservarDto(reservar));
-        }
-        return reservarDtos;
+        return reservars.stream().map(Convert::convertReservarDto).collect(Collectors.toList());
     }
 
     public List<ReservarDto> getCancel(Long providerId) {
-        List<ReservarDto> reservarDtos = new ArrayList<>();
         List<Reservar> reservars = reservarRepository.getAllCancel(providerId);
-        for (Reservar reservar : reservars) {
-            reservarDtos.add(Convert.convertReservarDto(reservar));
-        }
-        return reservarDtos;
+        return reservars.stream().map(Convert::convertReservarDto).collect(Collectors.toList());
     }
 }

@@ -4,23 +4,18 @@ import com.booking.dto.request.CreateCategoryDto;
 import com.booking.dto.request.CreateUserDto;
 import com.booking.dto.request.LoginUserDto;
 import com.booking.dto.request.UpdateProviderDto;
-import com.booking.dto.response.CategoryDto;
-import com.booking.dto.response.JwtUserResponse;
-import com.booking.dto.response.ProviderDto;
-import com.booking.dto.response.ReservarDto;
-import com.booking.entity.Category;
-import com.booking.entity.Customer;
+import com.booking.dto.response.*;
 import com.booking.entity.Provider;
 import com.booking.repository.ProviderRepository;
 import com.booking.security.jwt.JwtUtil;
 import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.ProviderService;
 import com.booking.service.interfaces.ReservarService;
+import com.booking.service.interfaces.ReviewService;
 import com.booking.service.interfaces.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,13 +38,10 @@ public class ProviderController {
     private final ProviderService providerService;
     private final RoomService roomService;
     private final ReservarService reservarService;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
-    @Autowired
-    JwtUtil jwtUtil;
-    @Autowired
-    ProviderRepository providerRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final ProviderRepository providerRepository;
+    private final ReviewService reviewService;
 
     @PostMapping(value = "/auth/sign-up")
     public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createUserDto) throws IOException {
@@ -124,19 +116,19 @@ public class ProviderController {
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-categories")
-    public ResponseEntity<List<CategoryDto>> getCategories(Principal principal){
+    public ResponseEntity<List<CategoryDto>> getCategories(Principal principal) {
         return ResponseEntity.ok(providerService.getAllCategories(getProviderId(principal)));
     }
 
     @PreAuthorize(" hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-category")
-    public ResponseEntity<CategoryDto> getCategory(@RequestParam("categoryId") Long categoryId){
+    public ResponseEntity<CategoryDto> getCategory(@RequestParam("categoryId") Long categoryId) {
         return ResponseEntity.ok(providerService.getCategory(categoryId));
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-provider")
-    public ResponseEntity<ProviderDto> getProvider(Principal principal){
+    public ResponseEntity<ProviderDto> getProvider(Principal principal) {
         return ResponseEntity.ok(providerService.getProvider(getProviderId(principal)));
     }
 
@@ -154,12 +146,13 @@ public class ProviderController {
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/list-checkin")
-    public List<ReservarDto> getCheckin(Principal principal){
+    public List<ReservarDto> getCheckin(Principal principal) {
         return providerService.getCheckin(getProviderId(principal));
     }
+
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/list-checkout")
-    public List<ReservarDto> getCheckout(Principal principal){
+    public List<ReservarDto> getCheckout(Principal principal) {
         return providerService.getCheckout(getProviderId(principal));
     }
 
@@ -181,5 +174,21 @@ public class ProviderController {
     public ResponseEntity<Object> checkout(Principal principal, @RequestParam("reservarId") Long reservarId) {
         reservarService.changeStateCheckout(reservarId);
         return ResponseEntity.ok("Checkout thành công");
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/cancel")
+    public ResponseEntity<Object> cancel(Principal principal, @RequestParam("reservarId") Long reservarId) {
+        if (reservarService.changeCancel(reservarId, getProviderId(principal))) {
+            return ResponseEntity.ok("Checkout thành công");
+        }else {
+            return ResponseEntity.status(400).body("Hủy không thành công");
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @GetMapping(value = "/reviews")
+    public ResponseEntity<List<ReviewDto>> getReview(Principal principal){
+        return ResponseEntity.ok(reviewService.getProviderReviews(getProviderId(principal)));
     }
 }

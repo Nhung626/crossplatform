@@ -1,15 +1,7 @@
 package com.booking.dto;
 
-import com.booking.dto.response.CategoryDto;
-import com.booking.dto.response.ProviderDto;
-import com.booking.dto.response.ReservarDto;
-import com.booking.dto.response.RoomDto;
-import com.booking.entity.Category;
-import com.booking.entity.Provider;
-import com.booking.entity.Reservar;
-import com.booking.entity.Room;
-import com.booking.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.booking.dto.response.*;
+import com.booking.entity.*;
 
 import java.util.List;
 
@@ -65,5 +57,15 @@ public class Convert {
                 .reservarDate(reservar.getReservarDate())
                 .rooms(roomReservar.trim()).build();
         return reservarDto;
+    }
+
+    public static ReviewDto convertToReviewDto(Review review, Reservar reservar){
+        List<Long> imgIds = review.getImgReview().stream().map(img -> img.getImgId()).toList();
+        ReviewDto reviewDto =  new ReviewDto().builder()
+                .imgReview(imgIds)
+                .rate(review.getRate())
+                .description(review.getDescription())
+                .reservar(convertReservarDto(reservar)).build();
+        return reviewDto;
     }
 }

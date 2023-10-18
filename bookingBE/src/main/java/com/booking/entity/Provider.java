@@ -18,15 +18,20 @@ public class Provider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "provider_id")
     private Long providerId;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @Column(name = "provider_name")
     private String providerName;
+
     @Column(name = "provider_phone")
     private String providerPhone;
+
     @Column(name = "address")
     private String address;
+
     @Column(name = "description")
     private String description;
 
@@ -36,10 +41,9 @@ public class Provider {
             inverseJoinColumns = {@JoinColumn(name = "favorite_id")})
     private Set<Favorite> favoriteCustomers = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "provider")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "provider")
     private Set<Category> categories = new HashSet<>();
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "provider")
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "provider")
     private Set<Image> imgProviders = new HashSet<>();
-
-
 }
