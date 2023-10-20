@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,35 +36,41 @@ public class RoomServiceImp implements RoomService {
 
     public void addCategory(CreateCategoryDto createCategoryDto) throws IOException {
         Provider provider = providerRepository.findByProviderId(createCategoryDto.getProviderId());
-        Category category = new Category().builder()
-                .categoryName(createCategoryDto.getCategoryName())
-                .bedType(createCategoryDto.getBedType())
-                .area(createCategoryDto.getArea())
-                .person(createCategoryDto.getPerson())
-                .description(createCategoryDto.getDescription())
-                .price(createCategoryDto.getPrice())
-                .provider(provider).build();
-        category.setImgRooms(createCategoryDto.getImgCategories().stream().map(data-> {
-            try {
-                return imageService.saveUploadedFile(data);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toSet()));
-        categoryRepository.save(category);
-
         List<Integer> roomNumbers = createCategoryDto.getRoomNumbers();
-        ArrayList<Room> rooms= new ArrayList<>(roomNumbers.size());
-        for (int i = 0; i < roomNumbers.size(); i++) {
-            if (!checkRoomNumber(roomNumbers.get(i), getAllRoomNumber(createCategoryDto.getProviderId()))) {
-                throw new CustomException("room exit");
-            } else {
-                rooms.add(new Room().builder()
-                        .roomNumber(roomNumbers.get(i))
-                        .category(category)
-                        .build());
-                roomRepository.save(rooms.get(i));
+        if (checkCategory(createCategoryDto.getCategoryName(), provider.getProviderId())) {
+
+            Category category = new Category().builder()
+                    .categoryName(createCategoryDto.getCategoryName())
+                    .bedType(createCategoryDto.getBedType())
+                    .area(createCategoryDto.getArea())
+                    .person(createCategoryDto.getPerson())
+                    .description(createCategoryDto.getDescription())
+                    .price(createCategoryDto.getPrice())
+                    .rooms(new HashSet<>())
+                    .provider(provider).build();
+            category.setImgRooms(createCategoryDto.getImgCategories().stream().map(data -> {
+                try {
+                    return imageService.saveUploadedFile(data);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).collect(Collectors.toSet()));
+
+            for (int i = 0; i < roomNumbers.size(); i++) {
+                if (!checkRoomNumber(roomNumbers.get(i), getAllRoomNumber(createCategoryDto.getProviderId()))) {
+                    throw new CustomException("Room số " + i + " đã tồn tại");
+                } else {
+                    Room room = new Room().builder()
+                            .roomNumber(roomNumbers.get(i))
+                            .category(category)
+                            .build();
+                    category.getRooms().add(room);
+                }
             }
+            categoryRepository.save(category);
+        } else {
+            throw new CustomException("Loại phòng " + createCategoryDto.getCategoryName() + " đã tồn tại");
+
         }
     }
 
@@ -74,7 +81,18 @@ public class RoomServiceImp implements RoomService {
     public boolean checkRoomNumber(int roomNumber, List<Integer> roomNumbers) {
         boolean check = true;
         for (int number : roomNumbers) {
-            if (roomNumber==number){
+            if (roomNumber == number) {
+                check = false;
+            }
+        }
+        return check;
+    }
+
+    public boolean checkCategory(String categoryName, Long providerId) {
+        boolean check = true;
+        List<String> categoryNames = providerRepository.findByProviderId(providerId).getCategories().stream().map(data -> data.getCategoryName()).toList();
+        for (String str : categoryNames) {
+            if (categoryName.equals(str)) {
                 check = false;
             }
         }

@@ -66,20 +66,20 @@ public class ReservarController {
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @PostMapping(value = "/list-cancel")
-    public List<ReservarDto> getCancel(Principal principal) {
-        return reservarService.getCancel(getCustomerId(principal));
+    @GetMapping(value = "/list-cancel")
+    public ResponseEntity<List<ReservarDto>> getCancel(Principal principal) {
+        return ResponseEntity.ok(reservarService.getCancel(getCustomerId(principal)));
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @PostMapping(value = "/list-booked")
-    public List<ReservarDto> getBooking(Principal principal) {
-        return reservarService.getBooking(getCustomerId(principal));
+    @GetMapping(value = "/list-booked")
+    public ResponseEntity<List<ReservarDto>> getBooking(Principal principal) {
+        return ResponseEntity.ok(reservarService.getBooking(getCustomerId(principal)));
     }
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @PostMapping(value = "/list-checkout")
-    public List<ReservarDto> getCheckout(Principal principal){
-        return reservarService.getCheckout(getCustomerId(principal));
+    @GetMapping(value = "/list-checkout")
+    public ResponseEntity<List<ReservarDto>> getCheckout(Principal principal){
+        return ResponseEntity.ok(reservarService.getCheckout(getCustomerId(principal)));
     }
 
     public Long getCustomerId(Principal principal) {

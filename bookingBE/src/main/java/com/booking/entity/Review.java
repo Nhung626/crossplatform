@@ -36,6 +36,6 @@ public class Review {
     @Column(name = "reservarId")
     private Long reservarId;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "review")
+    @OneToMany
     private Set<Image> imgReview = new HashSet<>();
 }
