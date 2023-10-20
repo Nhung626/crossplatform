@@ -14,12 +14,12 @@ import com.booking.service.interfaces.ReservarService;
 import com.booking.service.interfaces.ReviewService;
 import com.booking.service.interfaces.RoomService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +29,6 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.io.IOException;
-import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -44,13 +43,13 @@ public class ProviderController {
     private final ReviewService reviewService;
 
     @PostMapping(value = "/auth/sign-up")
-    public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createUserDto) throws IOException {
+    public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createUserDto){
         providerService.addProvider(createUserDto);
         return ResponseEntity.ok("success");
     }
 
     @PostMapping(value = "/auth/login")
-    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto) throws IOException {
+    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
 
@@ -59,8 +58,7 @@ public class ProviderController {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .map(GrantedAuthority::getAuthority).toList();
         Provider provider = providerRepository.findByUserId(userDetails.getId());
         String role = roles.get(0);
         return ResponseEntity.ok(new JwtUserResponse().builder()
@@ -133,25 +131,25 @@ public class ProviderController {
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
-    @PostMapping(value = "/list-cancel")
+    @GetMapping(value = "/list-cancel")
     public List<ReservarDto> getCancel(Principal principal) {
         return providerService.getCancel(getProviderId(principal));
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
-    @PostMapping(value = "/list-booked")
+    @GetMapping(value = "/list-booked")
     public List<ReservarDto> getBooking(Principal principal) {
         return providerService.getBooking(getProviderId(principal));
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
-    @PostMapping(value = "/list-checkin")
+    @GetMapping(value = "/list-checkin")
     public List<ReservarDto> getCheckin(Principal principal) {
         return providerService.getCheckin(getProviderId(principal));
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
-    @PostMapping(value = "/list-checkout")
+    @GetMapping(value = "/list-checkout")
     public List<ReservarDto> getCheckout(Principal principal) {
         return providerService.getCheckout(getProviderId(principal));
     }

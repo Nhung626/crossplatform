@@ -7,12 +7,10 @@ import com.booking.entity.*;
 import com.booking.exception.CustomException;
 import com.booking.repository.CustomerRepository;
 import com.booking.repository.FavoriteRepository;
-import com.booking.repository.ImageRepository;
 import com.booking.repository.UserRepository;
 import com.booking.service.interfaces.CustomerService;
 import com.booking.service.interfaces.ImageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +23,7 @@ public class CustomerServiceImp implements CustomerService {
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
     private final PasswordEncoder encoder;
-    @Autowired
-    private ImageService imageService;
-    @Autowired
-    private ImageRepository imageRepository;
+    private final ImageService imageService;
 
     @Override
     public void addCustomer(CreateUserDto userDto) {
@@ -63,8 +58,7 @@ public class CustomerServiceImp implements CustomerService {
 
     public CustomerDto getCustomer(Long customerId){
         Customer customer = customerRepository.findByCustomerId(customerId);
-        CustomerDto customerDto = new CustomerDto(customer.getAvatar().getImgId(), customer.getFullName(), customer.getGender(), customer.getPhoneNumber(),
+        return new CustomerDto(customer.getAvatar().getImgId(), customer.getFullName(), customer.getGender(), customer.getPhoneNumber(),
                 customer.getAddress(), customer.getCustomerCode(), customer.getDateOfBirth());
-        return customerDto;
     }
 }

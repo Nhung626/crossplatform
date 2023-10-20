@@ -15,7 +15,6 @@ import com.booking.service.interfaces.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public class ProviderServiceImp implements ProviderService {
     }
 
     @Override
-    public void updateProvider(Long id, UpdateProviderDto updateProviderDto) throws IOException {
+    public void updateProvider(Long id, UpdateProviderDto updateProviderDto){
         Provider provider = providerRepository.findByProviderId(id);
         provider.setProviderName(updateProviderDto.getProviderName());
         provider.setProviderPhone(updateProviderDto.getProviderPhone());

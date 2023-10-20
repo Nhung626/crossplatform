@@ -10,5 +10,5 @@ public class CreateReviewDto {
     private int rate;
     private String description;
     private Long reservarId;
-    private Long customerId;
+//    private Long customerId;
 }

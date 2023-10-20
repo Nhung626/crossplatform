@@ -29,15 +29,14 @@ public class ReviewServiceImp implements ReviewService {
     private final ReservarRepository reservarRepository;
 
     public void createReview(CreateReviewDto createReviewDto) {
-        Customer customer = customerRepository.findByCustomerId(createReviewDto.getCustomerId());
         Reservar reservar = reservarRepository.findByReservarId(createReviewDto.getReservarId());
-        if (reservar.getStateReservar() != EStateReservar.CANCELED) {
+        Customer customer = reservar.getCustomer();
+        if (reservar.getStateReservar() == EStateReservar.CHECK_OUT) {
             Review review = new Review().builder()
                     .rate(createReviewDto.getRate())
                     .description(createReviewDto.getDescription())
                     .reservarId(createReviewDto.getReservarId())
                     .customer(customer).build();
-
             review.setImgReview(createReviewDto.getImgReview().stream().map(data -> {
                 try {
                     return imageService.saveUploadedFile(data);
@@ -47,7 +46,7 @@ public class ReviewServiceImp implements ReviewService {
             }).collect(Collectors.toSet()));
             reviewRepository.save(review);
         } else {
-            throw new CustomException("Không đánh giá được");
+            throw new CustomException("Vui lòng trải nghiệm thêm, và quay lại đánh giá chúng tôi sau");
         }
     }
 

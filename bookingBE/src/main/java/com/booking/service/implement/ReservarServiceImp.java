@@ -11,6 +11,7 @@ import com.booking.repository.*;
 import com.booking.service.interfaces.ReservarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class ReservarServiceImp implements ReservarService {
     private final RoomRepository roomRepository;
     private final CategoryRepository categoryRepository;
 
+    @Transactional
     public ReservarDto createOrder(CreateReservarDto createOrderDto) {
         Customer customer = customerRepository.findByCustomerId(createOrderDto.getCustomerId());
         Reservar reservar = new Reservar().builder()
@@ -44,12 +46,12 @@ public class ReservarServiceImp implements ReservarService {
                         .reservar(reservar)
                         .room(room).build();
                 room.getStateRooms().add(stateRoom);
-                roomRepository.save(room);
                 reservar.getStateRooms().add(stateRoom);
+                roomRepository.save(room);
                 reservarRepository.save(reservar);
             } else {
                 throw new CustomException("Phòng không đủ điều kiện đặt.");
-            }
+             }
         }
         reservar.callTotal();
         reservarRepository.save(reservar);
@@ -63,6 +65,7 @@ public class ReservarServiceImp implements ReservarService {
         for (int i = 0; i < n; i++) {
             int randomIndex = random.nextInt(roomNumbers.size()); // Sinh một số ngẫu nhiên từ 0 đến (số phần tử trong mảng - 1)
             Room room = roomRepository.findByNumber(categoryDto.getCategoryId(), roomNumbers.get(randomIndex));
+            roomNumbers.remove(randomIndex);
             roomReservars.add(room);
         }
         return roomReservars;

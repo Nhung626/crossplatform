@@ -42,13 +42,13 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
 
     @PostMapping(value = "/auth/sign-up")
-    public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createUserDto) throws IOException {
+    public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createUserDto){
         customerService.addCustomer(createUserDto);
         return ResponseEntity.status(200).build();
     }
 
     @PostMapping(value = "/auth/login")
-    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto) throws IOException {
+    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
 
@@ -110,14 +110,14 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping(value = "/review")
+    @PostMapping(value = "/add-review")
     public ResponseEntity<Object> createReview(@RequestBody CreateReviewDto createReviewDto){
         reviewService.createReview(createReviewDto);
         return ResponseEntity.ok("Success");
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping(value = "/reviews")
+    @GetMapping(value = "/list-reviews")
     public ResponseEntity<List<ReviewDto>> getReview(Principal principal){
         return ResponseEntity.ok(reviewService.getCustomerReviews(getCustomerId(principal)));
     }

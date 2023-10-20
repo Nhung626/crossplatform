@@ -5,7 +5,6 @@ import com.booking.repository.ImageRepository;
 import com.booking.service.interfaces.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
