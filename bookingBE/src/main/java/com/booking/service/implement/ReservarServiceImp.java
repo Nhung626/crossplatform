@@ -27,8 +27,8 @@ public class ReservarServiceImp implements ReservarService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public ReservarDto createOrder(CreateReservarDto createOrderDto) {
-        Customer customer = customerRepository.findByCustomerId(createOrderDto.getCustomerId());
+    public ReservarDto createOrder(CreateReservarDto createOrderDto, Long customerId) {
+        Customer customer = customerRepository.findByCustomerId(customerId);
         Reservar reservar = new Reservar().builder()
                 .reservarDate(LocalDateTime.now())
                 .customer(customer)

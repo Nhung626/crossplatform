@@ -10,7 +10,6 @@ import lombok.*;
 @Setter
 @Getter
 public class CreateReservarDto {
-    private Long customerId;
     private CategoryDto category;
     private int roomCount;
     private LocalDate startDate;
