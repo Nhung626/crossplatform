@@ -37,12 +37,12 @@ public class ProviderServiceImp implements ProviderService {
         if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new CustomException("Error: Email is already in use!");
         }
-        User user = new User().builder()
+        User user = User.builder()
                 .email(userDto.getEmail())
                 .password(encoder.encode(userDto.getPassword()))
                 .role(ERole.ROLE_PROVIDER).build();
         userRepository.save(user);
-        Provider provider = new Provider().builder()
+        Provider provider = Provider.builder()
                 .user(user).build();
         providerRepository.save(provider);
     }

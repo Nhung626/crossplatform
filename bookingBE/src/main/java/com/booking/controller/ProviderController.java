@@ -118,7 +118,7 @@ public class ProviderController {
         return ResponseEntity.ok(providerService.getAllCategories(getProviderId(principal)));
     }
 
-    @PreAuthorize(" hasRole('ROLE_PROVIDER')")
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-category")
     public ResponseEntity<CategoryDto> getCategory(@RequestParam("categoryId") Long categoryId) {
         return ResponseEntity.ok(providerService.getCategory(categoryId));

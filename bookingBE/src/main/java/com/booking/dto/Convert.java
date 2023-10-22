@@ -9,7 +9,7 @@ public class Convert {
 
     public static ProviderDto convertProvider(Provider provider) {
         List<Long> imgIds = provider.getImgProviders().stream().map(Image::getImgId).toList();
-        return new ProviderDto().builder()
+        return ProviderDto.builder()
                 .providerId(provider.getProviderId())
                 .imgIdProviders(imgIds)
                 .providerName(provider.getProviderName())
@@ -20,7 +20,7 @@ public class Convert {
     public static CategoryDto convertCategory(Category category) {
         List<Long> imgIds = category.getImgRooms().stream().map(Image::getImgId).toList();
         List<Integer> rooms = category.getRooms().stream().map(Room::getRoomNumber).toList();
-        return new CategoryDto().builder()
+        return CategoryDto.builder()
                 .imgIdCategories(imgIds)
                 .categoryName(category.getCategoryName())
                 .price(category.getPrice())
@@ -44,7 +44,7 @@ public class Convert {
         for(Room room: rooms){
             roomReservar.append(room.getRoomNumber()).append(" ");
         }
-        return new ReservarDto().builder()
+        return ReservarDto.builder()
                 .reservarId(reservar.getReservarId())
                 .customerName(reservar.getCustomer().getFullName())
                 .customerCode(reservar.getCustomer().getCustomerCode())
@@ -58,7 +58,7 @@ public class Convert {
 
     public static ReviewDto convertToReviewDto(Review review, Reservar reservar){
         List<Long> imgIds = review.getImgReview().stream().map(Image::getImgId).toList();
-        return new ReviewDto().builder()
+        return ReviewDto.builder()
                 .imgReview(imgIds)
                 .rate(review.getRate())
                 .description(review.getDescription())

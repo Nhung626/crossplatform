@@ -30,15 +30,15 @@ public class CustomerServiceImp implements CustomerService {
         if (userRepository.existsByEmail(userDto.getEmail())) {
             throw new CustomException("Error: Email is already in use!");
         }
-        User user = new User().builder()
+        User user = User.builder()
                 .email(userDto.getEmail())
                 .password(encoder.encode(userDto.getPassword()))
                 .role(ERole.ROLE_CUSTOMER).build();
         userRepository.save(user);
-        Customer customer = new Customer().builder()
+        Customer customer = Customer.builder()
                 .user(user).build();
         customerRepository.save(customer);
-        Favorite favorite = new Favorite().builder().customerId(customer.getCustomerId()).build();
+        Favorite favorite = Favorite.builder().customerId(customer.getCustomerId()).build();
         favoriteRepository.save(favorite);
     }
 
