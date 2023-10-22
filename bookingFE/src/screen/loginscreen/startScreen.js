@@ -34,7 +34,6 @@ const StartScreen = () => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
       <ImageBackground
         resizeMode="cover"
         source={require("../../assets/images/background/background.png")}
@@ -102,9 +101,6 @@ const StartScreen = () => {
               ></TouchableOpacity>
             </View> */}
       </ImageBackground>
-
-    </View>
-
 
 
   );
