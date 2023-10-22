@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, useWindowDimensions, StatusBar  } from "react-native";
+import { Text, StyleSheet, View, useWindowDimensions, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as React from 'react';
@@ -17,7 +17,7 @@ const ThirdRoute = () => (
 const renderScene = SceneMap({
   first: FirstRoute,
   second: SecondRoute,
-  third:ThirdRoute,
+  third: ThirdRoute,
 });
 
 
@@ -40,16 +40,16 @@ export default function BookingScreen() {
         <Ionicons style={styles.iconhelp} name="help-circle-outline"></Ionicons>
       </View>
 
-     
+
       <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-      renderTabBar={renderTabBar}
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={renderTabBar}
       />
     </SafeAreaView>
-    
+
   )
 }
 const renderTabBar = props => (

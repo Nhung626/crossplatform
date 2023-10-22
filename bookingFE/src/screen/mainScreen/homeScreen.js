@@ -8,14 +8,12 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style='light' backgroundColor={themeColor.bgColor} />
-
       <View style={styles.header}>
         <Text style={styles.headerText}>Reservar</Text>
-        <Ionicons style={styles.Icon1} name="chatbubble-outline"></Ionicons>
-        <Ionicons style={styles.Icon2} name="notifications-outline"></Ionicons>
       </View>
       <ScrollView>
         <View style={styles.modalSearchContainer}>
+
           <SearchModal />
         </View>
       </ScrollView>
@@ -29,7 +27,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
     backgroundColor: themeColor.bgColor,
     height: 60,
     justifyContent: 'center',
@@ -39,8 +36,7 @@ const styles = StyleSheet.create({
     flex: 10,
     color: '#fff',
     fontSize: 24,
-    justifyContent: 'flex-end',
-    marginLeft: 130,
+    marginVertical: 10
   },
   Icon1: {
     flex: 2,
