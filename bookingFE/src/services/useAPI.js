@@ -1,7 +1,6 @@
 import axios from "axios"
 import {
     BASE_URL,
-    getCustomerUrl,
     getImgCustomerUrl
 } from "./baseUrl"
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -208,7 +207,67 @@ export const getAllRoomAPI = async (id, start, end, person, token) => {
     }
 
 }
+export const saveFavor = async ({ id }) => {
+    try {
+        // Bước 1: Lấy danh sách idProvider hiện tại từ AsyncStorage
+        const currentIds = await AsyncStorage.getItem("idProvider");
+        let idArray = [];
 
+        if (currentIds) {
+            // Nếu danh sách idProvider đã tồn tại, chuyển nó từ chuỗi JSON thành mảng
+            idArray = JSON.parse(currentIds);
+        }
+        // Bước 2: Thêm id mới vào danh sách
+        if (id) {
+            idArray.push(id);
+        }
+
+        // Bước 3: Cập nhật danh sách mới vào AsyncStorage dưới dạng chuỗi JSON
+        await AsyncStorage.setItem("idProvider", JSON.stringify(idArray));
+        console.log('Đã lưu id favorite vào AsyncStorage!', idArray);
+    } catch (error) {
+        console.error('Lỗi khi lưu trữ danh sách id vào AsyncStorage: ', error);
+    }
+}
+
+export const getIdFavor = async (idToCheck) => {
+    try {
+        const favor = await AsyncStorage.getItem("idProvider");
+        if (favor) {
+            const idArray = JSON.parse(favor);
+            const isIdInFavor = idArray.includes(idToCheck);
+            return isIdInFavor;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error("Lỗi khi truy xuất favor:", error);
+        return false;
+    }
+};
+
+export const delIdFavor = async (id) => {
+    try {
+        // Bước 1: Lấy danh sách idProvider hiện tại từ AsyncStorage
+        const currentIds = await AsyncStorage.getItem("idProvider");
+        let idArray = [];
+        if (currentIds) {
+            // Nếu danh sách idProvider đã tồn tại, chuyển nó từ chuỗi JSON thành mảng
+            idArray = JSON.parse(currentIds);
+            // Bước 2: Tìm và xóa ID cụ thể khỏi mảng
+            const index = idArray.indexOf(id);
+            if (index > -1) {
+                idArray.splice(index, 1);
+            }
+
+            // Bước 3: Cập nhật danh sách mới vào AsyncStorage dưới dạng chuỗi JSON
+            await AsyncStorage.setItem("idProvider", JSON.stringify(idArray));
+            console.log("danh sách yue thích: ", idArray)
+        }
+    } catch (error) {
+        console.error('Lỗi khi xóa ID khỏi danh sách idProvider: ', error);
+    }
+};
 export const addFavoriteAPI = async (id, token) => {
     const formData = new FormData();
     formData.append('providerId', id);
@@ -223,6 +282,7 @@ export const addFavoriteAPI = async (id, token) => {
             }
         })
         if (response.status === 200) {
+            saveFavor({ id })
             console.log("Thêm vào yêu thích!")
             return response
         }
@@ -246,8 +306,27 @@ export const deleteFavorite = async (id, token) => {
             }
         })
         if (response.status === 200) {
-            console.log("Đã xóa khỏi yêu thích!");
+            console.log("Đã xóa khỏi yêu thích!", id);
+            delIdFavor(id)
             return null
+        }
+    } catch (error) {
+        console.log(error);
+        return null
+    }
+}
+
+export const getFavorite = async (token) => {
+    try {
+        const response = await axios({
+            method: 'GET',
+            url: `${BASE_URL}customer/get-favorite`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.status === 200) {
+            return response.data;
         }
     } catch (error) {
         console.log(error);

@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as React from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { themeColor } from "../../utils/theme";
 
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: '#fff' }} />
@@ -64,20 +65,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    backgroundColor: '#29b4ca',
+    backgroundColor: themeColor.bgColor,
     height: 60,
     justifyContent: 'center',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   headerText: {
     flex: 10,
     color: '#fff',
     fontSize: 24,
-    marginLeft: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
+    marginVertical: 10
   },
   iconhelp: {
     flex: 1.5,

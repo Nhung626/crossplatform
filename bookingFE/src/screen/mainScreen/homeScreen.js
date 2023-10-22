@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from '@expo/vector-icons';
 import SearchModal from "../../modals/searchModal";
 import { themeColor } from "../../utils/theme";
 
@@ -37,20 +36,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 24,
     marginVertical: 10
-  },
-  Icon1: {
-    flex: 2,
-    fontSize: 28,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  Icon2: {
-    flex: 2,
-    fontSize: 28,
-    color: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   modalSearchContainer: {
     marginVertical: 20

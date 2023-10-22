@@ -8,7 +8,7 @@ import { getImgCustomerUrl } from '../../services/baseUrl';
 import ShowRoom from '../../components/showRoom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectHotel, selectSelectedHotel } from '../../redux/slices/hotelSlice';
-import { addFavoriteAPI, deleteFavorite, getAllRoomAPI } from '../../services/useAPI';
+import { addFavoriteAPI, deleteFavorite, getAllRoomAPI, getIdFavor } from '../../services/useAPI';
 
 export default function HotelScreen() {
     const { params: {
@@ -29,7 +29,15 @@ export default function HotelScreen() {
         if (token && person && start && end) {
             const fetchDataFromAPI = async () => {
                 const response = await getAllRoomAPI(id, start, end, person, token);
+
                 setData(response)
+                const favor = await getIdFavor(id);
+                if (favor === true) {
+                    setFavorite(true);
+                }
+                else {
+                    setFavorite(false)
+                }
             };
             fetchDataFromAPI();
         }
@@ -42,7 +50,6 @@ export default function HotelScreen() {
                 await deleteFavorite(id, token);
                 setFavorite(false);
             } else {
-                // Nếu chưa là yêu thích, thì thêm vào danh sách yêu thích
                 await addFavoriteAPI(id, token);
                 setFavorite(true);
             }
@@ -50,6 +57,7 @@ export default function HotelScreen() {
             console.error('Error:', error);
         }
     }
+    console.log("favorite 1v: ", favorite)
     const heartColor = favorite ? themeColor.bgColor : 'white';
 
     const screenWidth = Dimensions.get("window").width;
@@ -61,7 +69,13 @@ export default function HotelScreen() {
                     <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleFavorite} >
-                    <Icon.Heart height={40} width={40} strokeWidth="2" stroke={themeColor.bgColor} style={{ marginHorizontal: 10 }} fill={heartColor} />
+                    <Icon.Heart
+                        height={40}
+                        width={40}
+                        strokeWidth="2"
+                        stroke={themeColor.bgColor}
+                        style={{ marginHorizontal: 10 }}
+                        fill={heartColor} />
                 </TouchableOpacity>
             </View>
             {/* Header bar */}
