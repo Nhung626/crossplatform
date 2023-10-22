@@ -1,4 +1,5 @@
-export const BASE_URL = "http://172.20.10.10:3000/api/v1/";
+// export const BASE_URL = "http://172.20.10.10:3000/api/v1/";
+export const BASE_URL = "http://192.168.1.4:3000/api/v1/";
 export const addUrlProviderSignUp = BASE_URL.concat('provider/auth/sign-up');
 export const addUrlProviderLogin = BASE_URL.concat('provider/auth/login');
 export const addUrlProviderUpdate = BASE_URL.concat(`provider/update`);

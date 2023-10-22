@@ -19,7 +19,7 @@ const { token } = route.params ?? {}; // Nhận token từ màn hình đăng nh�
 useEffect(() => {
   if (token) {
     console.log('Token đã được truyền qua:', token);
-    AsyncStorage.setItem('userToken', token);
+    AsyncStorage.setItem('token', token);
   } else {
     console.log('Token chưa được truyền qua.');
   }

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Fontisto';
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getCategoryApi, getImgRoomApi } from "../services/useAPI"; // Import getImgRoomApi
 import { getImgRoomUrl } from "../services/baseUrl";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function QLphong() {
   const route = useRoute();
@@ -47,36 +48,34 @@ export default function QLphong() {
   }, [isFetching]); // Use isFetching as a dependency
 
   function handleThemphong() {
-    console.log('Attempting to navigate to Themphong');
-    navigation.navigate('Themphong');
-     // Replace 'Themphong' with your actual screen name
+    navigation.navigate('Themphong', { token });
+    setIsFetching(true);
   }
 
   function renderItem({ item }) {
     const roomImg = item.imgIdCategories;
-  
+
     const firstImageId = roomImg && roomImg.length > 0 ? roomImg[0] : null;
     const imageSource = firstImageId
-    ? { uri: `${getImgRoomUrl}?imageId=${firstImageId}` }
-    : require('../assets/add-img-icon.png');
+      ? { uri: `${getImgRoomUrl}?imageId=${firstImageId}` }
+      : require('../assets/add-img-icon.png');
     return (
       <TouchableOpacity onPress={() => navigation.navigate('RoomDetails', { post: item })}>
         <ScrollView style={styles.roomItem}>
-
           <View style={styles.roomImage}>
-          <Image
-            style={{ width: 150, height: 200, borderRadius: 30 }}
-            source={imageSource} // Use the constructed image source
-          />
+            <Image
+              style={{ width: 150, height: 200, borderRadius: 30 }}
+              source={imageSource} // Use the constructed image source
+            />
           </View>
           <View style={styles.thongtinroom}>
-          <Text style={styles.roomName}>Tên: {item.categoryName}</Text>
-          <Text style={styles.roomDetail}>Số người: {item.person}</Text>
-          <Text style={styles.roomDetail}>Diện tích phòng: {item.area}</Text>
-          <Text style={styles.roomDetail}>Số phòng: {item.roomNumber}</Text>
-          <Text style={styles.roomDetail}>Mô tả thêm: {item.description}</Text>
-          <Text style={styles.roomDetail}>Giá: {item.price}</Text>
-          <Text style={styles.roomDetail}>Kiểu giường: {item.bedType}</Text>
+            <Text style={styles.roomName}>Tên: {item.categoryName}</Text>
+            <Text style={styles.roomDetail}>Số người: {item.person}</Text>
+            <Text style={styles.roomDetail}>Diện tích phòng: {item.area}</Text>
+            <Text style={styles.roomDetail}>Số phòng: {item.roomNumbers}</Text>
+            <Text style={styles.roomDetail}>Mô tả thêm: {item.description}</Text>
+            <Text style={styles.roomDetail}>Giá: {item.price}(VNĐ)</Text>
+            <Text style={styles.roomDetail}>Kiểu giường: {item.bedType}</Text>
           </View>
         </ScrollView>
       </TouchableOpacity>
@@ -89,20 +88,16 @@ export default function QLphong() {
       style={{ flex: 1 }}
     >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontWeight: 'bold',marginBottom:100,top:60, fontSize: 20, color: '#4477CE' }}>Danh sách phòng</Text>
+        <Text style={{ fontWeight: 'bold', marginBottom: 100, top: 60, fontSize: 20, color: '#4477CE' }}>Danh sách phòng</Text>
 
         <FlatList
           data={roomData}
           renderItem={renderItem}
-          keyExtractor={(item) => item.categoryId} 
-          
+          keyExtractor={(item) => item.categoryId}
         />
 
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Themphong',{ token });
-            setIsFetching(true);
-          }}
+          onPress={handleThemphong}
           style={styles.iconContainer}
         >
           <Icon name="plus-a" size={40} color="#235D9F" />
@@ -120,22 +115,21 @@ const styles = {
     borderRadius: 10,
     marginBottom: 20,
     width: 380,
-    height:300
+    height: 300
   },
-  
+
   roomImage: {
-    flex:1,
-    right:15,
-        
+    flex: 1,
+    right: 15,
   },
-  thongtinroom:{
-    flex:2,
-    marginLeft:160,
-    bottom:200,
-    borderLeftWidth:2,
-    padding:10
+  thongtinroom: {
+    flex: 2,
+    marginLeft: 160,
+    bottom: 200,
+    borderLeftWidth: 2,
+    padding: 10
   },
-  roomName: {  
+  roomName: {
     fontSize: 18,
     fontWeight: 'bold',
   },

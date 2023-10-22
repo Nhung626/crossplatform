@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useRoute, useNavigation } from "@react-navigation/native";
-import { providerAddRoom } from "../services/useAPI";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from "@react-navigation/native";
+import { providerAddRoom, getToken } from "../services/useAPI";
 
 export default function Themphong({ route }) {
   const [imgCategories, setImgCategories] = useState([]);
@@ -14,23 +13,17 @@ export default function Themphong({ route }) {
   const [price, setPrice] = useState('');
   const [roomNumbers, setRoomNumbers] = useState('');
   const [bedType, setBedType] = useState('');
+
   const [token, setToken] = useState('');
- 
+
   const navigation = useNavigation();
 
   useEffect(() => {
-    const getToken = async () => {
-      try {
-        const tokenThem = await AsyncStorage.getItem('token');
-        if (tokenThem !== null) {
-          setToken(tokenThem)
-          console.log('Token lấy từ async-storage:', tokenThem);
-        }
-      } catch (error) {
-        console.error('Lỗi khi lấy token từ async-storage:', error);
-      }
-    };
-    getToken();
+    const getTokenId = async () => {
+      const token = await getToken();
+      setToken(token);
+    }
+    getTokenId();
   }, []);
 
   const handleImagePickRoom = async () => {
@@ -41,8 +34,8 @@ export default function Themphong({ route }) {
       quality: 1,
     });
 
-    if (result.canceled) {
-      // console.log('User canceled image picker');
+    if (result.cancelled) {
+      // Xử lý khi người dùng hủy chọn ảnh
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
     } else {
@@ -70,35 +63,23 @@ export default function Themphong({ route }) {
   );
 
   const handleAddRoom = async () => {
-    const formData = new FormData();
-
-    imgCategories.forEach((img, index) => {
-      console.log(img);
-      formData.append('imgCategories[]', {
-        uri: img,
-        type: 'image/png',
-        name: `image_${index}.png`,
-      });
-    });
-    formData.append('categoryName', categoryName);
-    formData.append('person', person);
-    formData.append('area', area);
-    formData.append('description', description);
-    formData.append('price', price);
-    formData.append('roomNumbers', roomNumbers);
-    formData.append('bedType', bedType);
-
-    try {
-      const response = await providerAddRoom(formData, token);
-
-      if (response.status === 200) {
-        console.log("Thông tin đã được lưu thành công.");
-        navigation.navigate('QLphong');
-      } else {
-        console.log(response.data);
+    if (token) {
+      const response = await providerAddRoom(
+        token,
+        imgCategories,
+        categoryName,
+        person,
+        area,
+        description,
+        roomNumbers,
+        bedType
+      );
+      
+      if (response.status === 200) {  
+        navigation.navigate("CreateroomScreen");
+      }else{
+        console.log('Lưu không thành công!');
       }
-    } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error);
     }
   };
 
