@@ -53,6 +53,7 @@ public class Convert {
                 .checkout(reservar.getCheckout())
                 .stateReservar(reservar.getStateReservar().toString())
                 .reservarDate(reservar.getReservarDate())
+                .total(reservar.getTotal())
                 .rooms(roomReservar.toString().trim()).build();
     }
 

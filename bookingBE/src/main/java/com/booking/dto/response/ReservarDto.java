@@ -19,6 +19,7 @@ public class ReservarDto {
     private LocalDateTime checkin;
     private LocalDateTime checkout;
     private LocalDateTime reservarDate;
+    private int total;
     private String stateReservar;
 
 }

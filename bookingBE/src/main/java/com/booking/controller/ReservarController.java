@@ -1,5 +1,6 @@
 package com.booking.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.List;
 
@@ -7,12 +8,15 @@ import com.booking.dto.request.CreateReservarDto;
 import com.booking.dto.response.CategoryDto;
 import com.booking.dto.response.ProviderDto;
 import com.booking.dto.response.ReservarDto;
+import com.booking.dto.response.ReservarPaymentDto;
 import com.booking.entity.Customer;
 import com.booking.entity.Room;
 import com.booking.repository.CustomerRepository;
 import com.booking.service.implement.UserDetailsImpl;
+import com.booking.service.interfaces.PaymentService;
 import com.booking.service.interfaces.ReservarService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,12 +32,18 @@ import java.util.Set;
 public class ReservarController {
     private final ReservarService reservarService;
     private final CustomerRepository customerRepository;
+    private final PaymentService paymentService;
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/create-order")
-    public ResponseEntity<Object> createOrder(@RequestBody CreateReservarDto createOrderDto, Principal principal) {
+    public ResponseEntity<Object> createOrder(@RequestBody CreateReservarDto createOrderDto, Principal principal) throws UnsupportedEncodingException {
         ReservarDto reservarDto = reservarService.createOrder(createOrderDto, getCustomerId(principal));
-        return ResponseEntity.ok("Đặt phòng thành công.\n" + reservarDto);
+        String paymentURL = paymentService.getURLPayment(reservarDto.getTotal());
+
+        return ResponseEntity.ok(ReservarPaymentDto.builder()
+                .reservarDto(reservarDto)
+                .paymentURL(paymentURL)
+                .build());
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
@@ -76,9 +86,10 @@ public class ReservarController {
     public ResponseEntity<List<ReservarDto>> getBooking(Principal principal) {
         return ResponseEntity.ok(reservarService.getBooking(getCustomerId(principal)));
     }
+
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping(value = "/list-checkout")
-    public ResponseEntity<List<ReservarDto>> getCheckout(Principal principal){
+    public ResponseEntity<List<ReservarDto>> getCheckout(Principal principal) {
         return ResponseEntity.ok(reservarService.getCheckout(getCustomerId(principal)));
     }
 
