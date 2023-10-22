@@ -1,103 +1,91 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, ScrollView, TouchableOpacity, Image,Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
-import IconAwesome from 'react-native-vector-icons/FontAwesome';
 import Iconicons from 'react-native-vector-icons/Ionicons';
-import * as ImagePicker from 'expo-image-picker';
 import { useRoute, useNavigation } from "@react-navigation/native";
 
+import { getImgProviderApi } from '../services/useAPI';
+import { getImgProviderUrl } from "../services/baseUrl";
+
 export default function Person() {
+  const route = useRoute();
+  const { token } = route.params ?? {};
 
-    const route = useRoute();
+  const navigation = useNavigation();
+  
+  const [imgProviders, setImgProviders] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
+
+  const handleManageAccount = () => {
+    navigation.navigate('PersonDetail', { token });
+  };
+
+  const handleExitAccount = () => {
     
-    const { token } = route.params ?? {};
-
-    const [imgProviders, setImage] = useState([]);
-    const [providerName, setProviderName] = useState("");
-    const [providerPhone, setProviderPhone] = useState("");
-    const [address, setAddress] = useState("");
-    const [description, setDescription] = useState("");
-
-  const handleImagePickHotel = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (result.canceled) {
-      console.log('User canceled image picker');
-    } else if (result.error) {
-      console.log('ImagePicker Error: ', result.error);
-    } else {
-      const selectedImage = result.assets.map((asset) => asset.uri);
-      setImage([...imgProviders, ...selectedImage]);
-    }
+      Alert.alert(
+      'Đăng xuất tài khoản',
+      'Bạn có chắc chắn muốn đăng xuất?',
+      [
+        {
+          text: 'Hủy',
+          style: 'cancel',
+        },
+        {
+          text: 'Đồng ý',
+          onPress: () => {
+            navigation.navigate('LoginScreen'); 
+          },
+        },
+      ]
+    );
   };
 
-  const handleRemoveImage = (indexToRemove) => {
-    const updatedImage = [...imgProviders];
-    updatedImage.splice(indexToRemove, 1);
-    setImage(updatedImage);
-  };
 
-  const handleSaveThongtinKS = async () => {
-    const formData = new FormData();
-
-    if (imgProviders.length > 0) {
-      imgProviders.forEach((imgKS, index) => {
-        formData.append(`imgProviders`, {
-          uri: imgKS,
-          type: 'image/png', // Thay đổi loại ảnh nếu cần
-          name: `image-${index}.png`,
-        });
-      });
-    }
-
-    formData.append('providerName', providerName);
-    formData.append('providerPhone', providerPhone);
-    formData.append('address', address);
-    formData.append('description', description);
-
+  // Hàm lấy ảnh đầu tiên từ API
+  const fetchFirstImage = async () => {
     try {
-      // Gửi yêu cầu lưu thông tin đến API hoặc máy chủ cơ sở dữ liệu của bạn
-      const response = await providerUpdateApi(formData, token);
-
+      const response = await getImgProviderApi(token);
       if (response.status === 200) {
-        console.log('Thông tin đã được lưu thành công.');
+        const imgData = response.data;
+        // Lấy ảnh đầu tiên (nếu có) và cập nhật imgProviders
+        if (imgData && imgData.length > 0) {
+          setImgProviders([imgData[0]]);
+        }
       } else {
-        console.log(response.data);
+        console.error('Error fetching provider images:', response.data);
+        // Xử lý lỗi và hiển thị thông báo lỗi cho người dùng
       }
     } catch (error) {
-      if (error.response) {
-        console.error('Lỗi khi gửi yêu cầu lưu thông tin:', error.response.data);
-      } else if (error.request) {
-        console.error('Không có phản hồi từ máy chủ');
-      } else {
-        console.error('Lỗi trong quá trình thiết lập yêu cầu:', error.message);
-      }
-    }
+      console.error('Promise Error:', error);
+      // Xử lý lỗi promise và hiển thị thông báo lỗi cho người dùng
+    }    
+    setIsFetching(false);
   };
+
+  useEffect(() => {
+    // Gọi hàm để lấy ảnh đầu tiên
+    if (isFetching) {
+      fetchFirstImage();
+    }
+  }, [isFetching]);
 
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#B6FFFA' }}>
-        {/* Phần trên */}
+        {/* Hiển thị ảnh đầu tiên từ imgProviders */}
+        {imgProviders.length > 0 && (
+          <Image source={{ uri: getImgProviderUrl(imgProviders[0].imageId) }} style={{ width: 100, height: 100 }} />
+        )}
       </View>
       <View style={{ flex: 2 }}>
         <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
           {/* Phần dưới */}
           <View style={styles.buttonperson}>
-            <TouchableOpacity style={styles.button} onPress={handleSaveThongtinKS}>
+            <TouchableOpacity style={styles.button} onPress={handleManageAccount}>
               <Icon style={styles.personicon} name="person" size={20} />
               <Text style={styles.text}>Quản lý tài khoản</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button1}>
-              <IconAwesome style={styles.personicon} name="credit-card" size={20} />
-              <Text style={styles.text}>Phương thức thanh toán</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button2}>
+            <TouchableOpacity style={styles.button2} onPress={handleExitAccount}>
               <Iconicons style={styles.personicon} name="exit-outline" size={30} />
               <Text style={styles.text}>Đăng xuất</Text>
             </TouchableOpacity>
@@ -109,48 +97,6 @@ export default function Person() {
 }
 
 const styles = {
-  input: {
-    // borderColor: 'blue',
-    backgroundColor: '#8BE8E5',
-    borderRadius: 20,
-    width: '80%',
-    height: 50,
-    fontSize: 16,
-    padding: 10,
-    marginTop: 20,
-    marginBottom: 10,
-    marginLeft: 30,
-  },
-  imageContainer: {
-    marginRight: 10,
-    marginTop: -50,
-    marginBottom: 20,
-  },
-  imagePreview: {
-    width: 100, // Điều chỉnh chiều rộng của ảnh
-    height: 100, // Điều chỉnh chiều cao của ảnh
-  },
-  buttonKS: {
-    marginTop: 30,
-    bottom: 50,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: '#4477CE',
-    height: 40,
-    width: 100,
-    backgroundColor: '#8BE8E5',
-  },
-  buttonKSText: {
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    fontWeight: 'bold',
-    color: '#4477CE',
-  },
-  iconContainer: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-  },
   buttonperson: {
     marginTop: 30,
     flex: 1,
@@ -162,12 +108,6 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     right: 80,
-    marginBottom: 20,
-  },
-  button1: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    right: 50,
     marginBottom: 20,
   },
   button2: {

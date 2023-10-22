@@ -16,7 +16,7 @@ function TabScreen1() {
 function TabScreen2() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Đã hủy</Text>
+      <Text></Text>
     </View>
   );
 }
@@ -24,7 +24,7 @@ function TabScreen2() {
 function TabScreen3() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Đang sử dụng</Text>
+      <Text></Text>
     </View>
   );
 }
@@ -32,7 +32,15 @@ function TabScreen3() {
 function TabScreen4() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Đã hoàn thành</Text>
+      <Text></Text>
+    </View>
+  );
+}
+
+function TabScreen5() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text></Text>
     </View>
   );
 }
@@ -50,10 +58,11 @@ export default function QLDat() {
           style: { backgroundColor: '#fff' },
         }}
       >
-        <TopTab.Screen name="Đặt trước" component={TabScreen1} />
-        <TopTab.Screen name="Bị hủy" component={TabScreen2} />
-        <TopTab.Screen name="Đang sử dụng" component={TabScreen3} />
-        <TopTab.Screen name="Đã hoàn thành" component={TabScreen4} />
+        <TopTab.Screen name="Đặt trước" component={TabScreen1} />       
+        <TopTab.Screen name="Đang sử dụng" component={TabScreen2} />
+        <TopTab.Screen name="Đã hoàn thành" component={TabScreen3} />
+        <TopTab.Screen name="Bị hủy" component={TabScreen4} />
+        <TopTab.Screen name="Đánh giá" component={TabScreen5} />
       </TopTab.Navigator>
     </View>
   );

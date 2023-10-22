@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useRoute,useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import { providerAddRoom } from "../services/useAPI";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Themphong() {
+export default function Themphong({ route }) {
   const [imgCategories, setImgCategories] = useState([]);
   const [categoryName, setCategoryName] = useState('');
   const [person, setPerson] = useState('');
@@ -13,10 +14,24 @@ export default function Themphong() {
   const [price, setPrice] = useState('');
   const [roomNumbers, setRoomNumbers] = useState('');
   const [bedType, setBedType] = useState('');
+  const [token, setToken] = useState('');
+ 
+  const navigation = useNavigation();
 
-  const route = useRoute();
-  const { token } = route.params ?? {};
-  // console.log(token, id); 
+  useEffect(() => {
+    const getToken = async () => {
+      try {
+        const tokenThem = await AsyncStorage.getItem('token');
+        if (tokenThem !== null) {
+          setToken(tokenThem)
+          console.log('Token lấy từ async-storage:', tokenThem);
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy token từ async-storage:', error);
+      }
+    };
+    getToken();
+  }, []);
 
   const handleImagePickRoom = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -27,7 +42,7 @@ export default function Themphong() {
     });
 
     if (result.canceled) {
-      console.log('User canceled image picker');
+      // console.log('User canceled image picker');
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
     } else {
@@ -55,13 +70,13 @@ export default function Themphong() {
   );
 
   const handleAddRoom = async () => {
-    const navigation = useNavigation();
     const formData = new FormData();
-    
+
     imgCategories.forEach((img, index) => {
-      formData.append(`imgCategories`, {
+      console.log(img);
+      formData.append('imgCategories[]', {
         uri: img,
-        type: 'image/png', // Thay đổi loại hình ảnh nếu cần
+        type: 'image/png',
         name: `image_${index}.png`,
       });
     });
@@ -70,15 +85,15 @@ export default function Themphong() {
     formData.append('area', area);
     formData.append('description', description);
     formData.append('price', price);
-    formData.append('roomNumbers', roomNumbers);   
+    formData.append('roomNumbers', roomNumbers);
     formData.append('bedType', bedType);
 
     try {
       const response = await providerAddRoom(formData, token);
-        
+
       if (response.status === 200) {
         console.log("Thông tin đã được lưu thành công.");
-        navigation.navigate('CreateroomScreen')
+        navigation.navigate('QLphong');
       } else {
         console.log(response.data);
       }
@@ -154,6 +169,13 @@ export default function Themphong() {
       >
         <Text style={styles.addButtonText}>Thêm phòng</Text>
       </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.goBack()} // Điều hướng trở lại màn hình trước
+        style={styles.backButton}
+      >
+        <Text style={styles.backButtonText}>Trở lại</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -211,6 +233,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addButtonText: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  backButton: {
+    height: 40,
+    borderRadius: 10,
+    borderWidth: 1,
+    backgroundColor: '#DE5223',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  backButtonText: {
     fontSize: 20,
     color: '#fff',
   },

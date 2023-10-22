@@ -6,19 +6,16 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { providerUpdateApi } from "../services/useAPI";
 
 export default function ThongtinKS() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { token } = route.params ?? {};
 
-    const navigation = useNavigation();
-    const route = useRoute();
-    const { token } = route.params ?? {};
-    
-
-  const [imgProviders, setImage] = useState([]); // Danh sách ảnh đã chọn
+  const [imgProviders, setImage] = useState([]);
   const [providerName, setProviderName] = useState("");
   const [providerPhone, setProviderPhone] = useState("");
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
 
-  
   const handleImagePickHotel = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -32,7 +29,6 @@ export default function ThongtinKS() {
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
     } else {
-      // Lấy danh sách ảnh đã chọn
       const selectedImage = result.assets.map((asset) => asset.uri);
       setImage([...imgProviders, ...selectedImage]);
     }
@@ -45,21 +41,13 @@ export default function ThongtinKS() {
   };
 
   const handleSaveThongtinKS = async () => {
-    // if (!token) {
-    //     console.error("Token không hợp lệ.");
-    //     return;
-    //   }
-    // else{
-    //     console.log(`token: ${token}`);  
-    // }
-     
     const formData = new FormData();
 
     if (imgProviders.length > 0) {
       imgProviders.forEach((imgKS, index) => {
         formData.append(`imgProviders`, {
           uri: imgKS,
-          type: 'image/png', // Thay đổi loại ảnh nếu cần
+          type: 'image/png',
           name: `image-${index}.png`,
         });
       });
@@ -69,23 +57,23 @@ export default function ThongtinKS() {
     formData.append('providerPhone', providerPhone);
     formData.append('address', address);
     formData.append('description', description);
-  
+
     try {
       const response = await providerUpdateApi(formData, token);
 
       if (response.status === 200) {
-        console.log("Thông tin đã được lưu thành công.");
+        console.log('Thông tin đã được lưu thành công.');
         navigation.goBack();
       } else {
         console.log(response.data);
       }
     } catch (error) {
       if (error.response) {
-        console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error.response.data);
+        console.error('Lỗi khi gửi yêu cầu lưu thông tin:', error.response.data);
       } else if (error.request) {
-        console.error("Không có phản hồi từ máy chủ");
+        console.error('Không có phản hồi từ máy chủ');
       } else {
-        console.error("Lỗi trong quá trình thiết lập yêu cầu:", error.message);
+        console.error('Lỗi trong quá trình thiết lập yêu cầu:', error.message);
       }
     }
   };
@@ -96,14 +84,10 @@ export default function ThongtinKS() {
       style={{ flex: 1 }}
     >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontWeight: 'bold', color: '#687EFF', fontSize: 24, marginTop: 80, }}>
+        <Text style={{ fontWeight: 'bold', color: '#687EFF', fontSize: 24, marginTop: 80 }}>
           Thông tin khách sạn
         </Text>
-
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={{ alignItems: 'center' }}
-        >
+        <ScrollView horizontal={true} contentContainerStyle={{ alignItems: 'center' }}>
           {imgProviders.map((imgProvider, index) => (
             <View key={index} style={styles.imageContainer}>
               <ImageBackground source={{ uri: imgProvider }} style={styles.imagePreview}>
@@ -114,11 +98,9 @@ export default function ThongtinKS() {
             </View>
           ))}
         </ScrollView>
-
         <TouchableOpacity onPress={handleImagePickHotel}>
           <Image source={require('../assets/add-img-icon.png')} style={{ width: 100, height: 100, bottom: 40 }} />
         </TouchableOpacity>
-
         <View style={{ borderWidth: 1, borderColor: '#4477CE', borderRadius: 10, backgroundColor: '#fff', bottom: 40, width: '85%', height: '45%' }}>
           <TextInput
             style={styles.input}
@@ -128,7 +110,7 @@ export default function ThongtinKS() {
           />
           <TextInput
             style={styles.input}
-            placeholder="Hot line"
+            placeholder="Hotline"
             value={providerPhone}
             onChangeText={(text) => setProviderPhone(text)}
           />
