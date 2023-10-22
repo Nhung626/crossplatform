@@ -11,7 +11,6 @@ import { themeColor } from "../../utils/theme";
 export default function UserScreen({ navigation, route }) {
     const [fullName, setFullName] = useState("");
     const [imageUrl, setImageUrl] = useState();
-    const [logout, setLogout] = useState(false);
     const { token } = route.params ?? {};
 
     useEffect(() => {
@@ -30,11 +29,11 @@ export default function UserScreen({ navigation, route }) {
             }
         };
         fetchData();
-    }, [fullName])
+    }, [])
 
     const handleLogout = async () => {
         await Logout();
-        navigation.navigate(ScreenNames.LOGIN);
+        navigation.navigate(ScreenNames.LOADING);
     }
 
     return (
