@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/customer")
@@ -42,13 +43,13 @@ public class CustomerController {
     private final CustomerRepository customerRepository;
 
     @PostMapping(value = "/auth/sign-up")
-    public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createUserDto){
+    public ResponseEntity<Object> createCustomer(@RequestBody CreateUserDto createUserDto) {
         customerService.addCustomer(createUserDto);
         return ResponseEntity.status(200).build();
     }
 
     @PostMapping(value = "/auth/login")
-    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto){
+    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
 
@@ -104,21 +105,33 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    @GetMapping(value = "/get-favorite")
+    @GetMapping(value = "/list-favorite")
     public ResponseEntity<List<ProviderDto>> getFavorites(Principal principal) {
         return ResponseEntity.ok(favoriteService.getFavoriteProvider(getCustomerId(principal)));
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/add-review")
-    public ResponseEntity<Object> createReview(@RequestBody CreateReviewDto createReviewDto){
-        reviewService.createReview(createReviewDto);
+    public ResponseEntity<Object> createReview(
+            @RequestParam("imgReview") List<MultipartFile> imgReview,
+            @RequestParam("rate") int rate,
+            @RequestParam("description") String description,
+            @RequestParam("reservarId") Long reservarId
+    ) {
+        reviewService.createReview(
+                CreateReviewDto.builder()
+                        .imgReview(imgReview)
+                        .rate(rate)
+                        .reservarId(reservarId)
+                        .description(description).build()
+
+        );
         return ResponseEntity.ok("Success");
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping(value = "/list-reviews")
-    public ResponseEntity<List<ReviewDto>> getReview(Principal principal){
+    public ResponseEntity<List<ReviewDto>> getReview(Principal principal) {
         return ResponseEntity.ok(reviewService.getCustomerReviews(getCustomerId(principal)));
     }
 
@@ -142,13 +155,13 @@ public class CustomerController {
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/get-provider")
-    public ResponseEntity<ProviderDto> getProvider(@RequestParam("providerId") Long providerId){
+    public ResponseEntity<ProviderDto> getProvider(@RequestParam("providerId") Long providerId) {
         return ResponseEntity.ok(providerService.getProvider(providerId));
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/get-providers")
-    public ResponseEntity<List<ProviderDto>> getAllProviders(){
+    public ResponseEntity<List<ProviderDto>> getAllProviders() {
         return ResponseEntity.ok(providerService.getAllProviders());
     }
 }

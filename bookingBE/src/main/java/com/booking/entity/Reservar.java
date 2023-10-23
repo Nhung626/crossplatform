@@ -45,26 +45,29 @@ public class Reservar {
     @Column(name = "total")
     private int total;
 
+    @Column(name="state_payment")
+    private String paymentState;
     public void callTotal() {
         int price;
+        int sum = 0;
         if (stateRooms.size() != 0) {
             for (StateRoom stateRoom : stateRooms) {
                 price = stateRoom.getRoom().getCategory().getPrice();
-                total += Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays() * price;
+                sum += Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays() * price;
             }
         }
-        total= (int)110/100*total;
+        total = 110 * sum / 100;
     }
 
-    public LocalDate getStart(){
+    public LocalDate getStart() {
         return stateRooms.stream().toList().get(0).getStart();
     }
 
-    public LocalDate getEnd(){
+    public LocalDate getEnd() {
         return stateRooms.stream().toList().get(0).getEnd();
     }
 
-    public Provider getProvider(){
+    public Provider getProvider() {
         return stateRooms.stream().toList().get(0).getRoom().getCategory().getProvider();
     }
 

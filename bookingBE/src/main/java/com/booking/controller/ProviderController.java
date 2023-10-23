@@ -138,20 +138,20 @@ public class ProviderController {
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping(value = "/list-booked")
-    public List<ReservarDto> getBooking(Principal principal) {
-        return providerService.getBooking(getProviderId(principal));
+    public ResponseEntity<List<ReservarDto>> getBooking(Principal principal) {
+        return ResponseEntity.ok(providerService.getBooking(getProviderId(principal)));
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping(value = "/list-checkin")
-    public List<ReservarDto> getCheckin(Principal principal) {
-        return providerService.getCheckin(getProviderId(principal));
+    public ResponseEntity<List<ReservarDto>> getCheckin(Principal principal) {
+        return ResponseEntity.ok(providerService.getCheckin(getProviderId(principal)));
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping(value = "/list-checkout")
-    public List<ReservarDto> getCheckout(Principal principal) {
-        return providerService.getCheckout(getProviderId(principal));
+    public ResponseEntity<List<ReservarDto>> getCheckout(Principal principal) {
+        return ResponseEntity.ok(providerService.getCheckout(getProviderId(principal)));
     }
 
     public Long getProviderId(Principal principal) {
@@ -185,7 +185,7 @@ public class ProviderController {
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
-    @GetMapping(value = "/reviews")
+    @GetMapping(value = "/list-reviews")
     public ResponseEntity<List<ReviewDto>> getReview(Principal principal){
         return ResponseEntity.ok(reviewService.getProviderReviews(getProviderId(principal)));
     }
