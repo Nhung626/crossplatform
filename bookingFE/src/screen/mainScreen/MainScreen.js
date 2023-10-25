@@ -51,7 +51,6 @@ export default function MainScreen() {
         }}
         name="HomeScreen"
         component={HomeScreen}
-        initialParams={{ token }}
 
       />
       <Tab.Screen
@@ -75,8 +74,6 @@ export default function MainScreen() {
         }}
         name="Save"
         component={SaveScreen}
-        initialParams={{ token }}
-
       />
       <Tab.Screen
         options={{
@@ -99,7 +96,6 @@ export default function MainScreen() {
         }}
         name="Book"
         component={BookingScreen}
-        initialParams={{ token }}
 
       />
       <Tab.Screen
@@ -124,8 +120,6 @@ export default function MainScreen() {
         }}
         name="User"
         component={UserScreen}
-        initialParams={{ token }}
-
       />
     </Tab.Navigator>
   );
