@@ -33,6 +33,7 @@ public class ReservarServiceImp implements ReservarService {
                 .reservarDate(LocalDateTime.now())
                 .customer(customer)
                 .stateReservar(EStateReservar.BOOKED)
+                .paymentState("Unsuccessful")
                 .stateRooms(new HashSet<>()).build();
         reservarRepository.save(reservar);
         List<Room> rooms = getRoomReservar(createOrderDto.getCategory(), createOrderDto.getRoomCount());

@@ -43,11 +43,13 @@
 </head>
 <body>
 <div class="success-message">
-    <img class="logo" src="/reservar-logo.png" alt="Logo của bạn">
+    <img class="logo" th:src="@{/api/v1/image?imageId=13}" alt="Logo của bạn">
     <div class="success-message">
         <!--        <div class="success-icon">&#10004;</div>-->
         <h1 style="font-size: 30px">Thanh toán không thành công!</h1>
-        <button class="button">Thanh toán</button>
+        <button class="button" onclick="payment()">Thanh toán</button>
+        <p id="reservarId">${reservarId}</p>
+        <p id="total">"Số tiền giao dịch: ${total}"</p>
         <p style="font-size: 20px">Cảm ơn bạn đã đặt phòng. Phòng của bạn đã được xác nhận và đang được xử lý.</p>
     </div>
 </div>
@@ -55,5 +57,32 @@
     <div>&copy; 2023 Copyright: <a href="/static">reservar.vn</a>
     </div>
 </footer>
+
+<script>
+    function payment() {
+        let pay = new FormData();
+        pay.append("reservarId", $('#reservarId').val())
+        pay.append("total", $('#total').val())
+        // let pay1 = {
+        //     'reservarId': $('#reservarId').val(),
+        //     'total': $('#total').val(),
+        // }
+        $.ajax({
+            type: "POST",
+            url: "api/v1/payment/create",
+            data: JSON.stringify(pay),
+            contentType: 'multipart/form-data',
+            cache: false,
+            success: function (response) {
+                console.log("success")
+                // showPopupSuccess('Success!', 'Add Product Success!');
+            },
+            error: function (xhr) {
+                alert("fail")
+                // showPopupError('Error!', xhr.responseJSON.message)
+            }
+        });
+    }
+</script>
 </body>
 </html>

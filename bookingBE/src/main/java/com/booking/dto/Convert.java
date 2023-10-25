@@ -44,8 +44,12 @@ public class Convert {
         for(Room room: rooms){
             roomReservar.append(room.getRoomNumber()).append(" ");
         }
+        ProviderDto providerDto = convertProvider(reservar.getProvider());
         return ReservarDto.builder()
                 .reservarId(reservar.getReservarId())
+                .providerId(providerDto.getProviderId())
+                .providerName(providerDto.getProviderName())
+                .imgId(providerDto.getImgIdProviders().get(0))
                 .customerName(reservar.getCustomer().getFullName())
                 .customerCode(reservar.getCustomer().getCustomerCode())
                 .customerPhone(reservar.getCustomer().getPhoneNumber())
@@ -54,6 +58,7 @@ public class Convert {
                 .stateReservar(reservar.getStateReservar().toString())
                 .reservarDate(reservar.getReservarDate())
                 .total(reservar.getTotal())
+                .statePayment(reservar.getPaymentState())
                 .rooms(roomReservar.toString().trim()).build();
     }
 

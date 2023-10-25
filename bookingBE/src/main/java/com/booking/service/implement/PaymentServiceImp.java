@@ -46,7 +46,7 @@ public class PaymentServiceImp implements PaymentService {
         vnp_Params.put("vnp_Locale", "vn");
 
         vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
-        vnp_Params.put("vnp_IpAddr", "192.168.10.109");
+        vnp_Params.put("vnp_IpAddr", "192.168.0.241");
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

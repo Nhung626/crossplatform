@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class ReservarDto {
     private Long reservarId;
+    private Long imgId;
+    private String providerName;
+    private Long providerId;
     private String customerName;
     private String customerCode;
     private String customerPhone;
@@ -21,5 +24,5 @@ public class ReservarDto {
     private LocalDateTime reservarDate;
     private int total;
     private String stateReservar;
-
+    private String statePayment;
 }
