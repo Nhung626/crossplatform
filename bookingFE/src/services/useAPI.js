@@ -117,7 +117,7 @@ export const getCustomerApi = async (token) => {
         }
         );
         if (response.status === 200) {
-            return response
+            return response.data
         }
     }
     catch (error) {
@@ -150,6 +150,22 @@ export const saveDayBooking = async ({ start, end, person }) => {
     } catch (error) {
         console.log(error.response)
         console.error('Lỗi khi lưu trữ token vào Async Storage: ', error)
+    }
+}
+export const getStartBooking = async () => {
+    try {
+        const start = AsyncStorage.getItem("start");
+        return start
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const getEndBooking = async () => {
+    try {
+        const end = AsyncStorage.getItem("end");
+        return end
+    } catch (error) {
+        console.log(error);
     }
 }
 export const searchAPI = async (start, end, person, token) => {
@@ -206,6 +222,26 @@ export const getAllRoomAPI = async (id, start, end, person, token) => {
         return null
     }
 
+}
+// Lưu giá trị vào AsyncStorage
+export const saveNight = async (night) => {
+    try {
+        await AsyncStorage.setItem('night', night.toString());
+        console.log('Đã lưu số đêm AsyncStorage.');
+    } catch (error) {
+        console.error('Lỗi khi lưu vào AsyncStorage: ', error);
+    }
+};
+export const getNight = async () => {
+    try {
+        const night = await AsyncStorage.getItem('night');
+        console.log("số đêm: ", night);
+        if (night) {
+            return night
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 export const saveFavor = async ({ id }) => {
     try {
@@ -320,7 +356,7 @@ export const getFavorite = async (token) => {
     try {
         const response = await axios({
             method: 'GET',
-            url: `${BASE_URL}customer/get-favorite`,
+            url: `${BASE_URL}customer/list-favorite`,
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -331,5 +367,172 @@ export const getFavorite = async (token) => {
     } catch (error) {
         console.log(error);
         return null
+    }
+}
+
+export const saveCategory = async (dataRoom) => {
+    try {
+        const categoryString = JSON.stringify(dataRoom);
+        await AsyncStorage.setItem('category', categoryString);
+        console.log('Đã lưu category vào AsyncStorage:', dataRoom);
+    } catch (error) {
+        console.error('Lỗi khi lưu category vào AsyncStorage:', error);
+    }
+};
+
+export const getCategory = async () => {
+    try {
+        const categoryString = await AsyncStorage.getItem('category');
+        if (categoryString) {
+            const category = JSON.parse(categoryString);
+            return category;
+        } else {
+            console.log('Không có dữ liệu category trong AsyncStorage.');
+            return null;
+        }
+    } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu category từ AsyncStorage:', error);
+        return null;
+    }
+};
+
+
+export const orderAPI = async (category, roomCount, startDate, endDate, token) => {
+    try {
+        const response = await axios({
+            method: "POST",
+            url: `${BASE_URL}customer/create-order`,
+            data: { category, roomCount, startDate, endDate },
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+
+            },
+        });
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            if (response.data && response.data.message) {
+                console.error("Lỗi:", response.data.message);
+            } else {
+                console.error("Lỗi không rõ nguyên nhân, status:", response.status);
+            }
+            return null;
+        }
+    } catch (error) {
+        console.error('Lỗi :', error);
+        return null
+    }
+}
+
+export const getBookedAPI = async (token) => {
+    try {
+        const response = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/list-booked`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error)
+    }
+}
+export const getCheckoutAPI = async (token) => {
+    try {
+        const response = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/list-checkout`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error)
+    }
+}
+export const getCancelAPI = async (token) => {
+    try {
+        const response = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/list-cancel`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (response.status === 200) {
+            return response.data;
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error)
+    }
+}
+
+export const continuePaymentAPI = async (token, reservarID, total) => {
+    try {
+        const response = await axios({
+            method: "POST",
+            url: `${BASE_URL}payment/create?reservarID=${reservarID}&total=${total}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (response.status === 200) {
+            return response.data.url;
+        }
+    } catch (error) {
+        // console.log("Dữ liệu truyền vào API: ", token, reservarID, total)
+
+        console.log("Lỗi: ", error)
+    }
+}
+
+export const getProviderAPI = async (token, providerId) => {
+
+    try {
+        const resporn = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/get-provider`,
+            params: {
+                providerId: parseInt(providerId)
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (resporn.status === 200) {
+            console.log(resporn.data)
+            return resporn.data
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error)
+    }
+}
+
+export const getCategoryAPI = async (token, categoryId) => {
+
+    try {
+        const resporn = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/get-category`,
+            params: {
+                categoryId: parseInt(categoryId)
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (resporn.status === 200) {
+            console.log(resporn.data)
+            return resporn.data
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error)
     }
 }
