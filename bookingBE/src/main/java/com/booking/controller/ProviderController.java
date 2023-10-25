@@ -142,8 +142,8 @@ public class ProviderController {
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping(value = "/list-cancel")
-    public List<ReservarDto> getCancel(Principal principal) {
-        return providerService.getCancel(getProviderId(principal));
+    public ResponseEntity<List<ReservarDto>> getCancel(Principal principal) {
+        return ResponseEntity.ok(providerService.getCancel(getProviderId(principal)));
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
