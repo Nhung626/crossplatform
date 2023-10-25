@@ -21,12 +21,23 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
 
+//    @RequestMapping(name = "/create", method = RequestMethod.POST)
+//    public String payment(
+//            @RequestParam("reservarId") Long reservarId,
+//            @RequestParam("total") int total) throws UnsupportedEncodingException {
+//       String paymentURL = paymentService.getURLPayment(reservarId,total);
+//        return paymentURL;
+//    }
+
     @PostMapping("/create")
-    public String payment(
+    public ResponseEntity<PaymentDto> payment(
             @RequestParam("reservarID") Long reservarId,
             @RequestParam("total") int total) throws UnsupportedEncodingException {
-       String paymentURL = paymentService.getURLPayment(reservarId,total);
-        return "redirect:/paymentURL";
+        String paymentURL = paymentService.getURLPayment(reservarId,total);
+        return ResponseEntity.ok(PaymentDto.builder()
+                .status("Ok")
+                .message("Successfully")
+                .url(paymentURL).build());
     }
 
     @GetMapping("/info")

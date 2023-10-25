@@ -13,14 +13,17 @@
             height: 100vh;
             margin: 0;
         }
+
         .logo {
             /*margin-top: 30px;*/
             max-width: 200px; /* Điều chỉnh kích thước của logo theo nhu cầu */
         }
+
         .success-message {
             text-align: center;
             color: #0A5F92;
         }
+
         .button {
             margin-top: 20px;
             background-color: #007bff;
@@ -30,6 +33,7 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         footer {
             background-color: #f8f9fa;
             width: 100%;
@@ -43,46 +47,19 @@
 </head>
 <body>
 <div class="success-message">
-    <img class="logo" th:src="@{/api/v1/image?imageId=13}" alt="Logo của bạn">
+    <img alt="Logo của bạn" class="logo" th:src="@{/api/v1/image?imageId=13}">
     <div class="success-message">
-        <!--        <div class="success-icon">&#10004;</div>-->
         <h1 style="font-size: 30px">Thanh toán không thành công!</h1>
-        <button class="button" onclick="payment()">Thanh toán</button>
-        <p id="reservarId">${reservarId}</p>
-        <p id="total">"Số tiền giao dịch: ${total}"</p>
-        <p style="font-size: 20px">Cảm ơn bạn đã đặt phòng. Phòng của bạn đã được xác nhận và đang được xử lý.</p>
+        <!--        <button type="button" class="button" onclick="payment()">Thanh toán</button>-->
+        <!--        <p id="reservarId" th:text="${reservarId}"></p>-->
+        <!--        <p id="total" th:text="${total}"></p>-->
+        <p style="font-size: 20px">Vui lòng thanh toán trong vòng 15 phút nữa để giữ phòng.
+            Sau 15 phút phòng của bạn có thể bị khách sạn hủy </p>
     </div>
 </div>
-<footer >
+<footer>
     <div>&copy; 2023 Copyright: <a href="/static">reservar.vn</a>
     </div>
 </footer>
-
-<script>
-    function payment() {
-        let pay = new FormData();
-        pay.append("reservarId", $('#reservarId').val())
-        pay.append("total", $('#total').val())
-        // let pay1 = {
-        //     'reservarId': $('#reservarId').val(),
-        //     'total': $('#total').val(),
-        // }
-        $.ajax({
-            type: "POST",
-            url: "api/v1/payment/create",
-            data: JSON.stringify(pay),
-            contentType: 'multipart/form-data',
-            cache: false,
-            success: function (response) {
-                console.log("success")
-                // showPopupSuccess('Success!', 'Add Product Success!');
-            },
-            error: function (xhr) {
-                alert("fail")
-                // showPopupError('Error!', xhr.responseJSON.message)
-            }
-        });
-    }
-</script>
 </body>
 </html>
