@@ -71,5 +71,8 @@ public class Reservar {
         return stateRooms.stream().toList().get(0).getRoom().getCategory().getProvider();
     }
 
+    public Category getCategory() {
+        return stateRooms.stream().toList().get(0).getRoom().getCategory();
+    }
 
 }

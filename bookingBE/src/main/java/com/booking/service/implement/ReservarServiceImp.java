@@ -29,7 +29,7 @@ public class ReservarServiceImp implements ReservarService {
     @Transactional
     public ReservarDto createOrder(CreateReservarDto createOrderDto, Long customerId) {
         Customer customer = customerRepository.findByCustomerId(customerId);
-        Reservar reservar = new Reservar().builder()
+        Reservar reservar = Reservar.builder()
                 .reservarDate(LocalDateTime.now())
                 .customer(customer)
                 .stateReservar(EStateReservar.BOOKED)
@@ -37,10 +37,9 @@ public class ReservarServiceImp implements ReservarService {
                 .stateRooms(new HashSet<>()).build();
         reservarRepository.save(reservar);
         List<Room> rooms = getRoomReservar(createOrderDto.getCategory(), createOrderDto.getRoomCount());
-        for (int i = 0; i < rooms.size(); i++) {
-            if (checkState(rooms.get(i), createOrderDto.getStartDate(), createOrderDto.getEndDate())) {
-                Room room = rooms.get(i);
-                StateRoom stateRoom = new StateRoom().builder()
+        for (Room room : rooms) {
+            if (checkState(room, createOrderDto.getStartDate(), createOrderDto.getEndDate())) {
+                StateRoom stateRoom = StateRoom.builder()
                         .start(createOrderDto.getStartDate())
                         .end(createOrderDto.getEndDate())
                         .status(EStateRoom.BOOKED)
@@ -52,7 +51,7 @@ public class ReservarServiceImp implements ReservarService {
                 reservarRepository.save(reservar);
             } else {
                 throw new CustomException("Phòng không đủ điều kiện đặt.");
-             }
+            }
         }
         reservar.callTotal();
         reservarRepository.save(reservar);
@@ -78,9 +77,7 @@ public class ReservarServiceImp implements ReservarService {
         if (states != null) {
             for (StateRoom state : states) {
                 if (state.getStatus() == EStateRoom.BOOKED) {
-                    if (start.isAfter(state.getEnd()) || end.isBefore(state.getStart())) {
-                        continue;
-                    } else {
+                    if (!(start.isAfter(state.getEnd()) || end.isBefore(state.getStart()))) {
                         check = false;
                         break;
                     }
@@ -114,7 +111,7 @@ public class ReservarServiceImp implements ReservarService {
         Set<Room> roomProviders = new HashSet<>();
         Set<Long> categoryIds = new HashSet<>();
         for (Room room : rooms) {
-            if (room.getCategory().getProvider().getProviderId() == providerId) {
+            if (room.getCategory().getProvider().getProviderId().equals(providerId)) {
                 roomProviders.add(room);
             }
         }
@@ -131,7 +128,7 @@ public class ReservarServiceImp implements ReservarService {
     public Set<Room> getSearchRooms(Long categoryId, Set<Room> rooms) {
         Set<Room> roomCategories = new HashSet<>();
         for (Room room : rooms) {
-            if (room.getCategory().getCategoryId() == categoryId) {
+            if (room.getCategory().getCategoryId().equals(categoryId)) {
                 roomCategories.add(room);
             }
         }
@@ -142,7 +139,7 @@ public class ReservarServiceImp implements ReservarService {
         Category category = categoryRepository.findByCategoryId(categoryId);
         List<Long> imgIds = category.getImgRooms().stream().map(Image::getImgId).toList();
         List<Integer> roomNumbers = rooms.stream().map(Room::getRoomNumber).toList();
-        return new CategoryDto().builder()
+        return CategoryDto.builder()
                 .imgIdCategories(imgIds)
                 .categoryName(category.getCategoryName())
                 .price(category.getPrice())
@@ -157,22 +154,30 @@ public class ReservarServiceImp implements ReservarService {
 
     public void changeStateCheckin(Long reservarId) {
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        reservar.setCheckin(LocalDateTime.now());
-        reservar.setStateReservar(EStateReservar.CHECK_IN);
-        reservarRepository.save(reservar);
+        if (reservar.getStateReservar().equals(EStateReservar.BOOKED)) {
+            reservar.setCheckin(LocalDateTime.now());
+            reservar.setStateReservar(EStateReservar.CHECK_IN);
+            reservarRepository.save(reservar);
+        } else {
+            throw new CustomException("Không thể check-in");
+        }
     }
 
     public void changeStateCheckout(Long reservarId) {
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        reservar.setCheckout(LocalDateTime.now());
-        reservar.setStateReservar(EStateReservar.CHECK_OUT);
-        reservarRepository.save(reservar);
+        if (reservar.getStateReservar().equals(EStateReservar.CHECK_IN)) {
+            reservar.setCheckout(LocalDateTime.now());
+            reservar.setStateReservar(EStateReservar.CHECK_OUT);
+            reservarRepository.save(reservar);
+        } else {
+            throw new CustomException("Không thể check-out");
+        }
     }
 
     public boolean changeStateCancel(Long reservarId, Long customerId) {
         boolean check = false;
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        if (customerId == reservar.getCustomer().getCustomerId()) {
+        if (customerId.equals(reservar.getCustomer().getCustomerId())) {
             List<StateRoom> stateRooms = reservar.getStateRooms().stream().toList();
             if (LocalDate.now().isBefore(reservar.getStart())) {
                 reservar.setStateReservar(EStateReservar.CANCELED);
@@ -191,9 +196,17 @@ public class ReservarServiceImp implements ReservarService {
     public boolean changeCancel(Long reservarId, Long providerId) {
         boolean check = false;
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        if (providerId == reservar.getProvider().getProviderId()) {
+        if (providerId.equals(reservar.getProvider().getProviderId())) {
             List<StateRoom> stateRooms = reservar.getStateRooms().stream().toList();
             if (LocalDateTime.now().isAfter(reservar.getStart().atTime(14, 0))) {
+                reservar.setStateReservar(EStateReservar.CANCELED);
+                for (StateRoom stateRoom : stateRooms) {
+                    stateRoom.setStatus(EStateRoom.AVAILABLE);
+                }
+                reservarRepository.save(reservar);
+                check = true;
+            }
+            if (LocalDateTime.now().isAfter(reservar.getReservarDate().plusMinutes(15)) && !reservar.getPaymentState().equals("Success")) {
                 reservar.setStateReservar(EStateReservar.CANCELED);
                 for (StateRoom stateRoom : stateRooms) {
                     stateRoom.setStatus(EStateRoom.AVAILABLE);

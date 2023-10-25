@@ -45,11 +45,14 @@ public class Convert {
             roomReservar.append(room.getRoomNumber()).append(" ");
         }
         ProviderDto providerDto = convertProvider(reservar.getProvider());
+        CategoryDto categoryDto = convertCategory(reservar.getCategory());
         return ReservarDto.builder()
                 .reservarId(reservar.getReservarId())
                 .providerId(providerDto.getProviderId())
                 .providerName(providerDto.getProviderName())
-                .imgId(providerDto.getImgIdProviders().get(0))
+                .imgProvider(providerDto.getImgIdProviders().get(0))
+                .imgCategory(categoryDto.getImgIdCategories().get(0))
+                .categoryId(categoryDto.getCategoryId())
                 .customerName(reservar.getCustomer().getFullName())
                 .customerCode(reservar.getCustomer().getCustomerCode())
                 .customerPhone(reservar.getCustomer().getPhoneNumber())

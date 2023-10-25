@@ -13,9 +13,11 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public class ReservarDto {
     private Long reservarId;
-    private Long imgId;
+    private Long imgProvider;
+    private Long imgCategory;
     private String providerName;
     private Long providerId;
+    private Long categoryId;
     private String customerName;
     private String customerCode;
     private String customerPhone;

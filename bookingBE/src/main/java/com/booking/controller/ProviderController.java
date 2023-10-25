@@ -109,7 +109,17 @@ public class ProviderController {
                 .description(description)
                 .roomNumbers(numbers).build();
         roomService.addCategory(createCategoryDto);
-        return ResponseEntity.status(200).build();
+        return ResponseEntity.ok("Success");
+    }
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/update-category")
+    public ResponseEntity<Object> updateCategory(
+            @RequestParam("categoryId")Long categoryId,
+            @RequestParam("roomNumbers") String roomNumbers
+    ){
+        List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n.trim())).toList();
+        roomService.addRoom(categoryId, numbers);
+        return ResponseEntity.ok("Success");
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
