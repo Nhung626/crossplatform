@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Modal } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import CalendarPicker from 'react-native-calendar-picker'
 import { themeColor } from '../utils/theme';
+import { saveNight } from '../services/useAPI';
 
 export default function Calendar({ isVisible, onClose }) {
     const weekdays = ['T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7', 'CN']
@@ -51,16 +52,10 @@ export default function Calendar({ isVisible, onClose }) {
             setCountDayEnd(null)
 
             const dayOfWeek = new Date(date).getDay();
-            console.log(startDayOfWeek)
             setStartDayOfWeek(weekdays[dayOfWeek]);
         }
     };
-    useEffect(() => {
-        if (startDayOfWeek && endDayOfWeek) {
-            const calculatedNight = calculateNightCount();
-            setCountNight(calculatedNight);
-        }
-    }, [countDayStart, countDayEnd]);
+
 
     const calculateNightCount = () => {
         const dayStart = new Date(countDayStart);
@@ -73,8 +68,14 @@ export default function Calendar({ isVisible, onClose }) {
 
         return 0; // Default value if no dates are selected
     };
-
-
+    useEffect(() => {
+        if (startDayOfWeek && endDayOfWeek) {
+            const calculatedNight = calculateNightCount();
+            setCountNight(calculatedNight);
+            console.log("đêm: ", calculatedNight)
+            saveNight(calculatedNight)
+        }
+    }, [countDayStart, countDayEnd]);
 
     customMonths =
         ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12']

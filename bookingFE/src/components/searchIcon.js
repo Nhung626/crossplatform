@@ -6,6 +6,7 @@ import * as Icon from "react-native-feather"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Calendar from '../modals/calendarPicker';
 import NumOfPeople from '../modals/numOfPeople'
+import { getNight, saveNight } from '../services/useAPI'
 export default function SearchIcon() {
     const navigation = useNavigation();
     const route = useRoute();
@@ -19,6 +20,7 @@ export default function SearchIcon() {
     const [calendarData, setCalendarData] = useState({
         startDate, endDate, startDayOfWeek, countNight, endDayOfWeek
     });
+
     const handleNumOfPeopleClose = (data) => {
         setNumOfPeopleData(data);
         setNumOfPeopleModalVisible(false);
@@ -27,6 +29,8 @@ export default function SearchIcon() {
         setCalendarData(data);
         setCalendarModalVisible(false);
     }
+
+
     return (
         <SafeAreaView style={{ backgroundColor: 'white' }}>
             <StatusBar style='dark' />

@@ -36,25 +36,14 @@ export default function InformationScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [image, setImage] = useState(null);
 
-  const [token, setToken] = useState("")
-
   // const route = useRoute();
   // const { token, id } = route.params ?? {};
   // console.log(token)
   // console.log(id)
   const navigation = useNavigation()
 
-  useEffect(() => {
-    const getTokenId = async () => {
-      const token = await getToken();
-
-      setToken(token)
-    }
-    getTokenId();
-
-  }, [])
-
   const handleSaveInformation = async () => {
+    const token = await getToken();
     const update = await updateCustomer(token,
       image,
       fullName,
@@ -63,8 +52,10 @@ export default function InformationScreen() {
       address,
       customerCode,
       dateOfBirth)
+    if (update) {
+      navigation.navigate("MainScreen")
 
-    navigation.navigate("MainScreen")
+    }
   };
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -76,7 +67,7 @@ export default function InformationScreen() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]);
       return
     }
   };
@@ -93,7 +84,7 @@ export default function InformationScreen() {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <TouchableOpacity onPress={() => pickImage()} style={{ marginVertical: 30 }}>
               {image ? (
-                <Image source={{ uri: image }} style={styles.imgAvt} />
+                <Image source={{ uri: image.uri }} style={styles.imgAvt} />
               ) : (
                 <Image style={styles.imgAvt}
                   source={require("../../assets/images/icons/image.png")}
