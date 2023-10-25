@@ -1,7 +1,12 @@
 package com.booking.service.implement;
 
+import com.booking.entity.Payment;
+import com.booking.entity.Reservar;
 import com.booking.payment.Config;
+import com.booking.repository.PaymentRepository;
+import com.booking.repository.ReservarRepository;
 import com.booking.service.interfaces.PaymentService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -9,15 +14,22 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 @Service
+@AllArgsConstructor
 public class PaymentServiceImp implements PaymentService {
+
+    private final PaymentRepository paymentRepository;
+
+    private final ReservarRepository reservarRepository;
+
     @Override
-    public String getURLPayment(int total) throws UnsupportedEncodingException {
+    public String getURLPayment(Long reservarId, int total) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
         long amount = total * 100;
-        String vnp_TxnRef = Config.getRandomNumber(8);
+        String vnp_TxnRef = reservarId + Config.getRandomNumber(8);
         String vnp_TmnCode = Config.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
@@ -71,6 +83,18 @@ public class PaymentServiceImp implements PaymentService {
         String queryUrl = query.toString();
         String vnp_SecureHash = Config.hmacSHA512(Config.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+
+        paymentRepository.save(new Payment().builder()
+                .vnpTxnRef(vnp_TxnRef)
+                .reservarId(reservarId).build());
+
         return Config.vnp_PayUrl + "?" + queryUrl;
+    }
+
+    public void changeStatePayment(String vnpTxnRef,String state){
+        Payment payment = paymentRepository.findByVnpTxnRef(vnpTxnRef);
+        Reservar reservar = reservarRepository.findByReservarId(payment.getReservarId());
+        reservar.setPaymentState(state);
+        reservarRepository.save(reservar);
     }
 }

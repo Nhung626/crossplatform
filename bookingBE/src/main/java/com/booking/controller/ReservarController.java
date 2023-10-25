@@ -38,8 +38,7 @@ public class ReservarController {
     @PostMapping(value = "/create-order")
     public ResponseEntity<Object> createOrder(@RequestBody CreateReservarDto createOrderDto, Principal principal) throws UnsupportedEncodingException {
         ReservarDto reservarDto = reservarService.createOrder(createOrderDto, getCustomerId(principal));
-        String paymentURL = paymentService.getURLPayment(reservarDto.getTotal());
-
+        String paymentURL = paymentService.getURLPayment(reservarDto.getReservarId(),reservarDto.getTotal());
         return ResponseEntity.ok(ReservarPaymentDto.builder()
                 .reservarDto(reservarDto)
                 .paymentURL(paymentURL)
