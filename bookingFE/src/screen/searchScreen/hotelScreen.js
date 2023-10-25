@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StatusBar, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getImgCustomerUrl } from '../../services/baseUrl';
 import ShowRoom from '../../components/showRoom';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectHotel, selectSelectedHotel } from '../../redux/slices/hotelSlice';
 import { addFavoriteAPI, deleteFavorite, getAllRoomAPI, getIdFavor } from '../../services/useAPI';
 
 export default function HotelScreen() {
@@ -21,9 +19,9 @@ export default function HotelScreen() {
 
     } } = useRoute();
 
-    const navigation = useNavigation();
     const [data, setData] = useState("");
     const [favorite, setFavorite] = useState(false);
+    console.log("Hiển thị imaHotel: ", imageHotel)
 
     useEffect(() => {
         if (token && person && start && end) {
@@ -57,7 +55,6 @@ export default function HotelScreen() {
             console.error('Error:', error);
         }
     }
-    console.log("favorite 1v: ", favorite)
     const heartColor = favorite ? themeColor.bgColor : 'white';
 
     const screenWidth = Dimensions.get("window").width;
@@ -65,18 +62,6 @@ export default function HotelScreen() {
         <SafeAreaView style={{ backgroundColor: themeColor.bgModalColor }}>
             <StatusBar style='light' backgroundColor={themeColor.bgColor} />
             <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 50, zIndex: 1000, paddingHorizontal: 10 }}>
-                <TouchableOpacity style={{ padding: 8, backgroundColor: themeColor.bgColor, borderRadius: 100 }} onPress={() => navigation.goBack()}>
-                    <Icon.ArrowLeft height={30} width={30} strokeWidth="2" stroke="white" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleFavorite} >
-                    <Icon.Heart
-                        height={40}
-                        width={40}
-                        strokeWidth="2"
-                        stroke={themeColor.bgColor}
-                        style={{ marginHorizontal: 10 }}
-                        fill={heartColor} />
-                </TouchableOpacity>
             </View>
             {/* Header bar */}
             <ScrollView>
@@ -103,20 +88,45 @@ export default function HotelScreen() {
 
                     {/* Content */}
                     <View style={{
-                        backgroundColor: 'white', paddingTop: 24
+                        backgroundColor: 'white', paddingTop: 24, flex: 1
                     }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 15 }}>
-                            <View style={{ flexDirection: 'column', width: "80%" }}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 24, flexWrap: 'wrap', paddingBottom: 10, textAlign: 'center', }}>{name} </Text>
+                        <View style={{ flex: 1, paddingHorizontal: 10, }}>
+                            <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+                                <Text style={{
+                                    flex: 1,
+                                    fontWeight: 'bold',
+                                    fontSize: 24,
+                                    flexWrap: 'wrap',
+                                    paddingBottom: 10,
+                                    textAlign: 'left',
+                                    justifyContent: 'flex-start'
+                                }}>{name} </Text>
+                                <TouchableOpacity onPress={handleFavorite} >
+                                    <Icon.Heart
+                                        height={30}
+                                        width={30}
+                                        strokeWidth="2"
+                                        stroke={themeColor.bgColor}
+                                        style={{ justifyContent: 'flex-end' }}
+                                        fill={heartColor} />
+                                </TouchableOpacity>
+                            </View>
 
-                                <Text>{description}</Text>
+                            <View style={{ flexDirection: 'row', flex: 1, columnGap: 10, paddingVertical: 10, borderBottomWidth: 0.2, paddingBottom: 10 }}>
+                                <Icon.Info
+                                    height={25}
+                                    width={25}
+                                    stroke={"grey"}
+                                    style={{ justifyContent: "flex-start", flex: 1 }} />
+
+                                <Text style={{ flexWrap: 'wrap', textAlign: 'left', flex: 1 }}>{description}</Text>
                             </View>
 
 
                         </View>
                         {/*Vị trí */}
 
-                        <View style={{ marginHorizontal: 10 }}>
+                        <View style={{ marginHorizontal: 10, borderBottomColor: 'grey', borderBottomWidth: 0.6, paddingBottom: 10 }}>
 
                             <Text style={{ fontWeight: 'bold', fontSize: 20, paddingVertical: 10 }}> Vị trí chỗ nghỉ</Text>
                             <View style={{ flexDirection: 'row', columnGap: 10, marginHorizontal: 10 }}>
@@ -146,6 +156,7 @@ export default function HotelScreen() {
                         data.map((item) => (
                             <ShowRoom
                                 key={item.categoryId}
+                                id={item.categoryId}
                                 name={item.categoryName}
                                 imageRoom={item.imgIdCategories}
                                 description={item.description}
@@ -153,10 +164,10 @@ export default function HotelScreen() {
                                 price={item.price}
                                 area={item.area}
                                 bedType={item.bedType}
-                                roomNumber={item.roomNumber}
-
-
+                                countRoom={item.countRoom}
+                                dataRoom={item}
                             />
+
                         ))
                     ) : (
                         <Text>Data is not an array.</Text>
