@@ -1,12 +1,42 @@
-import { View, Text, StatusBar, Image, ScrollView } from 'react-native'
-import React from 'react'
+import { View, Text, StatusBar, Image, ScrollView, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { themeColor } from '../../utils/theme'
 import * as Icon from "react-native-feather";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { getToken, orderAPI } from '../../services/useAPI';
+import { getImgCustomerUrl } from '../../services/baseUrl';
 export default function CheckReservar() {
+    const route = useRoute();
+    const [url, setUrl] = useState('');
+    const {
+        dataRoom,
+        night,
+        totalRoom,
+        start,
+        end,
+        customer,
+        totalPrice
+
+    } = route.params ?? {}
     const navigation = useNavigation()
+
+    const handleOder = async () => {
+        const token = await getToken()
+        const response = await orderAPI(dataRoom, totalRoom, start, end, token);
+        if (response) {
+            // console.log("url resporn: ", response.paymentURL)
+            navigation.navigate("Web", { url: response.paymentURL })
+        }
+        else {
+            console.log("đặt phòng ko thành công!")
+            console.log(response)
+        }
+
+
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#f0f0f0' }}>
             <StatusBar backgroundColor={themeColor.bgColor} barStyle={'light-content'} />
@@ -24,62 +54,62 @@ export default function CheckReservar() {
                     <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10, justifyContent: 'space-between' }}>
                         <View style={{ flexDirection: 'column', rowGap: 10 }}>
                             <Text style={{ fontWeight: '300', color: 'grey' }}>Nhận phòng</Text>
-                            <Text> T.2, 9 Th10</Text>
+                            <Text>{start}</Text>
                         </View>
                         <View style={{ flexDirection: 'column', rowGap: 10, alignItems: 'center' }}>
                             <MaterialCommunityIcons name="weather-night" size={24} color={themeColor.btColor} />
-                            <Text> T.2, 9 Th10</Text>
+                            <Text> {night} đêm</Text>
                         </View>
                         <View style={{ flexDirection: 'column', rowGap: 10, alignItems: 'flex-end' }}>
                             <Text style={{ fontWeight: '300', color: 'grey', }}>Trả phòng</Text>
-                            <Text style={{ color: 'grey' }}> 1 đêm</Text>
+                            <Text >{end}</Text>
                         </View>
                     </View>
                 </View>
                 <View style={{ marginVertical: 10, backgroundColor: 'white', paddingHorizontal: 20, paddingVertical: 20, rowGap: 10 }}>
-                    <Text style={{ fontSize: 15 }}> (1x) Standard Double Room </Text>
-                    <Image source={require('../../assets/images/hotelImages/hotels/rooms/room1.png')} style={{ width: 200, height: 100 }} resizeMode='cover' />
+                    <Text style={{ fontSize: 15 }}> {dataRoom.categoryName}</Text>
+                    <Image source={{ uri: `${getImgCustomerUrl}?imageId=${dataRoom.imgIdCategories[0]}` }} style={{ width: 200, height: 100 }} resizeMode='cover' />
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ rowGap: 10, paddingRight: 100 }}>
                             <Text>Loại giường</Text>
                             <Text>Số khách</Text>
                         </View>
                         <View style={{ rowGap: 10 }}>
-                            <Text>1 giường đôi</Text>
-                            <Text>2 khách/phòng</Text>
+                            <Text>{dataRoom.bedType}</Text>
+                            <Text>{dataRoom.person} khách/phòng</Text>
                         </View>
                     </View>
                 </View>
                 <View style={{ marginVertical: 10, backgroundColor: 'white', paddingHorizontal: 20, paddingVertical: 20, rowGap: 10 }}>
                     <Text style={{ fontSize: 15 }}> Chính sách lưu trú</Text>
                     <Text>
-                        linh ta linh tinh .... nhân phòng sớm
-                        Trả phòng sớm
-                        v.v.v.v.v.v.v.v.v.v.
+                        {dataRoom.description}
                     </Text>
                 </View>
                 <View style={{ marginVertical: 10, backgroundColor: 'white', paddingHorizontal: 20, paddingVertical: 20, rowGap: 10 }}>
                     <Text style={{ fontSize: 15, marginBottom: 10 }}>Thông tin khách</Text>
                     <Text style={{ color: 'grey' }}>Tên khách</Text>
-                    <Text>Tran Quang Linh</Text>
+                    <Text>{customer.fullName}</Text>
                 </View>
                 <View style={{ marginVertical: 10, backgroundColor: 'white', paddingHorizontal: 20, paddingVertical: 20, rowGap: 10, borderBottomWidth: 0.6, borderBottomColor: 'grey' }}>
                     <Text style={{ fontSize: 15, marginBottom: 10 }}>Chi tiết giá</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         <View style={{ flex: 1 }}>
                             <Text style={{ color: 'grey' }}>
-                                (1x) Le Grand Hanoi Hotel - The Ruby, Standard Double Room</Text>
+                                ({totalRoom}x) {dataRoom.categoryName}</Text>
                         </View>
-                        <Text style={{ textAlign: 'right', color: 'grey' }}>VND 368.204</Text>
+                        <Text style={{ textAlign: 'right', color: 'grey' }}>VND {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                     </View>
                 </View>
                 <View style={{ paddingVertical: 20, paddingHorizontal: 20, flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.6, borderBottomColor: 'grey' }}>
                     <Text>Tổng giá tiền</Text>
-                    <Text style={{ color: themeColor.bgColor, fontSize: 16 }}>VND 368.204</Text>
+                    <Text style={{ color: themeColor.bgColor, fontSize: 16 }}>VND {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                 </View>
-                <View style={{ marginVertical: 20, marginHorizontal: 20, borderRadius: 8, backgroundColor: themeColor.bgColor, alignItems: 'center', padding: 15 }}>
+                <TouchableOpacity
+                    onPress={handleOder}
+                    style={{ marginVertical: 20, marginHorizontal: 20, borderRadius: 8, backgroundColor: themeColor.bgColor, alignItems: 'center', padding: 15 }}>
                     <Text style={{ fontSize: 16, color: 'white' }}>Tiếp tục thanh toán</Text>
-                </View>
+                </TouchableOpacity>
             </ScrollView>
 
         </SafeAreaView>
