@@ -1,35 +1,35 @@
 import { Text, StyleSheet, StatusBar, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons'
-import { Logout, getCustomerApi } from "../../services/useAPI";
+import { Logout, getCustomerApi, getToken } from "../../services/useAPI";
 import { useEffect, useState } from "react";
 import { getImgCustomerUrl } from "../../services/baseUrl";
 import ScreenNames from "../../utils/screenNames";
 import { themeColor } from "../../utils/theme";
-//import { Logout } from "../services/authService";
 
-export default function UserScreen({ navigation, route }) {
+export default function UserScreen({ navigation }) {
     const [fullName, setFullName] = useState("");
     const [imageUrl, setImageUrl] = useState();
-    const { token } = route.params ?? {};
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const token = await getToken();
                 const response = await getCustomerApi(token);
+                console.log("resporn: ", token)
                 if (response) {
-                    setFullName(response.data.fullName);
-                    setImageUrl(getImgCustomerUrl.concat(`?imageId=${response.data.avatarId}`))
+                    console.log(response)
+                    setFullName(response.fullName);
+                    setImageUrl(getImgCustomerUrl.concat(`?imageId=${response.avatarId}`))
                 } else {
-                    console.error('Request was not successful:', response.status);
+                    console.error('Request was not successful:');
                 }
-
             } catch (error) {
                 console.error('There was a problem with the request:', error);
             }
         };
         fetchData();
-    }, [])
+    }, [fullName, imageUrl])
 
     const handleLogout = async () => {
         await Logout();
@@ -48,7 +48,7 @@ export default function UserScreen({ navigation, route }) {
 
             <View style={styles.body}>
                 <ScrollView style={styles.scroll}>
-                    <TouchableOpacity onPress={() => navigation.navigate(ScreenNames.INFOCUSTOMER, { token: token })}>
+                    <TouchableOpacity onPress={() => navigation.navigate(ScreenNames.INFOCUSTOMER)}>
                         <View style={styles.fix}>
                             <Ionicons style={styles.icon} name="person-circle-outline" />
                             <Text style={styles.Text}>
