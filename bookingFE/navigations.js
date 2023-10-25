@@ -30,6 +30,8 @@ import TestHotelScreen from './src/screen/testScreen/testHotelScreen';
 import InfoRoomScreen from './src/screen/searchScreen/infoRoomScreen';
 import ScreenNames from './src/utils/screenNames';
 import LoadingScreen from './src/screen/loginscreen/loadingScreen';
+import WebScreen from './src/screen/searchScreen/webScreen';
+import InfoHotelBooked from './src/screen/searchScreen/InfoHotelBooked';
 
 const Stack = createNativeStackNavigator();
 const HidenHeader = {
@@ -63,7 +65,8 @@ export default function Navigations() {
                 <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
                 <Stack.Screen name='CheckReservar' component={CheckReservar} />
                 <Stack.Screen name='InfoRoom' component={InfoRoomScreen} />
-
+                <Stack.Screen name='Web' component={WebScreen} />
+                <Stack.Screen name='Info Hotel Booked' component={InfoHotelBooked} />
 
                 <Stack.Screen name='GetAll' component={GetProvider} />
                 <Stack.Screen name='TestHotel' component={TestHotelScreen} />

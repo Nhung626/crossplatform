@@ -17,10 +17,9 @@ export default function ShowHotel({
     start, end, person, token
 }) {
     const navigation = useNavigation();
-    console.log("id ảnh provider: ", imageHotel[0])
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.replace('Hotel', {
+            <TouchableOpacity onPress={() => navigation.navigate('Hotel', {
                 id,
                 name,
                 imageHotel,

@@ -5,21 +5,23 @@ import { themeColor } from '../utils/theme';
 
 export default function NumOfPeople({ isVisible, onClose }) {
 
-    const [roomCount, setRoomCount] = useState(0);
+    // const [roomCount, setRoomCount] = useState(0);
     const [peopleCount, setPeopleCount] = useState(0);
 
     const handleIncrement = (type) => {
-        if (type === 'room' && roomCount < 10) {
-            setRoomCount(roomCount + 1);
-        } else if (type === 'people' && peopleCount < 10) {
+        // if (type === 'room' && roomCount < 10) {
+        //     setRoomCount(roomCount + 1);
+        // } else 
+        if (type === 'people' && peopleCount < 10) {
             setPeopleCount(peopleCount + 1);
         }
     };
 
     const handleDecrement = (type) => {
-        if (type === 'room' && roomCount >= 1) {
-            setRoomCount(roomCount - 1);
-        } else if (type === 'people' && peopleCount >= 1) {
+        // if (type === 'room' && roomCount >= 1) {
+        //     setRoomCount(roomCount - 1);
+        // } else
+        if (type === 'people' && peopleCount >= 1) {
             setPeopleCount(peopleCount - 1);
         }
     };
@@ -36,20 +38,12 @@ export default function NumOfPeople({ isVisible, onClose }) {
                 alignItems: "center",
 
             }}>
-                <View style={{
-                    marginLeft: 10, marginRight: 10, backgroundColor: themeColor.bgModalColor,
-                    padding: 20,
-                    borderTopLeftRadius: 50, borderTopRightRadius: 50,
-                    borderWidth: 1,
-                    borderColor: "#ccc",
-                    height: "45%",
-                    width: "100%",
-                }}>
+                <View style={styles.containerModal}>
                     <View style={{ paddingVertical: 30, alignItems: 'center' }}>
                         <Text style={{ fontWeight: '500', fontSize: 20 }}>Thay đổi tìm kiếm của bạn</Text>
 
                     </View>
-                    <View style={styles.countContainer}>
+                    {/* <View style={styles.countContainer}>
                         <Text style={styles.text}>Số phòng</Text>
                         <View style={styles.count}
                         >
@@ -66,7 +60,7 @@ export default function NumOfPeople({ isVisible, onClose }) {
                             </TouchableOpacity>
                         </View>
 
-                    </View>
+                    </View> */}
                     <View style={styles.countContainer}>
                         <Text style={styles.text}>Số người</Text>
                         <View style={styles.count}>
@@ -84,10 +78,9 @@ export default function NumOfPeople({ isVisible, onClose }) {
                         </View>
                     </View>
                     <TouchableOpacity onPress={() => {
-                        onClose({ roomCount, peopleCount })
+                        onClose({peopleCount })
                     }}
-
-                        style={{ borderRadius: 10, backgroundColor: themeColor.bgColor, alignItems: 'center', padding: 10 }}>
+                        style={styles.button}>
                         <Text style={{ fontSize: 18, color: 'white' }}>Áp dụng</Text>
                     </TouchableOpacity>
                 </View>
@@ -98,11 +91,19 @@ export default function NumOfPeople({ isVisible, onClose }) {
     )
 }
 const styles = StyleSheet.create({
+    containerModal: {
+        marginLeft: 10, marginRight: 10, backgroundColor: themeColor.bgModalColor,
+        padding: 20,
+        borderTopLeftRadius: 50, borderTopRightRadius: 50,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        height: "35%",
+        width: "100%",
+    },
     countContainer: {
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 15
     },
     count: {
         flexDirection: 'row',
@@ -124,5 +125,12 @@ const styles = StyleSheet.create({
     sizeIcon: {
         height: 10,
         width: 10
+    },
+    button: {
+        borderRadius: 10,
+        backgroundColor: themeColor.bgColor,
+        alignItems: 'center',
+        padding: 10,
+        marginTop: '10%'
     }
 })

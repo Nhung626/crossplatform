@@ -1,13 +1,49 @@
 import { View, Text, StatusBar, ScrollView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { getCustomerApi, getEndBooking, getNight, getStartBooking, getToken, orderAPI, saveCategory } from '../../services/useAPI';
 
 export default function PaymentScreen() {
-    const navigation = useNavigation();
+    const route = useRoute()
+    const {
+        name,
+        dataRoom,
+        totalRoom
 
+    } = route.params ?? {}
+    const navigation = useNavigation();
+    const [start, setStart] = useState();
+    const [end, setEnd] = useState();
+    const [customer, setCustomer] = useState([]);
+    const [night, setNight] = useState();
+    useEffect(() => {
+        fetchData = async () => {
+            if (dataRoom) {
+                await saveCategory(dataRoom)
+                const startDay = await getStartBooking();
+                const endDay = await getEndBooking();
+                const nightt = await getNight();
+                setNight(nightt);
+                setStart(startDay);
+                setEnd(endDay)
+
+                console.log("night: ", night)
+                const token = await getToken();
+                const customerInfo = await getCustomerApi(token)
+                if (customerInfo) {
+                    setCustomer(customerInfo)
+                }
+            }
+        }
+        fetchData()
+    }, [])
+    const sumPrice = totalRoom * parseInt(dataRoom.price) * parseInt(night);
+    console.log("night: ", night)
+    const tax = sumPrice / 10;
+    const totalPrice = sumPrice + tax;
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#dedede' }}>
             <StatusBar style='light' backgroundColor={themeColor.bgColor} />
@@ -21,26 +57,22 @@ export default function PaymentScreen() {
                 <View style={{ backgroundColor: themeColor.bgColor, paddingHorizontal: 20, paddingVertical: 20 }}>
                     <View style={{ backgroundColor: 'white', borderRadius: 10, }}>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 10, rowGap: 8, borderBottomWidth: 0.6, borderBlockColor: 'gray' }}>
-                            <Text style={{ fontSize: 16, fontWeight: '500' }}>Tên khách sạn</Text>
-                            <Text>Nhận phòng         (VD) T.2, 9 Th10 2023 (14:00)</Text>
-                            <Text>Trả phòng          (VD) T.3, 9 Th10 2023 (12:00)</Text>
+                            <Text style={{ fontSize: 16, fontWeight: '500' }}>{dataRoom.categoryName}</Text>
+                            <Text>Nhận phòng                    {start}</Text>
+                            <Text>Trả phòng                       {end}</Text>
                         </View>
                         <View style={{ paddingVertical: 10, paddingHorizontal: 10, rowGap: 8, borderBottomWidth: 0.6, borderBlockColor: 'gray' }}>
-                            <Text>(3x) Tên phòng </Text>
-                            <Text style={{ fontSize: 12, color: 'gray' }}>1 giường đôi</Text>
-                            <Text style={{ fontSize: 12, color: 'gray' }}>2 khách/phòng</Text>
+                            <Text>{name}</Text>
+                            <Text style={{ fontSize: 12, color: 'gray' }}>{dataRoom.bedType}</Text>
+                            <Text style={{ fontSize: 12, color: 'gray' }}>{dataRoom.person} khách/phòng</Text>
                         </View>
                     </View>
-                </View>
-                <View style={{ backgroundColor: 'white', paddingHorizontal: 20, paddingVertical: 20, rowGap: 20 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '300' }}>Đăng nhập dưới tên Tran Quang Linh</Text>
-                    <Text style={{ fontSize: 12, fontWeight: '200' }}>bằng +84385880364</Text>
                 </View>
                 <View style={{ marginHorizontal: 10, marginVertical: 20 }}>
                     <Text style={{ fontWeight: '400', fontSize: 16, marginBottom: 10 }}>Thông tin liên hệ</Text>
                     <View style={{ paddingVertical: 10, paddingHorizontal: 10, backgroundColor: 'white', borderRadius: 10, rowGap: 10 }}>
-                        <Text style={{ fontSize: 16, fontWeight: '300' }}>Tran Quang Linh</Text>
-                        <Text style={{ fontWeight: '200' }}>asjdkm@gmail.com   +84385880364</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '300' }}>{customer.fullName}</Text>
+                        <Text style={{ fontWeight: '200' }}>Số điện thoại: {customer.phoneNumber}</Text>
                     </View>
 
                 </View>
@@ -55,24 +87,32 @@ export default function PaymentScreen() {
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 0.6, borderBottomColor: 'gray', paddingVertical: 20, paddingHorizontal: 20 }}>
                         <Text style={{ fontSize: 16, fontWeight: '300' }}>Tổng giá tiền </Text>
-                        <Text style={{ fontSize: 20, fontWeight: '500', color: themeColor.bgColor }}> VND 1.108.399</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '500', color: themeColor.bgColor }}> {totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 20, }}>
-                        <Text style={{ fontWeight: '200' }}>(3x) Tên phòng </Text>
-                        <Text style={{ fontWeight: '200' }}>VND 977.424</Text>
+                        <Text style={{ fontWeight: '200' }}>({totalRoom}x) {name}</Text>
+                        <Text style={{ fontWeight: '200' }}>VND {sumPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, paddingHorizontal: 20, }}>
                         <Text style={{ fontWeight: '200' }}>Thuế và phí </Text>
-                        <Text style={{ fontWeight: '200' }}>VND 130.975</Text>
+                        <Text style={{ fontWeight: '200' }}>VND {tax.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                     </View>
                 </View>
-                <TouchableOpacity onPress={() => navigation.navigate('CheckReservar')}
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('CheckReservar',
+                        {
+                            dataRoom,
+                            night: night,
+                            totalRoom,
+                            start: start,
+                            end: end,
+                            customer: customer,
+                            totalPrice: totalPrice
+                        })}
                     style={{ marginHorizontal: 20, marginVertical: 20, padding: 15, alignItems: 'center', borderRadius: 8, backgroundColor: themeColor.bgColor }}>
                     <Text style={{ fontSize: 18, fontWeight: '400', color: 'white' }}>Tiếp Tục</Text>
                 </TouchableOpacity>
             </ScrollView>
-
-
         </SafeAreaView>
 
     );

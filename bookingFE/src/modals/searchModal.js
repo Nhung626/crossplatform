@@ -6,29 +6,21 @@ import NumOfPeople from './numOfPeople'
 import { themeColor } from '../utils/theme'
 import Calendar from './calendarPicker'
 import ScreenNames from '../utils/screenNames'
-import { getToken } from '../services/useAPI'
+import { getToken, saveNight } from '../services/useAPI'
 export default function SearchModal() {
     const navigation = useNavigation();
     const [token, setToken] = useState('');
     const route = useRoute;
-    const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount, countNight, start, end } = route.params ?? {};
+    const { startDate, endDate, startDayOfWeek, endDayOfWeek, peopleCount, countNight, start, end } = route.params ?? {};
     const [numOfPeopleModalVisible, setNumOfPeopleModalVisible] = useState(false);
     const [calendarModalVisible, setCalendarModalVisible] = useState(false)
     const [numOfPeopleData, setNumOfPeopleData] = useState({
-        roomCount,
         peopleCount
     });
     const [calendarData, setCalendarData] = useState({
         startDate, endDate, startDayOfWeek, countNight, endDayOfWeek, start, end
     });
-    useEffect(() => {
-        const getTokenId = async () => {
-            const token = await getToken();
-            setToken(token)
-        }
-        getTokenId();
 
-    }, [])
     const handleNumOfPeopleClose = (data) => {
         setNumOfPeopleData(data);
         setNumOfPeopleModalVisible(false);
@@ -37,8 +29,19 @@ export default function SearchModal() {
         setCalendarData(data);
         setCalendarModalVisible(false);
     }
+
+    useEffect(() => {
+        const getTokenId = async () => {
+            const token = await getToken();
+            setToken(token)
+        }
+        getTokenId();
+
+    }, [])
     console.log(calendarData.start, calendarData.end)
     console.log(numOfPeopleData.peopleCount)
+    console.log(calendarData.countNight)
+
     const handleSearch = () => {
         navigation.navigate(ScreenNames.SEARCHVALUE, {
             start: calendarData.start,
@@ -89,8 +92,8 @@ export default function SearchModal() {
                 <Text style={styles.searchText}>
                     {numOfPeopleData.peopleCount ? (
                         <>
-                            <Text> {numOfPeopleData.roomCount} Phòng </Text>
-                            <Text> • </Text>
+                            {/* <Text> {numOfPeopleData.roomCount} Phòng </Text>
+                            <Text> • </Text> */}
                             <Text> {numOfPeopleData.peopleCount} Người</Text>
                         </>
                     ) : (

@@ -17,7 +17,7 @@ export const updateCustomer = async (
     const formData = new FormData();
     if (image) {
         formData.append('avatar', {
-            uri: image,
+            uri: image.uri,
             type: 'image/png',
             name: 'avatar.png',
         });
@@ -42,13 +42,13 @@ export const updateCustomer = async (
             }
         })
         if (response.status === 200) {
-            console.log("đăng ký thành công!")
+            console.log("Cập nhập thông tin thành công!")
             return response
         }
     }
     catch (error) {
-        console.log(error);
-        return null
+        console.log(error, image.uri);
+        console.log("resporn: ", error.response)
     }
 }
 

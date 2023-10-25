@@ -15,14 +15,25 @@ export default function ShowRoom({
     person,
     area,
     bedType,
-    roomNumber,
+    countRoom,
+    dataRoom
 }) {
     const navigation = useNavigation();
     const [containerWidth, setContainerWidth] = useState(0);
-
     const onContainerLayout = (event) => {
         const { width } = event.nativeEvent.layout;
         setContainerWidth(width);
+    };
+    const [countRoomChoose, setCountRoomChoosed] = useState()
+    const [showDropdown, setShowDropdown] = useState(false);
+    console.log("Phòng đã chọn: ", countRoomChoose)
+    const toggleDropdown = () => {
+        setShowDropdown(!showDropdown);
+    };
+
+    const selectRoom = (roomCount) => {
+        setCountRoomChoosed(roomCount);
+        toggleDropdown();
     };
     const handleSelectButtonPress = () => {
         navigation.navigate('PaymentScreen', {
@@ -34,7 +45,9 @@ export default function ShowRoom({
             person,
             area,
             bedType,
-            roomNumber,
+            countRoom,
+            dataRoom,
+            totalRoom: countRoomChoose
         });
     };
     return (
@@ -66,7 +79,8 @@ export default function ShowRoom({
                         person,
                         area,
                         bedType,
-                        roomNumber,
+                        countRoom,
+                        dataRoom
                     })
                 }>
 
@@ -87,8 +101,31 @@ export default function ShowRoom({
                             </View>
                             <Text style={styles.textPrice}>VND {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                             <Text style={styles.textRoomNight}>/phòng/đêm</Text>
-                            <View style={{ paddingVertical: 5, alignItems: 'flex-end' }}>
+                            <View style={styles.containerRoom}>
+                                <TouchableOpacity onPress={toggleDropdown} style={styles.dropdownButton}>
+                                    {countRoomChoose ? (
+                                        <Text>Đã chọn {countRoomChoose} phòng</Text>
+                                    ) : (
+                                        <Text>(có {countRoom} phòng)</Text>
+                                    )
+                                    }
+                                </TouchableOpacity>
 
+                                {showDropdown && (
+                                    <View style={styles.dropdownOptions}>
+                                        {[...Array(countRoom).keys()].map((roomCount) => (
+                                            <TouchableOpacity
+                                                key={roomCount}
+                                                style={styles.dropdownOption}
+                                                onPress={() => selectRoom(roomCount + 1)}
+                                            >
+                                                <Text>{roomCount + 1} phòng</Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                )}
+                            </View>
+                            <View style={{ paddingVertical: 5, alignItems: 'flex-end' }}>
                                 <TouchableOpacity
                                     style={styles.select}
                                     onPress={handleSelectButtonPress}>
@@ -162,5 +199,27 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.5,
         shadowRadius: 4,
         elevation: 5, // Cho Android
+    },
+    containerRoom: {
+        margin: 10,
+    },
+    dropdownButton: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+        borderRadius: 5,
+        justifyContent: 'flex-end'
+    },
+    dropdownOptions: {
+        backgroundColor: 'white',
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+        padding: 0.1
+    },
+    dropdownOption: {
+        padding: 10,
+        borderBottomWidth: 1,
+        borderColor: 'gray',
     },
 });
