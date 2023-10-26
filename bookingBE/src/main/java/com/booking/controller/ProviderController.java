@@ -43,13 +43,13 @@ public class ProviderController {
     private final ReviewService reviewService;
 
     @PostMapping(value = "/auth/sign-up")
-    public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createUserDto){
+    public ResponseEntity<Object> createProvider(@RequestBody CreateUserDto createUserDto) {
         providerService.addProvider(createUserDto);
         return ResponseEntity.ok("success");
     }
 
     @PostMapping(value = "/auth/login")
-    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto){
+    public ResponseEntity<Object> login(@RequestBody LoginUserDto loginUserDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUserDto.getEmail(), loginUserDto.getPassword()));
 
@@ -61,7 +61,7 @@ public class ProviderController {
                 .map(GrantedAuthority::getAuthority).toList();
         Provider provider = providerRepository.findByUserId(userDetails.getId());
         String role = roles.get(0);
-        return ResponseEntity.ok(new JwtUserResponse().builder()
+        return ResponseEntity.ok(JwtUserResponse.builder()
                 .token(jwt).role(role).type("Bearer")
                 .id(provider.getProviderId())
                 .email(provider.getUser().getEmail())
@@ -76,7 +76,7 @@ public class ProviderController {
                                                  @RequestParam("providerPhone") String providerPhone,
                                                  @RequestParam("address") String address,
                                                  @RequestParam("description") String description) throws IOException {
-        UpdateProviderDto updateProviderDto = new UpdateProviderDto().builder()
+        UpdateProviderDto updateProviderDto = UpdateProviderDto.builder()
                 .imgProviders(images)
                 .providerName(providerName)
                 .providerPhone(providerPhone)
@@ -98,7 +98,7 @@ public class ProviderController {
                                           @RequestParam("price") int price,
                                           @RequestParam("roomNumbers") String roomNumbers) throws IOException {
         List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n.trim())).toList();
-        CreateCategoryDto createCategoryDto = new CreateCategoryDto().builder()
+        CreateCategoryDto createCategoryDto = CreateCategoryDto.builder()
                 .imgCategories(images)
                 .providerId(getProviderId(principal))
                 .categoryName(categoryName)
@@ -111,12 +111,13 @@ public class ProviderController {
         roomService.addCategory(createCategoryDto);
         return ResponseEntity.ok("Success");
     }
+
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/update-category")
     public ResponseEntity<Object> updateCategory(
-            @RequestParam("categoryId")Long categoryId,
+            @RequestParam("categoryId") Long categoryId,
             @RequestParam("roomNumbers") String roomNumbers
-    ){
+    ) {
         List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n.trim())).toList();
         roomService.addRoom(categoryId, numbers);
         return ResponseEntity.ok("Success");
@@ -173,14 +174,14 @@ public class ProviderController {
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/checkin")
     public ResponseEntity<Object> checkin(Principal principal, @RequestParam("reservarId") Long reservarId) {
-        reservarService.changeStateCheckin(reservarId);
+        reservarService.changeStateCheckin(getProviderId(principal), reservarId);
         return ResponseEntity.ok("Checkin thành công");
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @PostMapping(value = "/checkout")
     public ResponseEntity<Object> checkout(Principal principal, @RequestParam("reservarId") Long reservarId) {
-        reservarService.changeStateCheckout(reservarId);
+        reservarService.changeStateCheckout(getProviderId(principal), reservarId);
         return ResponseEntity.ok("Checkout thành công");
     }
 
@@ -189,14 +190,14 @@ public class ProviderController {
     public ResponseEntity<Object> cancel(Principal principal, @RequestParam("reservarId") Long reservarId) {
         if (reservarService.changeCancel(reservarId, getProviderId(principal))) {
             return ResponseEntity.ok("Checkout thành công");
-        }else {
+        } else {
             return ResponseEntity.status(400).body("Hủy không thành công");
         }
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping(value = "/list-reviews")
-    public ResponseEntity<List<ReviewDto>> getReview(Principal principal){
+    public ResponseEntity<List<ReviewDto>> getReview(Principal principal) {
         return ResponseEntity.ok(reviewService.getProviderReviews(getProviderId(principal)));
     }
 }

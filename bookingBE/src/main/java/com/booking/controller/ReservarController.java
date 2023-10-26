@@ -16,7 +16,6 @@ import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.PaymentService;
 import com.booking.service.interfaces.ReservarService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

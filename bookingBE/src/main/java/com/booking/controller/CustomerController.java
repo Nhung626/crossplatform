@@ -61,7 +61,7 @@ public class CustomerController {
                 .map(GrantedAuthority::getAuthority).toList();
         String role = roles.get(0);
         Customer customer = customerRepository.findByUserId(userDetails.getId());
-        return ResponseEntity.ok(new JwtUserResponse().builder()
+        return ResponseEntity.ok(JwtUserResponse.builder()
                 .token(jwt).role(role).type("Bearer")
                 .id(customer.getCustomerId())
                 .email(customer.getUser().getEmail())

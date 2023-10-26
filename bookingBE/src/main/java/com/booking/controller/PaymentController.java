@@ -2,7 +2,6 @@ package com.booking.controller;
 
 import com.booking.dto.response.PaymentDto;
 import com.booking.entity.Payment;
-import com.booking.entity.Reservar;
 import com.booking.repository.PaymentRepository;
 import com.booking.service.interfaces.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +20,6 @@ public class PaymentController {
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
 
-//    @RequestMapping(name = "/create", method = RequestMethod.POST)
-//    public String payment(
-//            @RequestParam("reservarId") Long reservarId,
-//            @RequestParam("total") int total) throws UnsupportedEncodingException {
-//       String paymentURL = paymentService.getURLPayment(reservarId,total);
-//        return paymentURL;
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<PaymentDto> payment(
             @RequestParam("reservarID") Long reservarId,
@@ -46,18 +37,18 @@ public class PaymentController {
             @RequestParam("vnp_ResponseCode") String responseCode,
             @RequestParam("vnp_Amount") int amount
     ) {
+        ModelAndView model;
         if (responseCode.equals("00")) {
-            ModelAndView model = new ModelAndView("success");
+            model = new ModelAndView("success");
             paymentService.changeStatePayment(vnpTxnRef, "Success");
-            return model;
         }else {
-            ModelAndView model = new ModelAndView("unsuccess");
+            model = new ModelAndView("unsuccess");
             paymentService.changeStatePayment(vnpTxnRef, "Unsuccessful");
             Payment payment = paymentRepository.findByVnpTxnRef(vnpTxnRef);
             model.addObject("reservarId", payment.getReservarId());
             model.addObject("total",amount/100);
-            return model;
         }
+        return model;
     }
 }
 

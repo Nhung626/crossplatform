@@ -111,7 +111,7 @@ public class ReservarServiceImp implements ReservarService {
         Set<Room> roomProviders = new HashSet<>();
         Set<Long> categoryIds = new HashSet<>();
         for (Room room : rooms) {
-            if (room.getCategory().getProvider().getProviderId().equals(providerId)) {
+            if (providerId.equals(room.getCategory().getProvider().getProviderId())) {
                 roomProviders.add(room);
             }
         }
@@ -128,7 +128,7 @@ public class ReservarServiceImp implements ReservarService {
     public Set<Room> getSearchRooms(Long categoryId, Set<Room> rooms) {
         Set<Room> roomCategories = new HashSet<>();
         for (Room room : rooms) {
-            if (room.getCategory().getCategoryId().equals(categoryId)) {
+            if (categoryId.equals(room.getCategory().getCategoryId())) {
                 roomCategories.add(room);
             }
         }
@@ -152,9 +152,10 @@ public class ReservarServiceImp implements ReservarService {
                 .categoryId(category.getCategoryId()).build();
     }
 
-    public void changeStateCheckin(Long reservarId) {
+    public void changeStateCheckin(Long providerId, Long reservarId) {
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        if (reservar.getStateReservar().equals(EStateReservar.BOOKED)) {
+        if (EStateReservar.BOOKED.equals(reservar.getStateReservar())
+                && Objects.equals(reservar.getProvider().getProviderId(), providerId)) {
             reservar.setCheckin(LocalDateTime.now());
             reservar.setStateReservar(EStateReservar.CHECK_IN);
             reservarRepository.save(reservar);
@@ -163,9 +164,10 @@ public class ReservarServiceImp implements ReservarService {
         }
     }
 
-    public void changeStateCheckout(Long reservarId) {
+    public void changeStateCheckout(Long providerId, Long reservarId) {
         Reservar reservar = reservarRepository.findByReservarId(reservarId);
-        if (reservar.getStateReservar().equals(EStateReservar.CHECK_IN)) {
+        if (EStateReservar.CHECK_IN.equals(reservar.getStateReservar())
+                && providerId.equals(reservar.getProvider().getProviderId())) {
             reservar.setCheckout(LocalDateTime.now());
             reservar.setStateReservar(EStateReservar.CHECK_OUT);
             reservarRepository.save(reservar);
@@ -206,7 +208,7 @@ public class ReservarServiceImp implements ReservarService {
                 reservarRepository.save(reservar);
                 check = true;
             }
-            if (LocalDateTime.now().isAfter(reservar.getReservarDate().plusMinutes(15)) && !reservar.getPaymentState().equals("Success")) {
+            if (LocalDateTime.now().isAfter(reservar.getReservarDate().plusMinutes(15)) && !"Success".equals(reservar.getPaymentState())) {
                 reservar.setStateReservar(EStateReservar.CANCELED);
                 for (StateRoom stateRoom : stateRooms) {
                     stateRoom.setStatus(EStateRoom.AVAILABLE);

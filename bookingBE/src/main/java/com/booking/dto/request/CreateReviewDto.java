@@ -1,7 +1,6 @@
 package com.booking.dto.request;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,5 +14,4 @@ public class CreateReviewDto {
     private int rate;
     private String description;
     private Long reservarId;
-//    private Long customerId;
 }
