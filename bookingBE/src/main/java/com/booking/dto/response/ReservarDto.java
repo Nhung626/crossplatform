@@ -1,6 +1,5 @@
 package com.booking.dto.response;
 
-import com.booking.entity.EStateReservar;
 import lombok.*;
 
 import java.time.LocalDate;
