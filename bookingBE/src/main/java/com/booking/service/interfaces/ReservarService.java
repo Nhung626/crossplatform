@@ -18,6 +18,8 @@ public interface ReservarService {
     Set<CategoryDto> getSearchCategories(Long providerId, List<Room> rooms);
     Set<Room> getSearchRooms(Long categoryId,  Set<Room> rooms);
     List<Room> searchRoom(LocalDate start, LocalDate end, int personCount);
+
+    List<Room> orderFavoriteRoom(Long customerId, LocalDate start, LocalDate end, int personCount);
     void changeStateCheckin(Long providerId, Long reservarId);
     void changeStateCheckout(Long providerId,Long reservarId);
     boolean changeStateCancel(Long reservarId, Long customerId);

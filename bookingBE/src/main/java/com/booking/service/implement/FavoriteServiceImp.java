@@ -26,7 +26,7 @@ public class FavoriteServiceImp implements FavoriteService {
         providerRepository.save(provider);
     }
 
-    public void  removeFavoriteProvider(Long customerId, Long providerId) {
+    public void removeFavoriteProvider(Long customerId, Long providerId) {
         Favorite favorite = favoriteRepository.findByCustomerId(customerId);
         Provider provider = providerRepository.findByProviderId(providerId);
         favorite.getProviders().remove(provider);
@@ -38,4 +38,6 @@ public class FavoriteServiceImp implements FavoriteService {
         Favorite favorite = favoriteRepository.findByCustomerId(customerId);
         return favorite.getProviders().stream().map(Convert::convertProvider).toList();
     }
+
+
 }

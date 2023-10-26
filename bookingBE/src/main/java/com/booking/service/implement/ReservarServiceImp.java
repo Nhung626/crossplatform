@@ -25,6 +25,8 @@ public class ReservarServiceImp implements ReservarService {
     private final CustomerRepository customerRepository;
     private final RoomRepository roomRepository;
     private final CategoryRepository categoryRepository;
+    private final FavoriteRepository favoriteRepository;
+
 
     @Transactional
     public ReservarDto createOrder(CreateReservarDto createOrderDto, Long customerId) {
@@ -249,5 +251,24 @@ public class ReservarServiceImp implements ReservarService {
         }
         return reservarDtos;
     }
+
+    public List<Room> orderFavoriteRoom(Long customerId, LocalDate start, LocalDate end, int personCount) {
+        Favorite favorite = favoriteRepository.findByCustomerId(customerId);
+        Set<Provider> providers = favorite.getProviders();
+        Set<Room> rooms = new HashSet<>();
+        for (Provider provider : providers) {
+            rooms.addAll(roomRepository.findByProviderId(provider.getProviderId()));
+        }
+
+        List<Room> result = new ArrayList<>();
+        for (Room room : rooms) {
+            if (checkState(room, start, end) && room.getCategory().getPerson() == personCount) {
+                result.add(room);
+            }
+        }
+        return result;
+    }
+
+
 }
 

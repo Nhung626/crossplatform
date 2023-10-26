@@ -64,6 +64,25 @@ public class ReservarController {
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping(value = "/favorite-provider")
+    public ResponseEntity<Set<ProviderDto>> searchLikeProvider(Principal principal,@RequestParam("start") LocalDate start,
+                                                           @RequestParam("end") LocalDate end,
+                                                           @RequestParam("person") int person) {
+        List<Room> rooms = reservarService.orderFavoriteRoom(getCustomerId(principal),start, end, person);
+        return ResponseEntity.ok(reservarService.getSearchProviders(rooms));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping(value = "/favorite-category")
+    public ResponseEntity<Set<CategoryDto>> searchLikeCategory(Principal principal,@RequestParam("start") LocalDate start,
+                                                           @RequestParam("end") LocalDate end,
+                                                           @RequestParam("person") int person,
+                                                           @RequestParam("providerId") Long providerId) {
+        List<Room> rooms = reservarService.orderFavoriteRoom(getCustomerId(principal),start, end, person);
+        return ResponseEntity.ok(reservarService.getSearchCategories(providerId, rooms));
+    }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/cancel")
     public ResponseEntity<Object> cancel(Principal principal, @RequestParam("reservarId") Long reservarId) {
         if (reservarService.changeStateCancel(reservarId, getCustomerId(principal))) {
