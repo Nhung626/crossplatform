@@ -10,7 +10,7 @@ export default function Themphong({ route }) {
   const [person, setPerson] = useState('');
   const [area, setArea] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState(''); // Thêm biến `price`
   const [roomNumbers, setRoomNumbers] = useState('');
   const [bedType, setBedType] = useState('');
 
@@ -34,7 +34,7 @@ export default function Themphong({ route }) {
       quality: 1,
     });
 
-    if (result.cancelled) {
+    if (result.canceled) {
       // Xử lý khi người dùng hủy chọn ảnh
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
@@ -64,20 +64,25 @@ export default function Themphong({ route }) {
 
   const handleAddRoom = async () => {
     if (token) {
-      const response = await providerAddRoom(
-        token,
-        imgCategories,
-        categoryName,
-        person,
-        area,
-        description,
-        roomNumbers,
-        bedType
-      );
-      
-      if (response.status === 200) {  
-        navigation.navigate("CreateroomScreen");
-      }else{
+      try {
+        const response = await providerAddRoom(
+          token,
+          imgCategories,
+          categoryName,
+          person,
+          area,
+          description,
+          roomNumbers,
+          bedType
+        );
+
+        if (response && response.status === 200) { // Kiểm tra response không null trước khi truy cập status
+          navigation.navigate("CreateroomScreen");
+        } else {
+          console.log('Lưu không thành công!');
+        }
+      } catch (error) {
+        console.log('Error:', error);
         console.log('Lưu không thành công!');
       }
     }
@@ -152,7 +157,7 @@ export default function Themphong({ route }) {
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => navigation.goBack()} // Điều hướng trở lại màn hình trước
+        onPress={() => navigation.goBack()}
         style={styles.backButton}
       >
         <Text style={styles.backButtonText}>Trở lại</Text>
@@ -209,25 +214,25 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: '#DE5223',
+    backgroundColor: '#A0E9FF',
     alignItems: 'center',
     justifyContent: 'center',
   },
   addButtonText: {
     fontSize: 20,
-    color: '#fff',
+    color: '#3876BF',
   },
   backButton: {
     height: 40,
     borderRadius: 10,
     borderWidth: 1,
-    backgroundColor: '#DE5223',
+    backgroundColor: '#A0E9FF',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,
   },
   backButtonText: {
     fontSize: 20,
-    color: '#fff',
+    color: '#3876BF',
   },
 });

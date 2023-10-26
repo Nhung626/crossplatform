@@ -22,7 +22,7 @@ export default function PersonDetail() {
     async function fetchProviderData() {
       try {
         const response = await getProviderApi(token);
-        if (response.status === 200) {
+        if (response && response.status === 200) {
           const providerData = response.data;
           setProviderData(providerData);
 
@@ -126,7 +126,7 @@ const styles = {
       fontSize: 16,
       borderColor: '#190482', // Màu của đường gạch chân
     },
-    buttonRow: {
+    buttonRow: {  
       flexDirection: 'row',
       justifyContent: 'space-around',
       marginTop: 40,

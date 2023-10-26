@@ -1,9 +1,9 @@
-import axios from "axios"
+import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BASE_URL,
+import {BASE_URL,postCheckinUrl,postCheckoutUrl,postCancelUrl,
     getBookerUrl,getCheckinUrl,getCheckoutUrl,getCancelUrl,getReviewUrl, addUrlProviderLogin,getImgRoomUrl,getCategoryUrl, addUrlProviderSignUp,addUrlProviderAddRoom, addUrlProviderUpdate, getProviderUrl, getImgProviderUrl } from "./baseUrl"
 
-    export const loginApi = async (email, password) => {
+export const loginApi = async (email, password) => {
         try {
             const response = await axios({
                 method: 'POST',
@@ -51,7 +51,7 @@ export const getToken = async () => {
     };
 
 
-    export const signUpApi = async (email, password) => {
+export const signUpApi = async (email, password) => {
         try {
     
             const response = await axios({
@@ -113,7 +113,7 @@ export const providerAddRoom = async (
         name: `image_${index}.png`,
       });
     });
-
+    // formData.append('imgCategories',imgCategories);
     formData.append('categoryName', categoryName);
     formData.append('person', person);
     formData.append('area', area);
@@ -123,24 +123,23 @@ export const providerAddRoom = async (
     console.log("formData nè", formData)
 
     try {
-        //const token = getToken()
         const response = await axios({
             method: "POST",
-            url: `${BASE_URL}customer/update`,
+            url: addUrlProviderAddRoom,
             data: formData,
             headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`
             }
-        })
+        });
         if (response.status === 200) {
-            console.log("đăng ký thành công!")
+            console.log("lưu thành công!")
             return response
         }
-    }
-    catch (error) {
+    } catch (error) {
+        console.log('Error response data:', error.response.data); // Thêm dòng này
         console.log(error);
-        return null
+        return null;
     }
 }
 
@@ -158,7 +157,7 @@ export const getProviderApi = (token) => {
 export const getCategoryApi= (token) => {
     const getCategory = axios({
         method: "GET",
-        url: getCategoryUrl,
+        url: `${BASE_URL}provider/get-categories`,
         headers: {
             Authorization: `Bearer ${token}`
         },
@@ -194,8 +193,9 @@ export const getImgRoomApi = (token,imageId) => {
     return getImg
 }
 
-export const getBooker = (token) => {
+export const getBooked = (token) => {
     const getCategory = axios({
+        
         method: "GET",
         url: getBookerUrl,
         headers: {
@@ -215,7 +215,64 @@ export const getCheckin = (token) => {
     });
     return getCategory;
 };
+export const postCheckin = async(reservarId, token ) => {
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: postCheckinUrl(reservarId),
+            params: { reservarId:reservarId, token:token },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("response: ", response);
 
+        if (response.status === 200) {
+            return response;
+        } else {
+            // Xử lý lỗi và ném ra một ngoại lệ
+            throw new Error(`Failed to check in. Status code: ${response.status}`);
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error);
+        throw error; // Ném ngoại lệ để thông báo lỗi đến người gọi hàm
+    }
+};
+
+
+export const postCheckout = async(reservarId,token) => {
+    const getCategory = axios({
+        method: "POST",
+        url: postCheckoutUrl,
+        params:{reservarId:reservarId},
+        headers: {
+            
+            Authorization: `Bearer ${token}`
+        },
+    });
+    return getCategory;
+};
+
+export const postCancel = async( reservarId,token) => {
+    try{
+       const response = await axios({
+      method: 'POST',
+      url: postCancelUrl,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("response: ",response)
+    if(response.status===200){
+        return response;
+    }
+    } catch(error){
+        console.log("Lỗi: ", error)
+    }
+  };
+
+  
+  
 export const getCheckout = (token) => {
     const getCategory = axios({
         method: "GET",

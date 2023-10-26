@@ -1,60 +1,84 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, ImageBackground, FlatList, Image } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, ImageBackground, FlatList, Image,RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import { useRoute, useNavigation } from "@react-navigation/native";
-import { getCategoryApi, getImgRoomApi } from "../services/useAPI"; // Import getImgRoomApi
+import { getCategoryApi } from "../services/useAPI";
 import { getImgRoomUrl } from "../services/baseUrl";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function QLphong() {
   const route = useRoute();
   const { token } = route.params ?? {};
-
   const navigation = useNavigation();
   const [roomData, setRoomData] = useState([]);
-  const [imgIdCategories, setCategories] = useState([]);
+  const [imgIdCategories, setImgIdCategories] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  const [isRefresh, setisRefresh] = useState(false);
 
-  useEffect(() => {
-    async function fetchRoomData() {
-      try {
-        const response = await getCategoryApi(token);
-        if (response.status === 200) {
-          setRoomData(response.data);
 
-          const imgPromises = roomData.map((room) => {
-            return getImgRoomApi(token, room.imageId); // Use getImgRoomApi to fetch images
-          });
-
-          const imgResponses = await Promise.all(imgPromises);
-          const imgData = imgResponses.map((response) => response.data);
-          setCategories(imgData);
-        } else {
-          console.error('Error fetching room data:', response.data);
-          // Handle the error, show an error message to the user
-        }
-      } catch (error) {
-        console.error('API error:', error);
-        // Handle the error, show an error message to the user
-      } finally {
-        setIsFetching(false);
-      }
+  // Lưu trữ danh sách phòng vào AsyncStorage
+  const storeRoomData = async (data) => {
+    try {
+      await AsyncStorage.setItem('roomData', JSON.stringify(data));
+    } catch (error) {
+      console.error('Error storing room data:', error);
     }
+  };
 
+  // Truy xuất danh sách phòng từ AsyncStorage
+  const getRoomData = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem('roomData');
+      if (storedData) {
+        const parsedData = JSON.parse(storedData);
+        setRoomData(parsedData);
+      }
+    } catch (error) {
+      console.error('Error retrieving room data:', error);
+    }
+  };
+  const fetchRoomData = async () => {
+    try {
+      const response = await getCategoryApi(token);
+      if (response && response.status === 200) {
+        // Xử lý dữ liệu ở đây
+        setisRefresh(false);
+        setRoomData(response.data);
+      } else {
+        console.error('Error fetching room data:', response ? response.data : 'Response is null');
+        // Xử lý lỗi và hiển thị thông báo lỗi cho người dùng
+      }
+    } catch (error) {
+      console.error('API error:', error);
+      // Xử lý lỗi và hiển thị thông báo lỗi cho người dùng
+    } finally {
+      setIsFetching(false);
+    }
+  }
+  useEffect(() => {
+   
+  
+    // Truy xuất danh sách phòng từ AsyncStorage
+    // getRoomData();
+  
     // Add isFetching as a dependency to trigger data fetching
     if (isFetching) {
       fetchRoomData();
     }
-  }, [isFetching]); // Use isFetching as a dependency
+  }, [isFetching]);
+  
 
   function handleThemphong() {
     navigation.navigate('Themphong', { token });
     setIsFetching(true);
   }
+  const onRefresh = () => {
+    setisRefresh(true);  
+    fetchRoomData();
+  }
 
   function renderItem({ item }) {
     const roomImg = item.imgIdCategories;
-
     const firstImageId = roomImg && roomImg.length > 0 ? roomImg[0] : null;
     const imageSource = firstImageId
       ? { uri: `${getImgRoomUrl}?imageId=${firstImageId}` }
@@ -93,6 +117,11 @@ export default function QLphong() {
         <FlatList
           data={roomData}
           renderItem={renderItem}
+          refreshControl={
+            <RefreshControl refreshing={isRefresh}
+            onRefresh={() => {onRefresh()}}
+            />
+            }
           keyExtractor={(item) => item.categoryId}
         />
 
