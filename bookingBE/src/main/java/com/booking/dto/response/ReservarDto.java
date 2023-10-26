@@ -25,7 +25,7 @@ public class ReservarDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private LocalDateTime reservarDate;
-    private int total;
+    private long total;
     private String stateReservar;
     private String statePayment;
 }
