@@ -24,11 +24,11 @@ public class PaymentServiceImp implements PaymentService {
     private final ReservarRepository reservarRepository;
 
     @Override
-    public String getURLPayment(Long reservarId, int total) throws UnsupportedEncodingException {
+    public String getURLPayment(Long reservarId, long total) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-        long amount = total * 100;
+        long amount =  total * 100;
         String vnp_TxnRef = reservarId + Config.getRandomNumber(8);
         String vnp_TmnCode = Config.vnp_TmnCode;
 
