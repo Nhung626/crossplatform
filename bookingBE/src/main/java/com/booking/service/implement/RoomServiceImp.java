@@ -1,6 +1,7 @@
 package com.booking.service.implement;
 
 import com.booking.dto.request.CreateCategoryDto;
+import com.booking.dto.request.UpdateCategoryDto;
 import com.booking.entity.*;
 import com.booking.exception.CustomException;
 import com.booking.repository.CategoryRepository;
@@ -83,6 +84,40 @@ public class RoomServiceImp implements RoomService {
             }
             categoryRepository.save(category);
         }
+    }
+
+
+    public void updateCategory(UpdateCategoryDto updateCategoryDto){
+        Category category = categoryRepository.findByCategoryId(updateCategoryDto.getCategoryId());
+        category.setCategoryName(updateCategoryDto.getCategoryName());
+        category.setArea(updateCategoryDto.getArea());
+        category.setBedType(updateCategoryDto.getBedType());
+        category.setPerson(updateCategoryDto.getPerson());
+        category.setPrice(updateCategoryDto.getPrice());
+        category.setImgRooms(updateCategoryDto.getImgCategories().stream().map(data -> {
+            try {
+                return imageService.saveUploadedFile(data);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toSet()));
+        List<Integer> roomNumbers = updateCategoryDto.getRoomNumbers();
+        for (int i = 0; i < roomNumbers.size(); i++) {
+            if (checkRoomNumber(roomNumbers.get(i), getAllRoomNumber(category.getProvider().getProviderId()))) {
+                Room room = Room.builder()
+                        .roomNumber(roomNumbers.get(i))
+                        .category(category)
+                        .build();
+                category.getRooms().add(room);
+            } else {
+                if(!checkRoomNumber(roomNumbers.get(i), category.getRooms().stream().map(Room::getRoomNumber).toList())){
+                    Room room = roomRepository.findByNumber2(category.getProvider().getProviderId(), roomNumbers.get(i));
+                    room.setCategory(category);
+                    roomRepository.save(room);
+                }
+            }
+        }
+        categoryRepository.save(category);
     }
 
     public List<Integer> getAllRoomNumber(Long providerId) {

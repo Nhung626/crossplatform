@@ -16,6 +16,9 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r WHERE r.category.categoryId = ?1" +
             " AND r.roomNumber = ?2")
     Room findByNumber(Long categoryId, int roomNumber);
+    @Query("SELECT r FROM Room r WHERE r.category.provider.providerId = ?1" +
+            " AND r.roomNumber = ?2")
+    Room findByNumber2(Long providerId, int roomNumber);
     @Override
     List<Room> findAll();
     @Query("SELECT r FROM Room r WHERE r.category.provider.providerId = ?1")

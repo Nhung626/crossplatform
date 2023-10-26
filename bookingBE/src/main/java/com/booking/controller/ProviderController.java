@@ -1,9 +1,6 @@
 package com.booking.controller;
 
-import com.booking.dto.request.CreateCategoryDto;
-import com.booking.dto.request.CreateUserDto;
-import com.booking.dto.request.LoginUserDto;
-import com.booking.dto.request.UpdateProviderDto;
+import com.booking.dto.request.*;
 import com.booking.dto.response.*;
 import com.booking.entity.Provider;
 import com.booking.repository.ProviderRepository;
@@ -98,7 +95,7 @@ public class ProviderController {
                                           @RequestParam("price") int price,
                                           @RequestParam("roomNumbers") String roomNumbers) throws IOException {
         List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n.trim())).toList();
-        CreateCategoryDto createCategoryDto = CreateCategoryDto.builder()
+        CreateCategoryDto updateCategoryDto = CreateCategoryDto.builder()
                 .imgCategories(images)
                 .providerId(getProviderId(principal))
                 .categoryName(categoryName)
@@ -108,7 +105,34 @@ public class ProviderController {
                 .price(price)
                 .description(description)
                 .roomNumbers(numbers).build();
-        roomService.addCategory(createCategoryDto);
+        roomService.addCategory(updateCategoryDto);
+        return ResponseEntity.ok("Success");
+    }
+
+    @PreAuthorize("hasRole('ROLE_PROVIDER')")
+    @PostMapping(value = "/update-room")
+    public ResponseEntity<Object> updateRoom(
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("imgCategories") List<MultipartFile> images,
+            @RequestParam("person") int person,
+            @RequestParam("categoryName") String categoryName,
+            @RequestParam("area") float area,
+            @RequestParam("bedType") String bedType,
+            @RequestParam("description") String description,
+            @RequestParam("price") int price,
+            @RequestParam("roomNumbers") String roomNumbers) throws IOException {
+        List<Integer> numbers = Arrays.stream(roomNumbers.split(",")).map(n -> Integer.valueOf(n.trim())).toList();
+        UpdateCategoryDto updateCategoryDto = UpdateCategoryDto.builder()
+                .categoryId(categoryId)
+                .imgCategories(images)
+                .categoryName(categoryName)
+                .person(person)
+                .area(area)
+                .bedType(bedType)
+                .price(price)
+                .description(description)
+                .roomNumbers(numbers).build();
+        roomService.updateCategory(updateCategoryDto);
         return ResponseEntity.ok("Success");
     }
 
