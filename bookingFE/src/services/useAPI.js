@@ -518,7 +518,7 @@ export const getProviderAPI = async (token, providerId) => {
 export const getCategoryAPI = async (token, categoryId) => {
 
     try {
-        const resporn = await axios({
+        const response = await axios({
             method: "GET",
             url: `${BASE_URL}customer/get-category`,
             params: {
@@ -528,11 +528,52 @@ export const getCategoryAPI = async (token, categoryId) => {
                 Authorization: `Bearer ${token}`
             }
         })
-        if (resporn.status === 200) {
-            console.log(resporn.data)
-            return resporn.data
+        if (response.status === 200) {
+            console.log(response.data)
+            return response.data
         }
     } catch (error) {
         console.log("Lỗi: ", error)
+    }
+}
+export const getAllCategory = async (token, providerId) => {
+    try {
+        const response = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/get-categories`,
+            params: {
+                providerId: parseInt(providerId)
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.status === 200) {
+            console.log("response data: ", response.data)
+            return response.data
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error)
+    }
+}
+export const getListFavoriteBySearch = async (start, end, person, token) => {
+    try {
+        const resporn = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/favorite-provider`,
+            params: {
+                start: start,
+                end: end,
+                person: person,
+            },
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (resporn.status === 200) {
+            return resporn.data;
+        }
+    } catch (error) {
+        console.log("Lỗi get favorite by search: ", error)
     }
 }

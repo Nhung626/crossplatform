@@ -7,6 +7,7 @@ import * as Icon from "react-native-feather";
 import { getImgCustomerUrl } from '../../services/baseUrl';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import moment from 'moment';
 
 export default function InfoHotelBooked() {
     const { params: { reservarId,
@@ -18,7 +19,8 @@ export default function InfoHotelBooked() {
         statePayment,
         startDate,
         endDate,
-        categoryId } } = useRoute();
+        categoryId,
+        stateReservar } } = useRoute();
     const [provider, setProvider] = useState([])
     const [idImgProvider, setIdImgProvider] = useState([])
     const [category, setCategory] = useState([])
@@ -66,7 +68,7 @@ export default function InfoHotelBooked() {
     const screenWidth = Dimensions.get("window").width;
     console.log("resporn data: ", category)
     return (
-        <SafeAreaView style={{ backgroundColor: themeColor.bgModalColor }}>
+        <SafeAreaView style={{ backgroundColor: "#F0f0f0" }}>
             <StatusBar style='light' backgroundColor={themeColor.btColor} />
             <View style={styles.header}>
                 <Text style={styles.headerText}>Reservar</Text>
@@ -84,7 +86,7 @@ export default function InfoHotelBooked() {
                             key={index}
                             style={{
                                 width: screenWidth, // Điều chỉnh kích thước theo nhu cầu của bạn
-                                height: 300,
+                                height: 400,
                                 resizeMode: 'cover',
                             }}
                             source={{ uri: `${getImgCustomerUrl}?imageId=${id}` }}
@@ -97,11 +99,12 @@ export default function InfoHotelBooked() {
 
 
                     <View style={{
-                        backgroundColor: 'white',
+                        backgroundColor: themeColor.bgModalColor,
                         paddingTop: 24,
                         flex: 1,
+                        borderRadius: 30
                     }}>
-                        <View style={{ flex: 1, paddingHorizontal: 10, }}>
+                        <View style={{ flex: 1, marginHorizontal: 10, }}>
                             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
                                 <Text style={{
                                     flex: 1,
@@ -109,8 +112,8 @@ export default function InfoHotelBooked() {
                                     fontSize: 24,
                                     flexWrap: 'wrap',
                                     paddingBottom: 10,
+                                    paddingLeft: 10,
                                     textAlign: 'left',
-                                    justifyContent: 'flex-start'
                                 }}>
                                     {provider.providerName}
                                 </Text>
@@ -142,7 +145,7 @@ export default function InfoHotelBooked() {
                                 fontWeight: 'bold',
                                 fontSize: 24,
                                 paddingVertical: 16,
-                                paddingHorizontal: 16,
+                                marginHorizontal: 16,
                                 borderTopColor: 'grey',
                                 borderTopWidth: 0.5
                             }}>
@@ -156,7 +159,7 @@ export default function InfoHotelBooked() {
 
                             <View style={styles.boxTextRoom}>
                                 <Icon.Calendar color={'gray'} width={15} height={15} />
-                                <Text style={styles.textInfo}>Ngày đặt phòng: {reservarDate}</Text>
+                                <Text style={styles.textInfo}>Ngày đặt phòng: {moment(reservarDate).format('YYYY-MM-DD')}</Text>
 
                             </View>
                             <View style={styles.boxTextRoom}>
@@ -168,7 +171,7 @@ export default function InfoHotelBooked() {
                                 <Text style={styles.textInfo}>Ngày kết thúc: {endDate}</Text>
                             </View>
 
-                            <View style={{ flex: 1, padding: 10, paddingRight: 20 }}>
+                            <View style={{ flex: 1, padding: 8, paddingRight: 20 }}>
                                 <Text
                                     style={{ textAlign: 'right', fontWeight: "400", fontSize: 16 }}>
                                     Tổng: </Text>
@@ -232,7 +235,7 @@ export default function InfoHotelBooked() {
                                     <Ionicons name="bed-outline" size={20} color="grey" />
                                     <Text>{category.bedType}</Text>
                                 </View>
-                                {/* <Text style={styles.textPrice}>VND {(category.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text> */}
+                                <Text style={styles.textPrice}>VND {parseInt(category.price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                                 <Text style={styles.textRoomNight}>/phòng/đêm</Text>
                             </View>
                         </View>
@@ -249,6 +252,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 4,
         elevation: 5, // Cho Android
+        marginTop: -30,
+        marginBottom: 10,
+        borderRadius: 30,
+
     },
     header: {
         backgroundColor: themeColor.btColor,
@@ -355,12 +362,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     buttonUnsuccess: {
-        padding: 8,
+        padding: 10,
         backgroundColor: "#FFA500",
         borderRadius: 10,
     },
     buttonState: {
-        padding: 10,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
         justifyContent: 'flex-end',
         alignItems: 'flex-end'
     }

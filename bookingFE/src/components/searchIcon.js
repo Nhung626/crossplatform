@@ -1,24 +1,24 @@
 import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { themeColor } from '../utils/theme'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import * as Icon from "react-native-feather"
-import { SafeAreaView } from 'react-native-safe-area-context'
 import Calendar from '../modals/calendarPicker';
 import NumOfPeople from '../modals/numOfPeople'
-import { getNight, saveNight } from '../services/useAPI'
-export default function SearchIcon() {
+import { getToken } from '../services/useAPI'
+import ScreenNames from '../utils/screenNames'
+export default function SearchIcon(props) {
     const navigation = useNavigation();
-    const route = useRoute();
-    const { startDate, endDate, startDayOfWeek, endDayOfWeek, roomCount, peopleCount, countNight } = route.params ?? {};
+    const [token, setToken] = useState('');
+    const route = useRoute;
+    const { startDate, endDate, startDayOfWeek, endDayOfWeek, peopleCount, countNight, start, end } = route.params ?? {};
     const [numOfPeopleModalVisible, setNumOfPeopleModalVisible] = useState(false);
     const [calendarModalVisible, setCalendarModalVisible] = useState(false)
     const [numOfPeopleData, setNumOfPeopleData] = useState({
-        roomCount,
         peopleCount
     });
     const [calendarData, setCalendarData] = useState({
-        startDate, endDate, startDayOfWeek, countNight, endDayOfWeek
+        startDate, endDate, startDayOfWeek, countNight, endDayOfWeek, start, end
     });
 
     const handleNumOfPeopleClose = (data) => {
@@ -30,85 +30,88 @@ export default function SearchIcon() {
         setCalendarModalVisible(false);
     }
 
+    useEffect(() => {
+        const getTokenId = async () => {
+            const token = await getToken();
+            setToken(token)
+        }
+        getTokenId();
 
+    }, [])
+
+    const handleSearch = () => {
+        props.onClose({
+            start: calendarData.start,
+            startDate: calendarData.startDate,
+            endDate: calendarData.endDate,
+            end: calendarData.end,
+            person: numOfPeopleData.peopleCount,
+        })
+    }
+    console.log("data tìm kiếm: ", calendarData, numOfPeopleData)
     return (
-        <SafeAreaView style={{ backgroundColor: 'white' }}>
-            <StatusBar style='dark' />
+        <View style={{ borderWidth: 2, borderColor: themeColor.bgColor, borderRadius: 6, marginHorizontal: 10 }}>
+            <TouchableOpacity style={styles.searchContainer}
+                onPress={() => navigation.navigate('Map')}>
+                <Icon.Search height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
+                <Text style={styles.searchText}> Xung quanh vị trí hiện tại</Text>
+            </TouchableOpacity >
+            <TouchableOpacity style={styles.searchContainer}
+                onPress={() => setCalendarModalVisible(true)}>
+                <Icon.Calendar height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
 
-            <View style={{ marginLeft: 10, marginRight: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}
-                        style={{ padding: 4, marginVertical: 30 }}>
-                        <Icon.ArrowLeft strokeWidth={2} stroke={'white'} height={30} width={30} style={{ backgroundColor: themeColor.bgColor, borderRadius: 100 }} />
-                    </TouchableOpacity>
-                    <Text style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 30 }}>Thay đổi tìm kiếm của bạn</Text>
-                </View>
+                <Text style={styles.searchText}>
+                    {calendarData.startDate ? (
+                        <>
+                            <Text > {calendarData.startDayOfWeek}, {calendarData.startDate}</Text>
+                            <Text>  - </Text>
+                            <Text >{calendarData.endDayOfWeek}, {calendarData.endDate}</Text>
+                            {calendarData.countNight ? (
+                                <Text> - ({calendarData.countNight} đêm)</Text>
 
-                <View style={{ borderWidth: 2, borderColor: themeColor.btColor, borderRadius: 6 }}>
-                    <TouchableOpacity style={styles.searchContainer}
-                        onPress={() => navigation.navigate('Map')}>
-                        <Icon.Search height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
-                        <Text style={styles.searchText}> Xung quanh vị trí hiện tại</Text>
-                    </TouchableOpacity >
-                    <TouchableOpacity style={styles.searchContainer}
-                        onPress={() => setCalendarModalVisible(true)}>
-                        <Icon.Calendar height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
-
-                        <Text style={styles.searchText}>
-                            {calendarData.startDate ? (
-                                <>
-                                    <Text > {calendarData.startDayOfWeek}, {calendarData.startDate}</Text>
-                                    <Text>  - </Text>
-                                    <Text >{calendarData.endDayOfWeek}, {calendarData.endDate}</Text>
-                                    <Text> - ({calendarData.countNight} đêm)</Text>
-                                </>
-                            ) : (
-                                'Thời gian đặt phòng'
-                            )}
-                        </Text>
-                    </TouchableOpacity>
-                    {calendarModalVisible && (
-
-                        <Calendar
-                            isVisible={calendarModalVisible}
-                            onClose={handleCalendarClose}
-                        />
+                            ) : ('')}
+                        </>
+                    ) : (
+                        'Thời gian đặt phòng'
                     )}
+                </Text>
+            </TouchableOpacity>
+            {calendarModalVisible && (
+                <Calendar
+                    isVisible={calendarModalVisible}
+                    onClose={handleCalendarClose}
+                />
+            )}
 
 
-                    <TouchableOpacity style={styles.searchContainer}
-                        onPress={() => setNumOfPeopleModalVisible(true)}>
-                        <Icon.User height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
-                        <Text style={styles.searchText}>
-                            {numOfPeopleData.roomCount ? (
-                                <>
-                                    <Text> {numOfPeopleData.roomCount} Phòng </Text>
-                                    <Text> • </Text>
-                                    <Text> {numOfPeopleData.peopleCount} Người</Text>
-                                </>
-                            ) : (
-                                'Chọn phòng và khách'
-                            )}
-                        </Text>
-                    </TouchableOpacity>
-                    {numOfPeopleModalVisible && (
-                        <NumOfPeople
-                            isVisible={numOfPeopleModalVisible}
-                            onClose={handleNumOfPeopleClose}
-                        />
+            <TouchableOpacity style={styles.searchContainer}
+                onPress={() => setNumOfPeopleModalVisible(true)}>
+                <Icon.User height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
+                <Text style={styles.searchText}>
+                    {numOfPeopleData.peopleCount ? (
+                        <>
+                            {/* <Text> {numOfPeopleData.roomCount} Phòng </Text>
+                            <Text> • </Text> */}
+                            <Text> {numOfPeopleData.peopleCount} Người</Text>
+                        </>
+                    ) : (
+                        'Chọn phòng và khách'
                     )}
-                    <TouchableOpacity
-                        style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor, borderBottomEndRadius: 5, borderBottomStartRadius: 5 }}
-                    >
-                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Tìm</Text>
-                    </TouchableOpacity>
-                </View>
-
-
-
-            </View>
-        </SafeAreaView>
-
+                </Text>
+            </TouchableOpacity>
+            {numOfPeopleModalVisible && (
+                <NumOfPeople
+                    isVisible={numOfPeopleModalVisible}
+                    onClose={handleNumOfPeopleClose}
+                />
+            )}
+            <TouchableOpacity
+                onPress={handleSearch}
+                style={{ alignItems: 'center', paddingVertical: 16, backgroundColor: themeColor.bgColor, borderBottomEndRadius: 5, borderBottomStartRadius: 5 }}
+            >
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>Tìm</Text>
+            </TouchableOpacity>
+        </View>
     )
 }
 const styles = StyleSheet.create({

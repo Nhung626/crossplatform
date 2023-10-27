@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getBookedAPI, getCancelAPI, getCheckoutAPI, getToken } from "../../services/useAPI";
 import HotelBooked from "../../components/hotelBooked";
+import { isMoment } from "moment";
 
 const FirstRoute = () => {
   const [booked, setBooked] = useState();
@@ -17,10 +18,11 @@ const FirstRoute = () => {
       const bookedData = await getBookedAPI(token);
 
       if (bookedData) {
-        setBooked(bookedData)
+        setBooked(bookedData);
       }
-    }
-    fetchData()
+    };
+
+    fetchData();
   }, [])
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }} >
@@ -43,6 +45,8 @@ const FirstRoute = () => {
                 startDate={item.startDate}
                 endDate={item.endDate}
                 categoryId={item.categoryId}
+                stateReservar={item.stateReservar}
+
               />
             ))
           ) : (
@@ -78,13 +82,19 @@ const SecondRoute = () => {
             checkout.map((item) => (
               <HotelBooked
                 key={item.reservarId}
+                reservarId={item.reservarId}
                 providerId={item.providerId}
                 providerName={item.providerName}
-                imgId={item.imgId}
+                imgProvider={item.imgProvider}
                 rooms={item.rooms}
                 reservarDate={item.reservarDate}
                 total={item.total}
                 statePayment={item.statePayment}
+                startDate={item.startDate}
+                endDate={item.endDate}
+                categoryId={item.categoryId}
+                stateReservar={item.stateReservar}
+
               />
             ))
           ) : (
@@ -128,13 +138,18 @@ const ThirdRoute = () => {
             cancel.map((item) => (
               <HotelBooked
                 key={item.reservarId}
+                reservarId={item.reservarId}
                 providerId={item.providerId}
                 providerName={item.providerName}
-                imgId={item.imgId}
+                imgProvider={item.imgProvider}
                 rooms={item.rooms}
                 reservarDate={item.reservarDate}
                 total={item.total}
                 statePayment={item.statePayment}
+                startDate={item.startDate}
+                endDate={item.endDate}
+                categoryId={item.categoryId}
+                stateReservar={item.stateReservar}
 
               />
             ))

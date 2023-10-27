@@ -17,6 +17,7 @@ const ScreenNames = {
     SLIDER: "Slider",
     PAYMENT: "PaymentScreen",
     CHECK: "CheckReservar",
+    HOTELFAVORITE: "Favorite"
 };
 
 export default ScreenNames;

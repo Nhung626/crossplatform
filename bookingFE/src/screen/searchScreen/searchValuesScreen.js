@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
@@ -8,22 +8,45 @@ import SortHotel from '../../components/sortHotel';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ShowHotel from '../../components/showHotel';
 import { searchAPI } from '../../services/useAPI';
+import SearchIcon from '../../components/searchIcon';
 
 export default function SearchValuesScreen() {
   const navigation = useNavigation();
   const [data, setData] = useState("")
+  const [searchModalVisible, setSearchModalVisible] = useState(false)
+
+  const [dataSearch, setDataSearch] = useState({
+    start, end, person,
+  })
   const route = useRoute()
-  const { start, end, person, token } = route.params ?? {};
-  console.log(start, end, person, token)
+  const { start, end, person, token, startDate, endDate } = route.params ?? {};
+  console.log(start, end, person, dataSearch.person, token)
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await searchAPI(start, end, person, token);
-      if (response) {
-        setData(response)
+      // navigation.addListener('focus', async () => {
+      if (dataSearch.person, dataSearch.start, dataSearch.end) {
+        const response = await searchAPI(dataSearch.start, dataSearch.end, dataSearch.person, token);
+        if (response) {
+          setData(response)
+        }
+      } else {
+        const response = await searchAPI(start, end, person, token);
+        if (response) {
+          setData(response)
+        }
       }
+
+      // })
+
     }
     fetchData();
-  }, []);
+  }, [dataSearch.person, dataSearch.start, dataSearch.end]);
+  const handleSearchModalClose = (data) => {
+    setDataSearch(data)
+    setSearchModalVisible(false)
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: themeColor.bgColor }}>
 
@@ -37,10 +60,44 @@ export default function SearchValuesScreen() {
         <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', borderRadius: 20, padding: 12, marginRight: 10, backgroundColor: 'white' }}>
           <TouchableOpacity
             style={{ flexDirection: 'row', flex: 1, alignItems: 'center', }}
-            onPress={() => navigation.navigate('SearchIcon')}>
+            onPress={() => setSearchModalVisible(true)}>
             <Icon.Search height="25" width="25" stroke="gray" />
-            <Text style={{ marginLeft: 2, flex: 1, color: 'gray' }} > Tìm kiếm </Text>
+            {dataSearch.startDate && dataSearch.endDate && dataSearch.person ? (
+              <Text style={{ marginLeft: 2, flex: 1, color: 'gray' }}>
+                {dataSearch.startDate} - {dataSearch.endDate} || {dataSearch.person} người
+              </Text>
+            ) : (
+              <Text style={{ marginLeft: 2, flex: 1, color: 'gray' }}>
+                {startDate} - {endDate} || {person} người
+              </Text>
+            )}
           </TouchableOpacity>
+          {searchModalVisible && (
+            <Modal
+              animationType='slide'
+              transparent={true}
+              visible={searchModalVisible}
+              onRequestClose={handleSearchModalClose}
+            >
+
+              <View style={{
+                backgroundColor: themeColor.bgModalColor,
+                borderTopLeftRadius: 50, borderTopRightRadius: 50,
+                borderWidth: 1,
+                borderColor: "#ccc",
+                height: "99%",
+                width: "100%",
+              }}>
+                <View style={{ flex: 1, paddingTop: 30 }}>
+                  <SearchIcon onClose={handleSearchModalClose} />
+
+                </View>
+
+              </View>
+            </Modal>
+          )}
+
+
           <TouchableOpacity
             style={{ flexDirection: 'row', alignItems: 'center', borderColor: 'gray', borderLeftWidth: 2, paddingRight: 2, paddingLeft: 8 }}
             onPress={() => navigation.navigate('Map')}>
