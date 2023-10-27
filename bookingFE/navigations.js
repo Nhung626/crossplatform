@@ -25,13 +25,12 @@ import InformationScreen from './src/screen/loginscreen/informationScreen';
 import ForgetPassword from './src/screen/loginscreen/forgetPassword';
 import NewPasswordScreen from './src/screen/loginscreen/newPassword';
 import Notice from './src/screen/loginscreen/notice';
-import GetProvider from './src/screen/testScreen/getProvider';
-import TestHotelScreen from './src/screen/testScreen/testHotelScreen';
 import InfoRoomScreen from './src/screen/searchScreen/infoRoomScreen';
 import ScreenNames from './src/utils/screenNames';
 import LoadingScreen from './src/screen/loginscreen/loadingScreen';
 import WebScreen from './src/screen/searchScreen/webScreen';
 import InfoHotelBooked from './src/screen/searchScreen/InfoHotelBooked';
+import ReviewScreen from './src/screen/searchScreen/ReviewScreen';
 
 const Stack = createNativeStackNavigator();
 const HidenHeader = {
@@ -40,7 +39,7 @@ const HidenHeader = {
 export default function Navigations() {
     return (
         <NavigationContainer>
-            <Stack.Navigator screenOptions={HidenHeader} initialRouteName={ScreenNames.LOADING
+            <Stack.Navigator screenOptions={HidenHeader} initialRouteName={"Review"
             }>
                 <Stack.Screen name="Notice" component={Notice} />
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -68,10 +67,8 @@ export default function Navigations() {
                 <Stack.Screen name='Web' component={WebScreen} />
                 <Stack.Screen name='Info Hotel Booked' component={InfoHotelBooked} />
 
-                <Stack.Screen name='GetAll' component={GetProvider} />
-                <Stack.Screen name='TestHotel' component={TestHotelScreen} />
 
-
+                <Stack.Screen name='Review' component={ReviewScreen} />
 
 
 
