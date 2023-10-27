@@ -14,20 +14,24 @@ export default function ShowHotel({
     description,
     address,
     providerPhone,
-    start, end, person, token
+    start, end, person
 }) {
     const navigation = useNavigation();
+    const handleNavigation = () => {
+
+        navigation.navigate('Hotel', {
+            id,
+            name,
+            imageHotel,
+            description,
+            address,
+            providerPhone,
+            start, end, person
+        })
+    }
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => navigation.navigate('Hotel', {
-                id,
-                name,
-                imageHotel,
-                description,
-                address,
-                providerPhone,
-                start, end, person, token
-            })} >
+            <TouchableOpacity onPress={(handleNavigation)} >
                 <View style={styles.boxStyle}>
                     <View style={{ alignItems: 'center', marginRight: 4 }}>
                         <Image style={{ width: 144, height: 256, borderRadius: 30 }} source={{ uri: getImgCustomerUrl.concat(`?imageId=${imageHotel[0]}`) }} />

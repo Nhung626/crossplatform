@@ -6,7 +6,7 @@ import NumOfPeople from './numOfPeople'
 import { themeColor } from '../utils/theme'
 import Calendar from './calendarPicker'
 import ScreenNames from '../utils/screenNames'
-import { getToken, saveNight } from '../services/useAPI'
+import { getToken } from '../services/useAPI'
 export default function SearchModal() {
     const navigation = useNavigation();
     const [token, setToken] = useState('');
@@ -38,19 +38,19 @@ export default function SearchModal() {
         getTokenId();
 
     }, [])
-    console.log(calendarData.start, calendarData.end)
-    console.log(numOfPeopleData.peopleCount)
-    console.log(calendarData.countNight)
 
     const handleSearch = () => {
+
         navigation.navigate(ScreenNames.SEARCHVALUE, {
             start: calendarData.start,
+            startDate: calendarData.startDate,
+            endDate: calendarData.endDate,
             end: calendarData.end,
             person: numOfPeopleData.peopleCount,
             token: token
         })
     }
-
+    console.log("data tìm kiếm: ", calendarData, numOfPeopleData)
     return (
         <View style={{ borderWidth: 2, borderColor: themeColor.bgColor, borderRadius: 6, marginHorizontal: 10 }}>
             <TouchableOpacity style={styles.searchContainer}

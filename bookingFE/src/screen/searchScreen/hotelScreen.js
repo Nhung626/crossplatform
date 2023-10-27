@@ -6,7 +6,7 @@ import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getImgCustomerUrl } from '../../services/baseUrl';
 import ShowRoom from '../../components/showRoom';
-import { addFavoriteAPI, deleteFavorite, getAllRoomAPI, getIdFavor } from '../../services/useAPI';
+import { addFavoriteAPI, deleteFavorite, getAllCategory, getAllRoomAPI, getIdFavor, getToken } from '../../services/useAPI';
 
 export default function HotelScreen() {
     const { params: {
@@ -15,33 +15,37 @@ export default function HotelScreen() {
         imageHotel,
         description,
         address,
-        start, end, person, token
+        start, end, person
 
     } } = useRoute();
 
     const [data, setData] = useState("");
     const [favorite, setFavorite] = useState(false);
-    console.log("Hiển thị imaHotel: ", imageHotel)
 
     useEffect(() => {
-        if (token && person && start && end) {
-            const fetchDataFromAPI = async () => {
+        const fetchDataFromAPI = async () => {
+            const token = await getToken();
+            if (start, end, person) {
                 const response = await getAllRoomAPI(id, start, end, person, token);
-
                 setData(response)
-                const favor = await getIdFavor(id);
-                if (favor === true) {
-                    setFavorite(true);
-                }
-                else {
-                    setFavorite(false)
-                }
-            };
-            fetchDataFromAPI();
-        }
-    }, []);
+            } else {
+                const response = await getAllCategory(token, id);
+                setData(response)
+            }
 
+            const favor = await getIdFavor(id);
+            if (favor === true) {
+                setFavorite(true);
+            }
+            else {
+                setFavorite(false)
+            }
+        };
+        fetchDataFromAPI();
+    }, []);
+    console.log("data: ", data, id, start, end, person)
     const handleFavorite = async () => {
+        const token = await getToken()
         try {
             if (favorite) {
                 // Nếu đã là yêu thích, thì xóa khỏi danh sách yêu thích
@@ -59,7 +63,7 @@ export default function HotelScreen() {
 
     const screenWidth = Dimensions.get("window").width;
     return (
-        <SafeAreaView style={{ backgroundColor: themeColor.bgModalColor }}>
+        <SafeAreaView style={{ backgroundColor: "#f0f0f0" }}>
             <StatusBar style='light' backgroundColor={themeColor.bgColor} />
             <View style={{ position: 'absolute', width: '100%', flexDirection: 'row', justifyContent: 'space-between', paddingTop: 50, zIndex: 1000, paddingHorizontal: 10 }}>
             </View>
@@ -75,7 +79,7 @@ export default function HotelScreen() {
                             key={index}
                             style={{
                                 width: screenWidth, // Điều chỉnh kích thước theo nhu cầu của bạn
-                                height: 300,
+                                height: 400,
                                 resizeMode: 'cover',
                             }}
                             source={{ uri: `${getImgCustomerUrl}?imageId=${imageId}` }}
@@ -88,10 +92,17 @@ export default function HotelScreen() {
 
                     {/* Content */}
                     <View style={{
-                        backgroundColor: 'white', paddingTop: 24, flex: 1
+                        backgroundColor: themeColor.bgModalColor,
+                        paddingTop: 24,
+                        flex: 1,
+                        borderRadius: 30
                     }}>
-                        <View style={{ flex: 1, paddingHorizontal: 10, }}>
-                            <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
+                        <View style={{ flex: 1, marginHorizontal: 10, }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                flex: 1,
+                                alignItems: 'center'
+                            }}>
                                 <Text style={{
                                     flex: 1,
                                     fontWeight: 'bold',
@@ -99,7 +110,6 @@ export default function HotelScreen() {
                                     flexWrap: 'wrap',
                                     paddingBottom: 10,
                                     textAlign: 'left',
-                                    justifyContent: 'flex-start'
                                 }}>{name} </Text>
                                 <TouchableOpacity onPress={handleFavorite} >
                                     <Icon.Heart
@@ -126,9 +136,9 @@ export default function HotelScreen() {
                         </View>
                         {/*Vị trí */}
 
-                        <View style={{ marginHorizontal: 10, borderBottomColor: 'grey', borderBottomWidth: 0.6, paddingBottom: 10 }}>
+                        <View style={{ marginHorizontal: 10, marginBottom: 10 }}>
 
-                            <Text style={{ fontWeight: 'bold', fontSize: 20, paddingVertical: 10 }}> Vị trí chỗ nghỉ</Text>
+                            <Text style={{ fontWeight: 'bold', fontSize: 20, marginVertical: 10 }}> Vị trí chỗ nghỉ</Text>
                             <View style={{ flexDirection: 'row', columnGap: 10, marginHorizontal: 10 }}>
                                 <Icon.MapPin stroke={'grey'} height={24} width={24} />
                                 <Text>{address}</Text>
@@ -137,13 +147,18 @@ export default function HotelScreen() {
                         </View>
                     </View>
                     <View
-                        style={{ backgroundColor: 'white', }}>
+                        style={{
+                            backgroundColor: 'white',
+                            paddingVertical: 16,
+                            paddingHorizontal: 16,
+                            borderRadius: 30,
+
+                        }}>
                         <Text
                             style={{
                                 fontWeight: 'bold',
                                 fontSize: 24,
-                                marginVertical: 16,
-                                paddingHorizontal: 16
+
                             }}>
                             Thông tin các phòng</Text>
 
@@ -151,7 +166,7 @@ export default function HotelScreen() {
                 </View>
 
 
-                <View style={{ backgroundColor: themeColor.bgModalColor }}>
+                <View style={{ backgroundColor: "#f0f0f0" }}>
                     {Array.isArray(data) ? (
                         data.map((item) => (
                             <ShowRoom
@@ -166,6 +181,10 @@ export default function HotelScreen() {
                                 bedType={item.bedType}
                                 countRoom={item.countRoom}
                                 dataRoom={item}
+                                start={start}
+                                end={end}
+                                personNum={person}
+
                             />
 
                         ))
@@ -185,7 +204,11 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 2, height: 5 },
         shadowOpacity: 1,
         shadowRadius: 4,
-        elevation: 5, // Cho Android
+        elevation: 5,
+        marginTop: -30,
+        borderRadius: 30,
+        backgroundColor: '#fff',
+        marginBottom: 10
     },
     img: {
         height: 300,

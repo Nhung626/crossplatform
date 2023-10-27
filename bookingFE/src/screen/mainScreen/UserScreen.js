@@ -1,4 +1,4 @@
-import { Text, StyleSheet, StatusBar, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import { Text, StyleSheet, StatusBar, View, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons'
 import { Logout, getCustomerApi, getToken } from "../../services/useAPI";
@@ -12,11 +12,12 @@ export default function UserScreen({ navigation }) {
     const [imageUrl, setImageUrl] = useState();
 
     useEffect(() => {
-        const fetchData = async () => {
+
+        navigation.addListener('focus', async () => {
+
             try {
                 const token = await getToken();
                 const response = await getCustomerApi(token);
-                console.log("resporn: ", token)
                 if (response) {
                     console.log(response)
                     setFullName(response.fullName);
@@ -27,13 +28,24 @@ export default function UserScreen({ navigation }) {
             } catch (error) {
                 console.error('There was a problem with the request:', error);
             }
-        };
-        fetchData();
-    }, [fullName, imageUrl])
+        })
+
+    }, [])
 
     const handleLogout = async () => {
-        await Logout();
-        navigation.navigate(ScreenNames.LOADING);
+        Alert.alert('Bạn có muốn đăng xuất không', '', [
+            {
+                text: 'Không',
+                style: 'cancel',
+            },
+            {
+                text: 'Có',
+                onPress: async () => {
+                    await Logout();
+                    navigation.navigate(ScreenNames.LOADING);
+                }
+            },
+        ]);
     }
 
     return (

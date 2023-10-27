@@ -9,14 +9,15 @@ const ScreenNames = {
     USER: "UserScreen",
     SAVE: "SaveScreen",
     BOOKING: "BookingScreen",
-    
-    MAP:"Map",
-    INFOROOM:"InforRoomScreen",
-    HOTEL:"Hotel",
-    SEARCHVALUE:"SearchValue",
-    SLIDER:"Slider",
-    PAYMENT:"PaymentScreen",
-    CHECK:"CheckReservar",
+
+    MAP: "Map",
+    INFOROOM: "InforRoomScreen",
+    HOTEL: "Hotel",
+    SEARCHVALUE: "SearchValue",
+    SLIDER: "Slider",
+    PAYMENT: "PaymentScreen",
+    CHECK: "CheckReservar",
+    HOTELFAVORITE: "Favorite"
 };
 
 export default ScreenNames;

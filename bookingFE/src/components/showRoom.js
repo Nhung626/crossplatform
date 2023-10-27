@@ -16,7 +16,11 @@ export default function ShowRoom({
     area,
     bedType,
     countRoom,
-    dataRoom
+    dataRoom,
+    start,
+    end,
+    personNum,
+
 }) {
     const navigation = useNavigation();
     const [containerWidth, setContainerWidth] = useState(0);
@@ -26,7 +30,6 @@ export default function ShowRoom({
     };
     const [countRoomChoose, setCountRoomChoosed] = useState()
     const [showDropdown, setShowDropdown] = useState(false);
-    console.log("Phòng đã chọn: ", countRoomChoose)
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
     };
@@ -101,37 +104,42 @@ export default function ShowRoom({
                             </View>
                             <Text style={styles.textPrice}>VND {price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
                             <Text style={styles.textRoomNight}>/phòng/đêm</Text>
-                            <View style={styles.containerRoom}>
-                                <TouchableOpacity onPress={toggleDropdown} style={styles.dropdownButton}>
-                                    {countRoomChoose ? (
-                                        <Text>Đã chọn {countRoomChoose} phòng</Text>
-                                    ) : (
-                                        <Text>(có {countRoom} phòng)</Text>
-                                    )
-                                    }
-                                </TouchableOpacity>
+                            {countRoom && start && end && personNum ? (<View>
+                                <View style={styles.containerRoom}>
+                                    <TouchableOpacity onPress={toggleDropdown} style={styles.dropdownButton}>
+                                        {countRoomChoose ? (
+                                            <Text>Đã chọn {countRoomChoose} phòng</Text>
+                                        ) : (
+                                            <Text>(có {countRoom} phòng)</Text>
+                                        )
+                                        }
+                                    </TouchableOpacity>
 
-                                {showDropdown && (
-                                    <View style={styles.dropdownOptions}>
-                                        {[...Array(countRoom).keys()].map((roomCount) => (
-                                            <TouchableOpacity
-                                                key={roomCount}
-                                                style={styles.dropdownOption}
-                                                onPress={() => selectRoom(roomCount + 1)}
-                                            >
-                                                <Text>{roomCount + 1} phòng</Text>
-                                            </TouchableOpacity>
-                                        ))}
-                                    </View>
-                                )}
+                                    {showDropdown && (
+                                        <View style={styles.dropdownOptions}>
+                                            {[...Array(countRoom).keys()].map((roomCount) => (
+                                                <TouchableOpacity
+                                                    key={roomCount}
+                                                    style={styles.dropdownOption}
+                                                    onPress={() => selectRoom(roomCount + 1)}
+                                                >
+                                                    <Text>{roomCount + 1} phòng</Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </View>
+                                    )}
+                                </View>
+                                <View style={{ paddingVertical: 5, alignItems: 'flex-end' }}>
+                                    <TouchableOpacity
+                                        style={styles.select}
+                                        onPress={handleSelectButtonPress}>
+                                        <Text style={{ color: '#fff' }}>Chọn</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <View style={{ paddingVertical: 5, alignItems: 'flex-end' }}>
-                                <TouchableOpacity
-                                    style={styles.select}
-                                    onPress={handleSelectButtonPress}>
-                                    <Text style={{ color: '#fff' }}>Chọn</Text>
-                                </TouchableOpacity>
-                            </View>
+
+                            ) : ("")}
+
                         </View>
                     </View>
                 </View>
