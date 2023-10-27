@@ -5,4 +5,5 @@ public enum EStateReservar {
     CANCELED,
     CHECK_IN,
     CHECK_OUT,
+    REVIEW
 }

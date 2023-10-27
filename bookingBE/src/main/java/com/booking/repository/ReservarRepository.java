@@ -42,7 +42,7 @@ public interface ReservarRepository extends JpaRepository<Reservar, Long> {
     List<Reservar> getCancel(Long customerId);
 
     @Query("SELECT r FROM Reservar r WHERE r.customer.customerId = ?1" +
-            " AND r.stateReservar = 0")
+            " AND (r.stateReservar = 0 OR r.stateReservar = 2)")
     List<Reservar> getBooked(Long customerId);
 
     @Query("SELECT r FROM Reservar r WHERE r.customer.customerId = ?1" +
@@ -50,6 +50,6 @@ public interface ReservarRepository extends JpaRepository<Reservar, Long> {
     List<Reservar> getCheckin(Long customerId);
 
     @Query("SELECT r FROM Reservar r WHERE r.customer.customerId = ?1" +
-            " AND r.stateReservar = 3")
+            " AND (r.stateReservar = 3 OR r.stateReservar = 4)")
     List<Reservar> getCheckout(Long customerId);
 }

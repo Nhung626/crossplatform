@@ -68,6 +68,7 @@ public class Convert {
     public static ReviewDto convertToReviewDto(Review review, Reservar reservar){
         List<Long> imgIds = review.getImgReview().stream().map(Image::getImgId).toList();
         return ReviewDto.builder()
+                .reviewId(review.getReviewId())
                 .imgReview(imgIds)
                 .rate(review.getRate())
                 .description(review.getDescription())

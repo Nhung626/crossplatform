@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 public class ReviewDto {
+    private Long reviewId;
     private List<Long> imgReview;
     private int rate;
     private String description;

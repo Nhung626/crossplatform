@@ -32,7 +32,7 @@ public class ReviewServiceImp implements ReviewService {
         Reservar reservar = reservarRepository.findByReservarId(createReviewDto.getReservarId());
         Customer customer = reservar.getCustomer();
         if (reservar.getStateReservar() == EStateReservar.CHECK_OUT) {
-            Review review = new Review().builder()
+            Review review = Review.builder()
                     .rate(createReviewDto.getRate())
                     .description(createReviewDto.getDescription())
                     .reservarId(createReviewDto.getReservarId())
@@ -44,7 +44,9 @@ public class ReviewServiceImp implements ReviewService {
                     throw new RuntimeException(e);
                 }
             }).collect(Collectors.toSet()));
+            reservar.setStateReservar(EStateReservar.REVIEW);
             reviewRepository.save(review);
+            reservarRepository.save(reservar);
         } else {
             throw new CustomException("Vui lòng trải nghiệm thêm, và quay lại đánh giá chúng tôi sau");
         }
