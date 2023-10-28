@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet ,Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation,useRoute  } from "@react-navigation/native";
 import { updateRoom, getToken } from "../services/useAPI";
+import { getImgRoomUrl } from "../services/baseUrl";
 
-export default function RoomDetails({ route }) {
-  const [imgCategories, setImgCategories] = useState([]);
-  const [categoryName, setCategoryName] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [person, setPerson] = useState('');
-  const [area, setArea] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState(''); // Thêm biến `price`
-  const [roomNumbers, setRoomNumbers] = useState('');
-  const [bedType, setBedType] = useState('');
-
+export default function RoomDetail({route}) {
+  // const route = useRoute();
+  const { post } = route.params;
   const [token, setToken] = useState('');
+
+  const [categoryId, setCategoryId] = useState(post.categoryId);
+  const [imgCategories, setImgCategories] = useState(post.imgCategories);
+  const [categoryName, setCategoryName] = useState(post.categoryName);
+  const [person, setPerson] = useState(post.person);
+  const [area, setArea] = useState(post.area);
+  const [description, setDescription] = useState(post.description);
+  const [price, setPrice] = useState(post.price);
+  const [roomNumbers, setRoomNumbers] = useState(post.roomNumbers);
+  const [bedType, setBedType] = useState(post.bedType);
+
+
+  
+  console.log('post:',post)
+  // console.log('2',post.bedType)
 
   const navigation = useNavigation();
 
@@ -63,22 +71,23 @@ export default function RoomDetails({ route }) {
     </View>
   );
 
-  const handleAddRoom = async () => {
+  const handleUpdateRoom = async () => {
     if (token) {
       try {
-        const response = await providerAddRoom(
+        const response = await updateRoom(
           token,
+          categoryId,
           imgCategories,
           categoryName,
           person,
           area,
           bedType,
-          roomNumbers,
           description,
-          price
+          price,
+          roomNumbers 
         );
 
-        if (response && response.status === 200) { // Kiểm tra response không null trước khi truy cập status
+        if (response && response.status === 200) {
           Alert.alert("Lưu thành công!");
           navigation.navigate("CreateroomScreen");
         } else {
@@ -95,10 +104,10 @@ export default function RoomDetails({ route }) {
   return (
     <ScrollView style={styles.container}>
       <FlatList
-        style={{ top: 40 }}
+        style={{ top: 10 }}
         data={imgCategories}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(post) => post.categoryId.toString()}
         horizontal
       />
 
@@ -154,10 +163,10 @@ export default function RoomDetails({ route }) {
       />
 
       <TouchableOpacity
-        onPress={handleAddRoom}
+        onPress={handleUpdateRoom}
         style={styles.addButton}
       >
-        <Text style={styles.addButtonText}>Thêm phòng</Text>
+        <Text style={styles.addButtonText}>Sửa thông tin phòng</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

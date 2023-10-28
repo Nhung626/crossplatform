@@ -11,7 +11,7 @@ import CreateroomScreen from './src/app/createroomScreen';
 import Themphong from './src/app/themphong';
 import PersonDetail from './src/app/personDetails';
 import ThongtinKS from './src/app/thongtinKS';
-// import RoomDetail from './src/app/roomDetail';
+import RoomDetail from './src/app/roomDetails';
 
 const Drawer = createDrawerNavigator();
 export default function App() {
@@ -28,7 +28,7 @@ export default function App() {
   <Stack.Screen name="Themphong" component={Themphong} />
   <Stack.Screen name="PersonDetail" component={PersonDetail} />
   <Stack.Screen name="ThongtinKS" component={ThongtinKS} />
-  {/* <Stack.Screen name="RoomDetail" component={RoomDetail} /> */}
+  <Stack.Screen name="RoomDetail" component={RoomDetail} />
 
 </Stack.Navigator>
   </NavigationContainer>
