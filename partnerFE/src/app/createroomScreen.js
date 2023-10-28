@@ -37,7 +37,7 @@ useEffect(() => {
           ),
         }}
       />
-      {/* ... */}
+      
       
       <Tab.Screen
         name="Quản lý đặt"

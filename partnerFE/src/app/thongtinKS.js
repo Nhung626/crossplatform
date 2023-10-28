@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
-import { Text, View, ScrollView, TextInput, TouchableOpacity, ImageBackground, Image } from 'react-native';
-import Iconicons from 'react-native-vector-icons/Ionicons';
+import React, { useState,useEffect} from 'react';
+import { FlatList, Alert,Text, View, TextInput, TouchableOpacity, ImageBackground, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useRoute, useNavigation } from "@react-navigation/native";
-import { providerUpdateApi } from "../services/useAPI";
+import {  useNavigation } from "@react-navigation/native";
+import { providerUpdateApi,getToken, } from "../services/useAPI";
 
-export default function ThongtinKS() {
+export default function ThongtinKS({ route }) {
   const navigation = useNavigation();
-  const route = useRoute();
-  const { token } = route.params ?? {};
 
-  const [imgProviders, setImage] = useState([]);
+  const [token, setToken] = useState('');
+  const [imgProviders, setImgProviders] = useState([]);
   const [providerName, setProviderName] = useState("");
   const [providerPhone, setProviderPhone] = useState("");
   const [address, setAddress] = useState("");
   const [description, setDescription] = useState("");
+
+
+  useEffect(() => {
+    const getTokenId = async () => {
+      const token = await getToken();
+      setToken(token);
+    }
+    getTokenId();
+  }, []);
 
   const handleImagePickHotel = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -25,79 +32,79 @@ export default function ThongtinKS() {
     });
 
     if (result.canceled) {
-      console.log('User canceled image picker');
+      // Xử lý khi người dùng hủy chọn ảnh
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
     } else {
-      const selectedImage = result.assets.map((asset) => asset.uri);
-      setImage([...imgProviders, ...selectedImage]);
+      const selectedImages = result.assets.map((asset) => asset.uri);
+      setImgProviders([...imgProviders, ...selectedImages]);
     }
   };
 
   const handleRemoveImage = (indexToRemove) => {
-    const updatedImage = [...imgProviders];
-    updatedImage.splice(indexToRemove, 1);
-    setImage(updatedImage);
+    const updatedImgProviders = [...imgProviders];
+    updatedImgProviders.splice(indexToRemove, 1);
+    setImgProviders(updatedImgProviders);
   };
+
+  const renderItem = ({ item, index }) => (
+    <View style={styles.imageItem}>
+      <Image source={{ uri: item }} style={styles.selectedImage} />
+      <TouchableOpacity
+        onPress={() => handleRemoveImage(index)}
+        style={styles.removeButton}
+      >
+        <Text style={styles.removeButtonText}>Xóa</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   const handleSaveThongtinKS = async () => {
-    const formData = new FormData();
+    if (token) {
+      try {
+        const response = await providerUpdateApi(
+          token,
+          imgProviders,
+          providerName,
+          providerPhone,
+          address,
+          description 
+        );
 
-    if (imgProviders.length > 0) {
-      imgProviders.forEach((imgKS, index) => {
-        formData.append(`imgProviders`, {
-          uri: imgKS,
-          type: 'image/png',
-          name: `image-${index}.png`,
-        });
-      });
-    }
-
-    formData.append('providerName', providerName);
-    formData.append('providerPhone', providerPhone);
-    formData.append('address', address);
-    formData.append('description', description);
-
-    try {
-      const response = await providerUpdateApi(formData, token);
-
-      if (response.status === 200) {
-        console.log('Thông tin đã được lưu thành công.');
-        navigation.goBack();
-      } else {
-        console.log(response.data);
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error('Lỗi khi gửi yêu cầu lưu thông tin:', error.response.data);
-      } else if (error.request) {
-        console.error('Không có phản hồi từ máy chủ');
-      } else {
-        console.error('Lỗi trong quá trình thiết lập yêu cầu:', error.message);
+        if (response && response.status === 200) { // Kiểm tra response không null trước khi truy cập status
+          Alert.alert("Lưu thành công!");
+          navigation.navigate("CreateroomScreen");
+        } else {
+          Alert.alert("Lưu không thành công!");
+          console.log('Lưu không thành công!');
+        }
+      } catch (error) {
+        console.log('Error:', error);
+        console.log('Lưu không thành công!');
       }
     }
   };
+
 
   return (
     <ImageBackground
       source={require('../assets/theme.png')}
       style={{ flex: 1 }}
     >
+      
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontWeight: 'bold', color: '#687EFF', fontSize: 24, marginTop: 80 }}>
           Thông tin khách sạn
         </Text>
-        <ScrollView horizontal={true} contentContainerStyle={{ alignItems: 'center' }}>
-          {imgProviders.map((imgProvider, index) => (
-            <View key={index} style={styles.imageContainer}>
-              <ImageBackground source={{ uri: imgProvider }} style={styles.imagePreview}>
-                <TouchableOpacity onPress={() => handleRemoveImage(index)}>
-                  <Iconicons name="close" size={20} color="red" />
-                </TouchableOpacity>
-              </ImageBackground>
-            </View>
-          ))}
-        </ScrollView>
+
+        <FlatList
+        style={{ top: 40 }}
+        data={imgProviders}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal
+      />
+
         <TouchableOpacity onPress={handleImagePickHotel}>
           <Image source={require('../assets/add-img-icon.png')} style={{ width: 100, height: 100, bottom: 40 }} />
         </TouchableOpacity>
@@ -130,6 +137,13 @@ export default function ThongtinKS() {
         <TouchableOpacity style={styles.buttonKS} onPress={handleSaveThongtinKS}>
           <Text style={styles.buttonKSText}>Lưu thông tin</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.buttonKS}
+      >
+        <Text style={styles.buttonKSText}>Trở lại</Text>
+      </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -147,6 +161,25 @@ const styles = {
     marginBottom: 10,
     marginLeft: 30,
   },
+  selectedImage: {
+    width: 100,
+    height: 100,
+  },
+  removeButton: {
+    backgroundColor: 'red',
+    width: 60,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  removeButtonText: {
+    color: 'white',
+  },
+  
   imageContainer: {
     marginRight: 10,
     marginTop: -50,

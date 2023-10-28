@@ -37,6 +37,7 @@ export default function QLphong() {
       console.error('Error retrieving room data:', error);
     }
   };
+
   const fetchRoomData = async () => {
     try {
       const response = await getCategoryApi(token);
@@ -57,11 +58,6 @@ export default function QLphong() {
   }
   useEffect(() => {
    
-  
-    // Truy xuất danh sách phòng từ AsyncStorage
-    // getRoomData();
-  
-    // Add isFetching as a dependency to trigger data fetching
     if (isFetching) {
       fetchRoomData();
     }
@@ -88,7 +84,7 @@ export default function QLphong() {
         <ScrollView style={styles.roomItem}>
           <View style={styles.roomImage}>
             <Image
-              style={{ width: 150, height: 200, borderRadius: 30 }}
+              style={{ width: 150, height: 200, borderRadius: 30,borderWidth:1, }}
               source={imageSource} // Use the constructed image source
             />
           </View>
@@ -123,6 +119,15 @@ export default function QLphong() {
             />
             }
           keyExtractor={(item) => item.categoryId}
+
+          style={{
+          shadowColor: 'black',
+          shadowOffset: { width: 0, height: 3 }, // Độ dịch chuyển của bóng
+          shadowOpacity: 1,
+          shadowColor:'#4F4A45',
+          borderWidth:1,
+          borderColor: 'transparent',
+          shadowRadius: 5}}
         />
 
         <TouchableOpacity
@@ -144,7 +149,9 @@ const styles = {
     borderRadius: 10,
     marginBottom: 20,
     width: 380,
-    height: 300
+    height: 300,
+    
+    
   },
 
   roomImage: {
@@ -156,7 +163,7 @@ const styles = {
     marginLeft: 160,
     bottom: 200,
     borderLeftWidth: 2,
-    padding: 10
+    padding: 10,
   },
   roomName: {
     fontSize: 18,

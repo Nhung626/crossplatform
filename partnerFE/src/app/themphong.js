@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet ,Alert} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
 import { providerAddRoom, getToken } from "../services/useAPI";
@@ -71,14 +71,17 @@ export default function Themphong({ route }) {
           categoryName,
           person,
           area,
-          description,
+          bedType,
           roomNumbers,
-          bedType
+          description,
+          price
         );
 
         if (response && response.status === 200) { // Kiểm tra response không null trước khi truy cập status
+          Alert.alert("Lưu thành công!");
           navigation.navigate("CreateroomScreen");
         } else {
+          Alert.alert("Lưu không thành công!");
           console.log('Lưu không thành công!');
         }
       } catch (error) {

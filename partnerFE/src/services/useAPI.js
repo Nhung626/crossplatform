@@ -1,6 +1,6 @@
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BASE_URL,postCheckinUrl,postCheckoutUrl,postCancelUrl,
+import {BASE_URL,postCheckinUrl,postCheckoutUrl,postCancelUrl,updateCategoryUrl,
     getBookerUrl,getCheckinUrl,getCheckoutUrl,getCancelUrl,getReviewUrl, addUrlProviderLogin,getImgRoomUrl,getCategoryUrl, addUrlProviderSignUp,addUrlProviderAddRoom, addUrlProviderUpdate, getProviderUrl, getImgProviderUrl } from "./baseUrl"
 
 export const loginApi = async (email, password) => {
@@ -80,18 +80,53 @@ export const signUpApi = async (email, password) => {
         }
     };
 
-export const providerUpdateApi = (data, token) => {
-    const providerUpdate = axios({
-        method: "POST",
-        url: addUrlProviderUpdate,
-        data: data,
-        headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`
-        },
-    });
-    return providerUpdate;
-};
+    export const providerUpdateApi = async (
+        token,
+        imgProviders,
+        providerName,
+        providerPhone,
+        address,
+        description  
+    ) => {
+    
+        const formData = new FormData();
+    
+        imgProviders.forEach((img, index) => {
+            formData.append('imgProviders', {
+                uri: img, // Điều này không đúng, hãy chỉ đính kèm URI
+                type: 'image/png',
+                name: `image_${index}.png`,
+            });
+        });
+        
+        formData.append('providerName', providerName);
+        formData.append('providerPhone', providerPhone);
+        formData.append('address', address);
+        formData.append('description', description);
+        console.log("formData nè", formData);
+        // console.log("imgCategories:", imgCategories);
+    
+        try {
+            const response = await axios({
+                method: "POST",
+                url: addUrlProviderUpdate,
+                data: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                
+                console.log("lưu thành công!");
+                return response;
+            }
+        } catch (error) {
+            console.log('Error response data:', error.response.data);
+            console.log(error);
+            return null;
+        }
+    }
 
 export const providerAddRoom = async (
     token,
@@ -99,28 +134,31 @@ export const providerAddRoom = async (
     categoryName,
     person,
     area,
-    description,
+    bedType,
     roomNumbers,
-    bedType) => {
+    description,
+    price
+) => {
 
     const formData = new FormData();
 
-     imgCategories.forEach((img, index) => {
-      console.log(img);
-      formData.append('imgCategories[]', {
-        uri: img,
-        type: 'image/png',
-        name: `image_${index}.png`,
-      });
+    imgCategories.forEach((img, index) => {
+        formData.append('imgCategories', {
+            uri: img, // Điều này không đúng, hãy chỉ đính kèm URI
+            type: 'image/png',
+            name: `image_${index}.png`,
+        });
     });
-    // formData.append('imgCategories',imgCategories);
+    
     formData.append('categoryName', categoryName);
     formData.append('person', person);
     formData.append('area', area);
-    formData.append('description', description);
-    formData.append('roomNumbers', roomNumbers);
     formData.append('bedType', bedType);
-    console.log("formData nè", formData)
+    formData.append('roomNumbers', roomNumbers);
+    formData.append('description', description);     
+    formData.append('price', price);
+    console.log("formData nè", formData);
+    // console.log("imgCategories:", imgCategories);
 
     try {
         const response = await axios({
@@ -133,15 +171,73 @@ export const providerAddRoom = async (
             }
         });
         if (response.status === 200) {
-            console.log("lưu thành công!")
-            return response
+            
+            console.log("lưu thành công!");
+            return response;
         }
     } catch (error) {
-        console.log('Error response data:', error.response.data); // Thêm dòng này
+        console.log('Error response data:', error.response.data);
         console.log(error);
         return null;
     }
 }
+
+export const updateRoom = async (
+    token,
+    imgCategories,
+    categoryName,
+    categoryId,
+    person,
+    area,
+    bedType,
+    roomNumbers,
+    description,
+    price
+) => {
+
+    const formData = new FormData();
+
+    imgCategories.forEach((img, index) => {
+        formData.append('imgCategories', {
+            uri: img, // Điều này không đúng, hãy chỉ đính kèm URI
+            type: 'image/png',
+            name: `image_${index}.png`,
+        });
+    });
+    
+    formData.append('categoryName', categoryName);
+    formData.append('categoryId', categoryId);
+    formData.append('person', person);
+    formData.append('area', area);
+    formData.append('bedType', bedType);
+    formData.append('roomNumbers', roomNumbers);
+    formData.append('description', description);     
+    formData.append('price', price);
+    console.log("formData nè", formData);
+    
+
+    try {
+        const response = await axios({
+            method: "POST",
+            url: updateCategoryUrl(categoryId),
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            }
+        });
+        if (response.status === 200) {
+            
+            console.log("lưu thành công!");
+            return response;
+        }
+    } catch (error) {
+        console.log('Error response data:', error.response.data);
+        console.log(error);
+        return null;
+    }
+}
+
 
 export const getProviderApi = (token) => {
     const getProvider = axios({
@@ -215,6 +311,7 @@ export const getCheckin = (token) => {
     });
     return getCategory;
 };
+
 export const postCheckin = async(reservarId, token ) => {
     try {
         const response = await axios({
@@ -240,36 +337,53 @@ export const postCheckin = async(reservarId, token ) => {
 };
 
 
-export const postCheckout = async(reservarId,token) => {
-    const getCategory = axios({
-        method: "POST",
-        url: postCheckoutUrl,
-        params:{reservarId:reservarId},
-        headers: {
-            
-            Authorization: `Bearer ${token}`
-        },
-    });
-    return getCategory;
+export const postCheckout = async(reservarId, token ) => {
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: postCheckoutUrl(reservarId),
+            params: { reservarId:reservarId, token:token },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("response: ", response);
+
+        if (response.status === 200) {
+            return response;
+        } else {
+            // Xử lý lỗi và ném ra một ngoại lệ
+            throw new Error(`Failed to check out. Status code: ${response.status}`);
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error);
+        throw error; // Ném ngoại lệ để thông báo lỗi đến người gọi hàm
+    }
 };
 
-export const postCancel = async( reservarId,token) => {
-    try{
-       const response = await axios({
-      method: 'POST',
-      url: postCancelUrl,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log("response: ",response)
-    if(response.status===200){
-        return response;
+export const postCancel = async(reservarId, token ) => {
+    try {
+        const response = await axios({
+            method: 'POST',
+            url: postCancelUrl(reservarId),
+            params: { reservarId:reservarId, token:token },
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("response: ", response);
+
+        if (response.status === 200) {
+            return response;
+        } else {
+            // Xử lý lỗi và ném ra một ngoại lệ
+            throw new Error(`Failed to cancel. Status code: ${response.status}`);
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error);
+        throw error; // Ném ngoại lệ để thông báo lỗi đến người gọi hàm
     }
-    } catch(error){
-        console.log("Lỗi: ", error)
-    }
-  };
+};
 
   
   

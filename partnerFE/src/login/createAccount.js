@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, TextInput,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 // import config from '../utils/api-config.json';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -32,19 +32,14 @@ const CreateAccount = () => {
       alert("Mật khẩu và xác nhận mật khẩu không khớp.");
       return;
     }
-    const user = {
-      email: email,
-      password: password,
-    };
-    try {
-      const response = await signUpApi(user);
-      if (response.status === 200) {
-        console.log('Đăng ký thành công')
-        navigation.navigate("CreateroomScreen", { user })
-      }
-    } catch (error) {
-      console.log(user)
-      console.error("Lỗi khi gửi yêu cầu lưu thông tin:", error);
+    const response = await signUpApi(email, password);
+    console.log('2',response);
+
+    if (response) {
+      Alert.alert("Đăng ký thành công!")
+      navigation.navigate('LoginScreen')
+    } else {
+      Alert.alert("Đăng kí không thành công");
     }
   };
 
@@ -153,7 +148,7 @@ const styles = StyleSheet.create({
   },
   createAccountButton: {
     marginTop: 5,
-    backgroundColor: '#DE5223',
+    backgroundColor: '#A0E9FF',
     borderRadius: 10,
     height: 40,
     justifyContent: 'center',
@@ -162,7 +157,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   createAccountButtonText: {
-    color: '#fff',
+    color: '#3876BF',
     fontWeight: 'bold',
     fontSize: 16,
   },

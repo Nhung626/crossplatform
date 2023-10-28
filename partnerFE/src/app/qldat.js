@@ -4,7 +4,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getImgRoomUrl } from "../services/baseUrl";
-import { getBooked,getCheckin,getCheckout,getCancel,getReview,postCheckin,postCancel} from '../services/useAPI';
+import { getBooked,getCheckin,getCheckout,getCancel,getReview,postCheckin,postCheckout,postCancel} from '../services/useAPI';
 
 const TopTab = createMaterialTopTabNavigator();
 
@@ -42,14 +42,26 @@ export default function QLDat() {
         tabBarOptions={{
           activeTintColor: 'blue',
           inactiveTintColor: 'gray',
-          style: { backgroundColor: '#fff' },
+          // style: { backgroundColor: '#fff' },
         }}
       >
-        <TopTab.Screen name="Đặt trước" component={() => <TabScreen1 token={token} reservarId={listData.reserverId} />} />
-        <TopTab.Screen name="Đang sử dụng" component={() => <TabScreen2 token={token} />} />
-        <TopTab.Screen name="Đã hoàn thành" component={() => <TabScreen3 token={token} />} />
-        <TopTab.Screen name="Bị hủy" component={() => <TabScreen4 token={token} />} />
-        <TopTab.Screen name="Đánh giá" component={() => <TabScreen5 token={token} />} />
+        <TopTab.Screen name="Đặt trước">
+          {() => <TabScreen1 token={token} />}
+        </TopTab.Screen>
+        <TopTab.Screen name="Đang sử dụng">
+          {() => <TabScreen2 token={token} />}
+        </TopTab.Screen>
+        <TopTab.Screen name="Đã hoàn thành">
+          {() => <TabScreen3 token={token} />}
+        </TopTab.Screen>
+        <TopTab.Screen name="Bị hủy">
+          {() => <TabScreen4 token={token} />}
+        </TopTab.Screen>
+
+        <TopTab.Screen name="Đánh giá">
+          {() => <TabScreen5 token={token} />}
+        </TopTab.Screen>
+
       </TopTab.Navigator>
     </View>
   );
@@ -72,11 +84,23 @@ const handleCheckIn = async (reservarId, token) => {
 
 };
 
+const handleCheckOut = async (reservarId, token) => {
+    
+  try {
+    const response = await postCheckout(reservarId, token);
+    if (response) {
+        // Kiểm tra response ở đây nếu cần
+        console.log("Checkout response:", response);
+        Alert.alert('Checkout thành công!');
+    }
+} catch (error) {
+    console.error('API error:', error);
+    Alert.alert('Lỗi', 'Có lỗi xảy ra. Vui lòng thử lại sau.');
+}
 
+};
 
-// console.log("reservar id: ", reservarId)
 const handleCancel = async (reservarId, token ) => {
-  // console.log('222', reservarId,token)
   try {
     const response = await postCancel(reservarId, token);
     if (response) {
@@ -209,6 +233,8 @@ function TabScreen2({ token }) {
     }
   }, [isFetching, token]);
 
+  
+
   // Hàm này được sử dụng để hiển thị danh sách dữ liệu
   const renderList = (data) => {
     return data.map((item, index) => {
@@ -237,9 +263,9 @@ function TabScreen2({ token }) {
                 <Text style={styles.text}>Đã thanh toán</Text>             
             )}
 
-              <TouchableOpacity style={styles.check}>
-                  <Text style={styles.textCheck}>Check Out</Text>
-              </TouchableOpacity> 
+                  <TouchableOpacity style={styles.check} onPress={() => handleCheckOut(item.reservarId,token)}>
+                    <Text style={styles.textCheck}>Check Out</Text>
+                  </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -496,9 +522,17 @@ const styles = {
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 10,
+    marginTop:10,
     marginBottom: 20,
     width: 380,
-    height: 350
+    height: 300,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 }, // Độ dịch chuyển của bóng
+    shadowOpacity: 1,
+    shadowColor:'#4F4A45',
+    borderWidth:1,
+    borderColor: 'transparent',
+    
   },
   roomImage: {
     flex: 1,
@@ -507,7 +541,7 @@ const styles = {
   thongtin: {
     flex: 2,
     marginLeft: 160,
-    bottom: 100,
+    bottom: 80,
     borderLeftWidth: 1,
     padding: 10
   },

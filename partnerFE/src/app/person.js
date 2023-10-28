@@ -6,7 +6,7 @@ import Iconicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation } from "@react-navigation/native";
 
-import { getProviderApi, getImgProviderApi } from '../services/useAPI';
+import { getProviderApi } from '../services/useAPI';
 import { getImgProviderUrl} from "../services/baseUrl";
 
 export default function Person() {
@@ -52,9 +52,7 @@ useEffect(() => {
       
       const response = await getProviderApi(token);
       if (response && response.status === 200) {
-        // console.log('fffff2', response.data);
         setProviderData(response.data);
-        //storeProviderData(response.data); // Lưu trữ dữ liệu vào AsyncStorage
       } else {
         console.error('Error fetching provider data:', response ? response.data : 'Response is null');
       }
@@ -65,7 +63,6 @@ useEffect(() => {
     }
   }
 
-  // getProviderData();
 
   if (isFetching) {
     fetchProviderData();
@@ -100,6 +97,10 @@ useEffect(() => {
     navigation.navigate('PersonDetail', { token });
   };
 
+  const handleDanhGia =() =>{
+
+  };
+
   const handleExitAccount = () => {
     Alert.alert(
       'Đăng xuất tài khoản',
@@ -121,21 +122,13 @@ useEffect(() => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: '#B6FFFA',alignItems:'center', justifyContent:'center' }}>
-        {/* <View style={{ borderWidth: 1, alignItems: 'center', top: 200, marginBottom: 10 }}> */}
-          {/* <FlatList
-            data={providerData}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.providerId.toString()}
-          /> */}
+      <View style={{ flex: 1, backgroundColor: '#29b4ca',alignItems:'center', justifyContent:'center' }}>
           <Image
               style={{ width: 150, height: 150, borderRadius: 80,top:40}}
-              // source={{uri: `${getImgRoomUrl}?imageId=${providerData?.imgIdProviders[0] || 1}`  }} // Use the constructed image source
               source={providerData?.imgIdProviders
                 ? { uri: `${getImgProviderUrl}?imageId=${providerData?.imgIdProviders[0]}` }
                 : require('../assets/add-img-icon.png') }
             />
-        {/* </View> */}
         <Text style={{fontSize:20,textAlign: 'center',marginTop:50,}}>Xin chào, {providerData.providerName}</Text>
         <Text style={{ fontSize: 15, fontWeight: 'bold',textAlign: 'center',marginTop:10 }}>Đánh giá:</Text>
       </View>
@@ -148,7 +141,7 @@ useEffect(() => {
               <Text style={styles.text}>Quản lý tài khoản</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button3} onPress={handleManageAccount}>
+            <TouchableOpacity style={styles.button3} onPress={handleDanhGia}>
               <Iconicons style={styles.personicon} name="star-outline" size={30} />
               <Text style={styles.text}>Đánh giá của khách hàng</Text>
             </TouchableOpacity>

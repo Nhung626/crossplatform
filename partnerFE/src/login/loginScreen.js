@@ -10,28 +10,25 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   // const [token, setToken] = useState('');
+
   
   const handleLogin = async () => {
-    const user = {
-      email: email,
-      password: password,
-    };
-    console.log(user)
-
     try {
-      const response = await loginApi(user)
-      // console.log(response.data.token)
-      if (response.status === 200) {
-        const token = response.data.token
-        // const id = response.data.id;
-        navigation.navigate('CreateroomScreen', {token})
-        console.log("Đăng nhập thành công", token);
+      const result = await loginApi(email, password);
+      if (result) {
+        const token = result.data.token; // Lấy token từ result.data
+        console.log("token: ", token);
+        navigation.navigate('CreateroomScreen', { token: token });
+      } else {
+        Alert.alert('Đăng nhập thất bại');
       }
     } catch (error) {
-      console.error("Lỗi khi gửi yêu cầu đăng nhập:", error.response);
-      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+      // Xử lý lỗi khi gọi API thất bại
+      console.error('Error during login:', error);
+      Alert.alert('Đăng nhập thất bại');
     }
-  };
+  }
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -67,8 +64,8 @@ const LoginScreen = () => {
         <Text style={[styles.linkText,{color:'blue',textDecorationLine: 'underline',fontWeight:'bold'}]}>Quên mật khẩu?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, { backgroundColor: '#DE5223' }]} onPress={handleLogin}>
-        <Text style={{ textAlign: 'center', color: '#fff', paddingTop: 10 }}>
+      <TouchableOpacity style={[styles.button, { backgroundColor: '#A0E9FF' }]} onPress={handleLogin}>
+        <Text style={{ textAlign: 'center', color: '#3876BF',fontWeight:'bold', paddingTop: 10 }}>
           Đăng nhập
         </Text>
       </TouchableOpacity>
@@ -118,6 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     height: 40,
+    
   },
 });
 

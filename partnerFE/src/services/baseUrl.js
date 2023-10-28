@@ -1,6 +1,6 @@
-export const BASE_URL = "http://172.20.10.12:3000/api/v1/";
+// export const BASE_URL = "http://172.20.10.10:3000/api/v1/";
 // export const BASE_URL = "http://192.168.0.116:3000/api/v1/";
-// export const BASE_URL = "http://192.168.1.4:3000/api/v1/";
+export const BASE_URL = "http://192.168.1.4:3000/api/v1/";
 // export const BASE_URL = "http://10.0.2.43:3000/api/v1/";
 export const addUrlProviderSignUp = BASE_URL.concat('provider/auth/sign-up');
 export const addUrlProviderLogin = BASE_URL.concat('provider/auth/login');
@@ -10,6 +10,8 @@ export const addUrlProviderAddRoom = BASE_URL.concat(`provider/add-room`);
 export const getCategoryUrl  = BASE_URL.concat(`provider/get-categories`);
 export const getImgProviderUrl = BASE_URL.concat('image');
 export const getImgRoomUrl = BASE_URL.concat('image');
+
+export const updateCategoryUrl =(categoryId)=> BASE_URL.concat(`provider/update-room?categoryId=${categoryId}`);
 
 export const getBookerUrl = BASE_URL.concat(`provider/list-booked`);
 export const getCheckinUrl = BASE_URL.concat(`provider/list-checkin`);
