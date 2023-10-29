@@ -56,7 +56,7 @@ public class Reservar {
                 total += Period.between(stateRoom.getStart(), stateRoom.getEnd()).getDays() * price;
             }
         }
-        total += total/ 100;
+        total += 10 * total/ 100;
     }
 
     public LocalDate getStart() {
