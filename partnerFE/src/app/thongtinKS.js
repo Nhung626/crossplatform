@@ -142,7 +142,7 @@ export default function ThongtinKS({ route }) {
         onPress={() => navigation.goBack()}
         style={styles.buttonKS}
       >
-        <Text style={styles.buttonKSText}>Trở lại</Text>
+        <Text style={styles.Text}>Trở lại</Text>
       </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -194,15 +194,23 @@ const styles = {
     bottom: 50,
     borderWidth: 1,
     borderRadius: 10,
-    borderColor: '#4477CE',
+    borderColor: 'transparent',
     height: 40,
     width: 100,
-    backgroundColor: '#8BE8E5',
+    backgroundColor: '#98E4FF',
   },
   buttonKSText: {
     paddingVertical: 10,
     paddingHorizontal: 5,
     fontWeight: 'bold',
-    color: '#4477CE',
+    color: '#190482',
+    alignItems:'center'
+  },
+  Text: {
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    fontWeight: 'bold',
+    color: '#190482',
+   
   },
 };

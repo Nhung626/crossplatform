@@ -187,7 +187,8 @@ const styles = {
       width: 115,
       height: 40,
       backgroundColor: '#98E4FF',
-      alignItem:'center'
+      alignItem:'center',
+      borderColor: 'transparent',
     },
   };
   
