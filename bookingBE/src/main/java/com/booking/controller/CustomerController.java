@@ -107,7 +107,9 @@ public class CustomerController {
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping(value = "/list-favorite")
     public ResponseEntity<List<ProviderDto>> getFavorites(Principal principal) {
-        return ResponseEntity.ok(favoriteService.getFavoriteProvider(getCustomerId(principal)));
+        List<ProviderDto> providerDtos = favoriteService.getFavoriteProvider(getCustomerId(principal));
+        providerDtos.stream().forEach(data-> data.setStar(reviewService.rateAgs(data.getProviderId())));
+        return ResponseEntity.ok(providerDtos);
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")

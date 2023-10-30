@@ -7,6 +7,7 @@ import com.booking.repository.PaymentRepository;
 import com.booking.repository.ReservarRepository;
 import com.booking.service.interfaces.PaymentService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PaymentServiceImp implements PaymentService {
 
     private final PaymentRepository paymentRepository;

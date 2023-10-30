@@ -52,23 +52,27 @@ public class ReviewServiceImp implements ReviewService {
         }
     }
 
-    public ReviewDto getReviewToReservar(Long reservarId){
+    public ReviewDto getReviewToReservar(Long reservarId) {
         Review review = reviewRepository.findByReservarId(reservarId);
-        Reservar reservar =reservarRepository.findByReservarId(reservarId);
-        return Convert.convertToReviewDto(review,reservar);
+        Reservar reservar = reservarRepository.findByReservarId(reservarId);
+        return Convert.convertToReviewDto(review, reservar);
     }
+
     public List<ReviewDto> getCustomerReviews(Long customerId) {
         Customer customer = customerRepository.findByCustomerId(customerId);
         return customer.getReviews().stream().map(data -> Convert.convertToReviewDto(data, reservarRepository.findByReservarId(data.getReservarId()))).toList();
     }
 
     public List<ReviewDto> getProviderReviews(Long providerId) {
-        List<Review> reviews = reviewRepository.findAll().stream().filter(data-> reservarRepository.findByReservarId(data.getReservarId()).getProvider().getProviderId() == providerId).toList();
+        List<Review> reviews = reviewRepository.findAll().stream().filter(data -> reservarRepository.findByReservarId(data.getReservarId()).getProvider().getProviderId() == providerId).toList();
         return reviews.stream().map(data -> Convert.convertToReviewDto(data, reservarRepository.findByReservarId(data.getReservarId()))).toList();
     }
 
-    public float rateAgs(Long providerId){
-        List<Review> reviews = reviewRepository.findAll().stream().filter(data-> reservarRepository.findByReservarId(data.getReservarId()).getProvider().getProviderId() == providerId).toList();
-        return reviews.stream().mapToInt(data->data.getRate()).sum()/(reviews.size());
+    public float rateAgs(Long providerId) {
+        List<Review> reviews = reviewRepository.findAll().stream().filter(data -> reservarRepository.findByReservarId(data.getReservarId()).getProvider().getProviderId() == providerId).toList();
+        if (reviews.size() != 0) {
+            return reviews.stream().mapToInt(data -> data.getRate()).sum() / (reviews.size());
+        }
+        return 0;
     }
 }
