@@ -6,10 +6,9 @@ import com.booking.service.interfaces.ReviewService;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+
 @AllArgsConstructor
 public class Convert {
-    private final ReviewService reviewService;
-
     public static ProviderDto convertProvider(Provider provider) {
         List<Long> imgIds = provider.getImgProviders().stream().map(Image::getImgId).toList();
         return ProviderDto.builder()
@@ -20,6 +19,7 @@ public class Convert {
                 .address(provider.getAddress())
                 .description(provider.getDescription()).build();
     }
+
     public static CategoryDto convertCategory(Category category) {
         List<Long> imgIds = category.getImgRooms().stream().map(Image::getImgId).toList();
         List<Integer> rooms = category.getRooms().stream().map(Room::getRoomNumber).toList();
@@ -41,10 +41,10 @@ public class Convert {
         return new RoomDto(room.getRoomId(), room.getRoomNumber(), category);
     }
 
-    public static ReservarDto convertReservarDto(Reservar reservar){
+    public static ReservarDto convertReservarDto(Reservar reservar) {
         StringBuilder roomReservar = new StringBuilder();
         List<Room> rooms = reservar.getStateRooms().stream().map(StateRoom::getRoom).toList();
-        for(Room room: rooms){
+        for (Room room : rooms) {
             roomReservar.append(room.getRoomNumber()).append(" ");
         }
         ProviderDto providerDto = convertProvider(reservar.getProvider());
@@ -68,7 +68,7 @@ public class Convert {
                 .rooms(roomReservar.toString().trim()).build();
     }
 
-    public static ReviewDto convertToReviewDto(Review review, Reservar reservar){
+    public static ReviewDto convertToReviewDto(Review review, Reservar reservar) {
         List<Long> imgIds = review.getImgReview().stream().map(Image::getImgId).toList();
         return ReviewDto.builder()
                 .reviewId(review.getReviewId())
