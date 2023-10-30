@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet ,Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet ,Alert,ImageBackground} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
 import { providerAddRoom, getToken } from "../services/useAPI";
@@ -92,6 +92,7 @@ export default function Themphong({ route }) {
   };
 
   return (
+    <ImageBackground source={require('../assets/theme.png')} style={{ width: '100%', height: '100%' }}>
     <ScrollView style={styles.container}>
       <FlatList
         style={{ top: 40 }}
@@ -166,6 +167,7 @@ export default function Themphong({ route }) {
         <Text style={styles.backButtonText}>Trở lại</Text>
       </TouchableOpacity>
     </ScrollView>
+    </ImageBackground>
   );
 }
 

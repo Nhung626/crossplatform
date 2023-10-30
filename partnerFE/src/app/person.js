@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, Image, Alert, FlatList, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, Image, Alert, ImageBackground, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Fontisto';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 
@@ -138,27 +138,27 @@ useEffect(() => {
         </View>
       </View>
 
-      <View style={{ flex: 2 }}>
-        <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
-          <View style={styles.buttonperson}>
-            <TouchableOpacity style={styles.button} onPress={handleManageAccount}>
-              <Icon style={styles.personicon} name="person" size={20} />
-              <Text style={styles.text}>Quản lý tài khoản</Text>
-            </TouchableOpacity>
+    <ImageBackground source={require('../assets/theme.png')} style={{ flex: 2 }}>
+      <ScrollView style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <View style={styles.buttonperson}>
+          <TouchableOpacity style={styles.button} onPress={handleManageAccount}>
+            <Icon style={styles.personicon} name="person" size={20} />
+            <Text style={styles.text}>Quản lý tài khoản</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button3} onPress={handleDanhGia}>
-              <Iconicons style={styles.personicon} name="star-outline" size={30} />
-              <Text style={styles.text}>Đánh giá của khách hàng</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.button3} onPress={handleDanhGia}>
+            <Iconicons style={styles.personicon} name="star-outline" size={30} />
+            <Text style={styles.text}>Đánh giá của khách hàng</Text>
+          </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button2} onPress={handleExitAccount}>
-              <Iconicons style={styles.personicon} name="exit-outline" size={30} />
-              <Text style={styles.text}>Đăng xuất</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
-    </View>
+          <TouchableOpacity style={styles.button2} onPress={handleExitAccount}>
+            <Iconicons style={styles.personicon} name="exit-outline" size={30} />
+            <Text style={styles.text}>Đăng xuất</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </ImageBackground>
+  </View>
   );
 }
 

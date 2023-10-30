@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, ScrollView,TouchableOpacity,Alert } from 'react-native';
+import { View, Text, Image, ScrollView,TouchableOpacity,Alert,ImageBackground,RefreshControl } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,7 @@ export default function QLDat() {
   const { token,reservarId } = route.params ?? {};
   const [listData, setListData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  const [isRefresh, setisRefresh] = useState(false);
 
   // Lưu trữ danh sách phòng vào AsyncStorage
   const storeListData = async (data) => {
@@ -38,7 +39,10 @@ export default function QLDat() {
     }
   };
 
+ 
+
   return (
+    
     <View style={{ flex: 1, top: 50 }}>
       <TopTab.Navigator
         tabBarOptions={{
@@ -71,7 +75,7 @@ export default function QLDat() {
 
 
 const handleCheckIn = async (reservarId, token) => {
-  console.log('222', reservarId,token)
+  
   try {
     const response = await postCheckin(reservarId, token);
     if (response) {
@@ -115,14 +119,21 @@ const handleCancel = async (reservarId, token ) => {
     Alert.alert('Lỗi', 'Có lỗi xảy ra. Vui lòng thử lại sau.');
 }
 
+
+
+
 };
 
 function TabScreen1({ token }) {
   const [listData, setListData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
-
+  const [isRefresh, setisRefresh] = useState(false);
     
-
+  const onRefresh = () => {
+    setisRefresh(true);
+    setIsFetching(true);
+  };
+  
   useEffect(() => {
     async function fetchListData() {
       try {
@@ -130,7 +141,9 @@ function TabScreen1({ token }) {
         // console.log('2222',response.data)
         if (response && response.status === 200) {
           // Xử lý dữ liệu ở đây
+          
           setListData(response.data);
+          setisRefresh(false);
         } else {
           console.error('Error fetching list booked data:', response ? response.data : 'Response is null');
           // Xử lý lỗi và hiển thị thông báo lỗi cho người dùng
@@ -160,6 +173,7 @@ function TabScreen1({ token }) {
       
 
       return (
+        
         <View key={index}>
           <View style={styles.roomItem}>
             <View style={styles.roomImage}>
@@ -198,18 +212,33 @@ function TabScreen1({ token }) {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
-      <ScrollView style={{ flex: 1}}>
-      {renderList(listData)}
-      </ScrollView>
-    </View>
+    <ImageBackground
+    source={require('../assets/theme.png')}
+    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
+      <ScrollView
+      style={{ flex: 1 }}
+      refreshControl={
+    <RefreshControl
+      refreshing={isRefresh}
+      onRefresh={onRefresh}
+    />
+  }
+>
+  {renderList(listData)}
+</ScrollView>
+    </ImageBackground>
   );
 }
 
 function TabScreen2({ token }) {
   const [listData, setListData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
-
+  const [isRefresh, setisRefresh] = useState(false);
+    
+  const onRefresh = () => {
+    setisRefresh(true);
+    setIsFetching(true);
+  };
   useEffect(() => {
     async function fetchListData() {
       try {
@@ -217,6 +246,7 @@ function TabScreen2({ token }) {
         if (response && response.status === 200) {
           // Xử lý dữ liệu ở đây
           setListData(response.data);
+          setisRefresh(false);
         } else {
           console.error('Error fetching list booked data:', response ? response.data : 'Response is null');
           // Xử lý lỗi và hiển thị thông báo lỗi cho người dùng
@@ -276,17 +306,35 @@ function TabScreen2({ token }) {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
-      <ScrollView style={{ flex: 1}}>
-      {renderList(listData)}
-      </ScrollView>
-    </View>
+    <ImageBackground
+    source={require('../assets/theme.png')}
+    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
+      <ScrollView
+      style={{ flex: 1 }}
+      refreshControl={
+    <RefreshControl
+      refreshing={isRefresh}
+      onRefresh={onRefresh}
+    />
+  }
+>
+  {renderList(listData)}
+</ScrollView>
+
+      
+    </ImageBackground>
   );
 }
 
 function TabScreen3({ token }) {
   const [listData, setListData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  const [isRefresh, setisRefresh] = useState(false);
+    
+  const onRefresh = () => {
+    setisRefresh(true);
+    setIsFetching(true);
+  };
 
   useEffect(() => {
     async function fetchListData() {
@@ -295,6 +343,7 @@ function TabScreen3({ token }) {
         if (response && response.status === 200) {
           // Xử lý dữ liệu ở đây
           setListData(response.data);
+          setisRefresh(false);
           // storeListData(response.data); // Lưu dữ liệu vào AsyncStorage
         } else {
           console.error('Error fetching list booked data:', response ? response.data : 'Response is null');
@@ -349,11 +398,21 @@ function TabScreen3({ token }) {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
-      <ScrollView style={{ flex: 1}}>
-      {renderList(listData)}
-      </ScrollView>
-    </View>
+    <ImageBackground
+    source={require('../assets/theme.png')}
+    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
+      <ScrollView
+      style={{ flex: 1 }}
+      refreshControl={
+    <RefreshControl
+      refreshing={isRefresh}
+      onRefresh={onRefresh}
+    />
+  }
+>
+  {renderList(listData)}
+</ScrollView>
+    </ImageBackground>
   );
 }
   
@@ -362,6 +421,12 @@ function TabScreen3({ token }) {
 function TabScreen4({token}) {
   const [listData, setListData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  const [isRefresh, setisRefresh] = useState(false);
+    
+  const onRefresh = () => {
+    setisRefresh(true);
+    setIsFetching(true);
+  };
 
   useEffect(() => {
     async function fetchListData() {
@@ -370,6 +435,7 @@ function TabScreen4({token}) {
         if (response && response.status === 200) {
           // Xử lý dữ liệu ở đây
           setListData(response.data);
+          setisRefresh(false);
           // storeListData(response.data); // Lưu dữ liệu vào AsyncStorage
         } else {
           console.error('Error fetching list cancel data:', response ? response.data : 'Response is null');
@@ -420,17 +486,33 @@ function TabScreen4({token}) {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
-      <ScrollView style={{ flex: 1}}>
-      {renderList(listData)}
-      </ScrollView>
-    </View>
+    <ImageBackground
+    source={require('../assets/theme.png')}
+    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
+      <ScrollView
+      style={{ flex: 1 }}
+      refreshControl={
+    <RefreshControl
+      refreshing={isRefresh}
+      onRefresh={onRefresh}
+    />
+  }
+>
+  {renderList(listData)}
+</ScrollView>
+    </ImageBackground>
   );
 }
 
 function TabScreen5({token}) {
   const [listData, setListData] = useState([]);
   const [isFetching, setIsFetching] = useState(true);
+  // const [isRefresh, setisRefresh] = useState(false);
+    
+  // const onRefresh = () => {
+  //   setisRefresh(true);
+  //   setIsFetching(true);
+  // };
 
   useEffect(() => {
     const fetchListData = async () => {
@@ -440,6 +522,7 @@ function TabScreen5({token}) {
         if (response && response.status === 200) {
           // Xử lý dữ liệu ở đây
           setListData(response.data);
+          // setisRefresh(false); //load lại
           // storeListData(response.data); // Lưu dữ liệu vào AsyncStorage
         } else {
           console.error('Error fetching list booked data:', response ? response.data : 'Response is null');
@@ -489,11 +572,25 @@ function TabScreen5({token}) {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
+    <ImageBackground
+    source={require('../assets/theme.png')}
+    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
+      {/* <ScrollView
+      style={{ flex: 1 }}
+      refreshControl={
+    <RefreshControl
+      refreshing={isRefresh}
+      onRefresh={onRefresh}
+    />
+  }
+>
+  {renderList(listData)}
+</ScrollView> */}
+
       <ScrollView style={{ flex: 1}}>
-      {renderList(listData)}
+        {renderList(listData)}
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 

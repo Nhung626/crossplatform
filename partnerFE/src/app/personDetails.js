@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity,ImageBackground } from 'react-native';
 import { useRoute,useNavigation } from "@react-navigation/native";
 import { getProviderApi, } from '../services/useAPI';
 import { getImgProviderUrl } from "../services/baseUrl";
@@ -90,7 +90,7 @@ export default function PersonDetail() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+     <ImageBackground source={require('../assets/theme.png')} style={{ flex:1, width: '100%', height: '100%' }}>
       <View style={[styles.container,{flex: 1}]}>
         <Image
           style={{ width: 150, height: 150, borderRadius: 80,top:60,marginBottom:20,marginTop:20}}
@@ -119,7 +119,7 @@ export default function PersonDetail() {
         </View>
 
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
