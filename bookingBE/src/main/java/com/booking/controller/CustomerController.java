@@ -156,7 +156,9 @@ public class CustomerController {
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping("/get-provider")
     public ResponseEntity<ProviderDto> getProvider(@RequestParam("providerId") Long providerId) {
-        return ResponseEntity.ok(providerService.getProvider(providerId));
+        ProviderDto providerDto = providerService.getProvider(providerId);
+        providerDto.setStar(reviewService.rateAgs(providerId));
+        return ResponseEntity.ok(providerDto);
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
