@@ -3,7 +3,9 @@ import { View, Text, Image, ScrollView,TouchableOpacity,Alert } from 'react-nati
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getImgRoomUrl,getImgReviewUrl } from "../services/baseUrl";
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import { getImgRoomUrl } from "../services/baseUrl";
 import { getBooked,getCheckin,getCheckout,getCancel,getReview,postCheckin,postCheckout,postCancel} from '../services/useAPI';
 
 const TopTab = createMaterialTopTabNavigator();
@@ -315,8 +317,7 @@ function TabScreen3({ token }) {
   // Hàm này được sử dụng để hiển thị danh sách dữ liệu
   const renderList = (data) => {
     return data.map((item, index) => {
-      const bookImg = item.imgCategory;
-      
+      const bookImg = item.imgCategory; 
       const imageSource = bookImg
       ? { uri: `${getImgRoomUrl}?imageId=${bookImg}` }
       : require('../assets/add-img-icon.png');
@@ -432,9 +433,10 @@ function TabScreen5({token}) {
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
-    async function fetchListData() {
+    const fetchListData = async () => {
       try {
         const response = await getReview(token);
+        // console.log('22', response.data);
         if (response && response.status === 200) {
           // Xử lý dữ liệu ở đây
           setListData(response.data);
@@ -444,37 +446,41 @@ function TabScreen5({token}) {
         }
       } catch (error) {
         console.error('API error:', error);
-      } finally {
-        setIsFetching(false);
       }
-    }
-
-    if (isFetching) {
-      fetchListData();
-    }
-  }, [isFetching, token]);
+    };
+    fetchListData(); // Call the fetchListData function here
+  
+  }, []); 
 
   // Hàm này được sử dụng để hiển thị danh sách dữ liệu
   const renderList = (data) => {
     return data.map((item, index) => {
       const reviewImg = item.imgReview;     
       const imageSource = reviewImg
-      ? { uri: `${getImgReviewUrl}?imageId=${reviewImg}` }
-      : require('../assets/add-img-icon.png');
-    
+        ? { uri: `${getImgRoomUrl}?imageId=${reviewImg}` }
+        : require('../assets/add-img-icon.png');
+      
       return (
         <View key={index}>
-          <View style={styles.roomItem}>
-            <View style={styles.roomImage}>
-              <Image
-                style={{ width: 150, height: 200, borderRadius: 30 }}
-                source={imageSource}
-              />
-            </View>
-            <View style={styles.thongtin}>
-              <Text style={styles.name}>Khách hàng: {item.customerName}</Text>
-              <Text style={styles.detail}>Đánh giá: {item.rate} sao</Text>
+          <View style={styles.reviewItem}>
+            <View style={styles.reviewthongtin}>
+              <Text style={styles.name}>Khách hàng: {item.reservar.customerName}</Text>
+              <Text style={styles.detail}>Liên hệ: {item.reservar.customerPhone}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.detail}>Đánh giá: {item.rate} </Text>
+                <Icon style={{ top: 10 }} name="star-outline" size={15} />
+              </View>
               <Text style={styles.detail}>Nhận xét: {item.description}</Text>
+            </View>
+            <View style={styles.reviewImage}>
+              {item.imgReview.map((image, imgIndex) => (
+                <View key={imgIndex} style={{ marginBottom: 10,marginRight:20 }}>
+                  <Image
+                    style={{ width: 100, height: 100, borderRadius: 30 }}
+                    source={{ uri: `${getImgRoomUrl}?imageId=${image}` }}
+                  />
+                </View>
+              ))}
             </View>
           </View>
         </View>
@@ -511,6 +517,28 @@ const styles = {
   roomImage: {
     flex: 1,
     right: 15,
+  },
+  reviewItem:{
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    marginTop:10,
+    marginBottom: 20,
+    width: 380,
+    height: 300,
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 }, // Độ dịch chuyển của bóng
+    shadowOpacity: 1,
+    shadowColor:'#4F4A45',
+    borderWidth:1,
+    borderColor: 'transparent',
+  },
+  reviewImage:{
+    flex: 1,
+    right: 15,
+    flexDirection: 'row',
+    marginTop:20,
+    
   },
   thongtin: {
     flex: 2,

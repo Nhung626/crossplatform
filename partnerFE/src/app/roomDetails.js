@@ -7,7 +7,7 @@ import { updateRoom, getToken } from "../services/useAPI";
 export default function Themphong({ route }) {
   const { post } = route.params;
 
-  const [categoryId, setCategoryId] = useState(post.categoryName);
+  const [categoryId, setCategoryId] = useState(post.categoryId);
   const [imgCategories, setImgCategories] = useState([]);
   const [categoryName, setCategoryName] = useState(post.categoryName);
   const [person, setPerson] = useState(post.person);
@@ -18,7 +18,7 @@ export default function Themphong({ route }) {
   const [bedType, setBedType] = useState(post.bedType);
 
   const [token, setToken] = useState('');
-
+  // console.log('222',post.description)
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function Themphong({ route }) {
     });
 
     if (result.canceled) {
-      // Xử lý khi người dùng hủy chọn ảnh
+
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
     } else {
@@ -63,7 +63,7 @@ export default function Themphong({ route }) {
         <Text style={styles.removeButtonText}>Xóa</Text>
       </TouchableOpacity>
     </View>
-  );
+    );
 
   const handleUpdateRoom = async () => {
     if (token) {
@@ -76,9 +76,9 @@ export default function Themphong({ route }) {
           person,
           area,
           bedType,
-          roomNumbers,
           description,
           price,
+          roomNumbers  
           
         );
         
