@@ -23,7 +23,7 @@ export default function RoomDetail({route}) {
 
   
   console.log('post:',post)
-  // console.log('2',post.bedType)
+  // console.log('2',post.imgCategories)
 
   const navigation = useNavigation();
 
@@ -61,7 +61,7 @@ export default function RoomDetail({route}) {
 
   const renderItem = ({ item, index }) => (
     <View style={styles.imageItem}>
-      <Image source={{ uri: item }} style={styles.selectedImage} />
+      <Image source={{ uri: getImgRoomUrl(item.imgIdCategories[index]) }} style={styles.selectedImage} />
       <TouchableOpacity
         onPress={() => handleRemoveImage(index)}
         style={styles.removeButton}
@@ -70,6 +70,9 @@ export default function RoomDetail({route}) {
       </TouchableOpacity>
     </View>
   );
+  
+  console.log('ảnh:',post.imgIdCategories)
+  console.log('ảnh:',post.imgCategories)
 
   const handleUpdateRoom = async () => {
     if (token) {
@@ -103,13 +106,16 @@ export default function RoomDetail({route}) {
 
   return (
     <ScrollView style={styles.container}>
+
       <FlatList
-        style={{ top: 10 }}
+        style={{ top: 40 }}
         data={imgCategories}
         renderItem={renderItem}
-        keyExtractor={(post) => post.categoryId.toString()}
+        keyExtractor={(post) => post.imgIdCategories.toString()}
         horizontal
       />
+      
+
 
       <TouchableOpacity onPress={handleImagePickRoom}>
         <Image source={require('../assets/add-img-icon.png')} style={styles.addImageIcon} />
@@ -121,17 +127,18 @@ export default function RoomDetail({route}) {
         value={categoryName}
         onChangeText={(text) => setCategoryName(text)}
       />
+
       <TextInput
         style={styles.input}
         placeholder="Số người"
-        value={person}
+        value={person.toString()}
         onChangeText={(text) => setPerson(text)}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
         placeholder="Diện tích (m2)"
-        value={area}
+        value={area.toString()}
         onChangeText={(text) => setArea(text)}
         keyboardType="numeric"
       />
@@ -144,7 +151,7 @@ export default function RoomDetail({route}) {
       <TextInput
         style={styles.input}
         placeholder="Số phòng"
-        value={roomNumbers}
+        value={roomNumbers.toString()}
         onChangeText={(text) => setRoomNumbers(text)}
         keyboardType="numeric"
       />
@@ -157,7 +164,7 @@ export default function RoomDetail({route}) {
       <TextInput
         style={styles.input}
         placeholder="Giá tiền (VND)"
-        value={price}
+        value={price.toString()}
         onChangeText={(text) => setPrice(text)}
         keyboardType="numeric"
       />
