@@ -2,10 +2,13 @@ package com.booking.dto;
 
 import com.booking.dto.response.*;
 import com.booking.entity.*;
+import com.booking.service.interfaces.ReviewService;
+import lombok.AllArgsConstructor;
 
 import java.util.List;
-
+@AllArgsConstructor
 public class Convert {
+    private final ReviewService reviewService;
 
     public static ProviderDto convertProvider(Provider provider) {
         List<Long> imgIds = provider.getImgProviders().stream().map(Image::getImgId).toList();

@@ -15,6 +15,7 @@ import com.booking.repository.CustomerRepository;
 import com.booking.service.implement.UserDetailsImpl;
 import com.booking.service.interfaces.PaymentService;
 import com.booking.service.interfaces.ReservarService;
+import com.booking.service.interfaces.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +34,8 @@ public class ReservarController {
     private final CustomerRepository customerRepository;
     private final PaymentService paymentService;
 
+    private final ReviewService reviewService;
+
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @PostMapping(value = "/create-order")
     public ResponseEntity<Object> createOrder(@RequestBody CreateReservarDto createOrderDto, Principal principal) throws UnsupportedEncodingException {
@@ -50,7 +53,9 @@ public class ReservarController {
                                                            @RequestParam("end") LocalDate end,
                                                            @RequestParam("person") int person) {
         List<Room> rooms = reservarService.searchRoom(start, end, person);
-        return ResponseEntity.ok(reservarService.getSearchProviders(rooms));
+        Set<ProviderDto> providerDtos = reservarService.getSearchProviders(rooms);
+        providerDtos.stream().forEach(data-> data.setStar(reviewService.rateAgs(data.getProviderId())));
+        return ResponseEntity.ok(providerDtos);
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
@@ -69,7 +74,9 @@ public class ReservarController {
                                                            @RequestParam("end") LocalDate end,
                                                            @RequestParam("person") int person) {
         List<Room> rooms = reservarService.orderFavoriteRoom(getCustomerId(principal),start, end, person);
-        return ResponseEntity.ok(reservarService.getSearchProviders(rooms));
+        Set<ProviderDto> providerDtos = reservarService.getSearchProviders(rooms);
+        providerDtos.stream().forEach(data-> data.setStar(reviewService.rateAgs(data.getProviderId())));
+        return ResponseEntity.ok(providerDtos);
     }
 
     @PreAuthorize("hasRole('ROLE_CUSTOMER')")
