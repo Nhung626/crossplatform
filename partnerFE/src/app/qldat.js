@@ -3,7 +3,7 @@ import { View, Text, Image, ScrollView,TouchableOpacity,Alert } from 'react-nati
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getImgRoomUrl } from "../services/baseUrl";
+import { getImgRoomUrl,getImgReviewUrl } from "../services/baseUrl";
 import { getBooked,getCheckin,getCheckout,getCancel,getReview,postCheckin,postCheckout,postCancel} from '../services/useAPI';
 
 const TopTab = createMaterialTopTabNavigator();
@@ -391,8 +391,7 @@ function TabScreen4({token}) {
   // Hàm này được sử dụng để hiển thị danh sách dữ liệu
   const renderList = (data) => {
     return data.map((item, index) => {
-      const bookImg = item.imgCategory;
-      
+      const bookImg = item.imgCategory;      
       const imageSource = bookImg
       ? { uri: `${getImgRoomUrl}?imageId=${bookImg}` }
       : require('../assets/add-img-icon.png');
@@ -429,92 +428,67 @@ function TabScreen4({token}) {
 }
 
 function TabScreen5({token}) {
-  // const [listData, setListData] = useState([]);
-  // const [isFetching, setIsFetching] = useState(true);
+  const [listData, setListData] = useState([]);
+  const [isFetching, setIsFetching] = useState(true);
 
-  // useEffect(() => {
-  //   async function fetchListData() {
-  //     try {
-  //       const response = await getReview(token);
-  //       if (response && response.status === 200) {
-  //         // Xử lý dữ liệu ở đây
-  //         setListData(response.data);
-  //         // storeListData(response.data); // Lưu dữ liệu vào AsyncStorage
-  //       } else {
-  //         console.error('Error fetching list booked data:', response ? response.data : 'Response is null');
-  //         // Xử lý lỗi và hiển thị thông báo lỗi cho người dùng
-  //       }
-  //     } catch (error) {
-  //       console.error('API error:', error);
-  //       // Xử lý lỗi và hiển thị thông báo lỗi cho người dùng
-  //     } finally {
-  //       setIsFetching(false);
-  //     }
-  //   }
+  useEffect(() => {
+    async function fetchListData() {
+      try {
+        const response = await getReview(token);
+        if (response && response.status === 200) {
+          // Xử lý dữ liệu ở đây
+          setListData(response.data);
+          // storeListData(response.data); // Lưu dữ liệu vào AsyncStorage
+        } else {
+          console.error('Error fetching list booked data:', response ? response.data : 'Response is null');
+        }
+      } catch (error) {
+        console.error('API error:', error);
+      } finally {
+        setIsFetching(false);
+      }
+    }
 
-  //   // Add isFetching as a dependency to trigger data fetching
-  //   if (isFetching) {
-  //     fetchListData();
-  //   }
-  // }, [isFetching, token]);
+    if (isFetching) {
+      fetchListData();
+    }
+  }, [isFetching, token]);
 
-  // // Hàm này được sử dụng để hiển thị danh sách dữ liệu
-  // const renderList = (data) => {
-  //   return data.map((item, index) => {
-  //     const bookImg = item.imgCategory;
-  //     // const ImageId = bookImg && bookImg.length > 0 ? bookImg[0] : null;
-      
-  //     const imageSource = bookImg
-  //     ? { uri: `${getImgRoomUrl}?imageId=${bookImg}` }
-  //     : require('../assets/add-img-icon.png');
-      
+  // Hàm này được sử dụng để hiển thị danh sách dữ liệu
+  const renderList = (data) => {
+    return data.map((item, index) => {
+      const reviewImg = item.imgReview;     
+      const imageSource = reviewImg
+      ? { uri: `${getImgReviewUrl}?imageId=${reviewImg}` }
+      : require('../assets/add-img-icon.png');
+    
+      return (
+        <View key={index}>
+          <View style={styles.roomItem}>
+            <View style={styles.roomImage}>
+              <Image
+                style={{ width: 150, height: 200, borderRadius: 30 }}
+                source={imageSource}
+              />
+            </View>
+            <View style={styles.thongtin}>
+              <Text style={styles.name}>Khách hàng: {item.customerName}</Text>
+              <Text style={styles.detail}>Đánh giá: {item.rate} sao</Text>
+              <Text style={styles.detail}>Nhận xét: {item.description}</Text>
+            </View>
+          </View>
+        </View>
+      );
+    });
+  }
 
-  //     //Điều kiện checkin
-  //     // let paymentStatus;
-  //     // if (item.statePayment === "Success") {
-  //     //   paymentStatus = "Đã thanh toán";
-  //     // }
-
-  //     return (
-  //       <View key={index}>
-  //         <View style={styles.roomItem}>
-  //           <View style={styles.roomImage}>
-  //             <Image
-  //               style={{ width: 150, height: 200, borderRadius: 30 }}
-  //               source={imageSource}
-  //             />
-  //           </View>
-  //           <View style={styles.thongtin}>
-  //             {/* <Text style={styles.name}>Tên khách sạn: {item.providerName}</Text> */}
-  //             <Text style={styles.name}>{item.customerName}</Text>
-  //             {/* <Text style={styles.detail}>CCCD: {item.customerCode}</Text> */}
-  //             <Text style={styles.detail}>Sdt:{item.customerPhone}</Text>
-  //             <Text style={styles.detail}>Số phòng: {item.rooms}</Text>
-  //             {/* <Text style={styles.detail}>Thời gian đặt: {item.reservarDate}</Text> */}
-  //             <Text style={styles.detail}>Giá: {item.total}(VNĐ)</Text>
-  //             {/* <Text style={styles.detail}>Trạng thái đặt phòng: {item.stateReservar}</Text> */}
-            
-  //             {/* {item.statePayment === "Success" && (
-  //               <Text style={styles.text}>Đã thanh toán</Text>             
-  //           )}
-
-  //             <TouchableOpacity style={styles.check}>
-  //                 <Text style={styles.textCheck}>Check Out</Text>
-  //             </TouchableOpacity>  */}
-  //           </View>
-  //         </View>
-  //       </View>
-  //     );
-  //   });
-  // }
-
-  // return (
-  //   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
-  //     <ScrollView style={{ flex: 1}}>
-  //     {renderList(listData)}
-  //     </ScrollView>
-  //   </View>
-  // );
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>        
+      <ScrollView style={{ flex: 1}}>
+      {renderList(listData)}
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = {
@@ -532,7 +506,7 @@ const styles = {
     shadowColor:'#4F4A45',
     borderWidth:1,
     borderColor: 'transparent',
-    
+      
   },
   roomImage: {
     flex: 1,

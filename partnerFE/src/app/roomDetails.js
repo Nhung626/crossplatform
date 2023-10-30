@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet ,Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation,useRoute  } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { updateRoom, getToken } from "../services/useAPI";
-import { getImgRoomUrl } from "../services/baseUrl";
 
-export default function RoomDetail({route}) {
-  // const route = useRoute();
+export default function Themphong({ route }) {
   const { post } = route.params;
-  const [token, setToken] = useState('');
 
-  const [categoryId, setCategoryId] = useState(post.categoryId);
-  const [imgCategories, setImgCategories] = useState(post.imgCategories);
+  const [categoryId, setCategoryId] = useState(post.categoryName);
+  const [imgCategories, setImgCategories] = useState([]);
   const [categoryName, setCategoryName] = useState(post.categoryName);
   const [person, setPerson] = useState(post.person);
   const [area, setArea] = useState(post.area);
@@ -20,10 +17,7 @@ export default function RoomDetail({route}) {
   const [roomNumbers, setRoomNumbers] = useState(post.roomNumbers);
   const [bedType, setBedType] = useState(post.bedType);
 
-
-  
-  console.log('post:',post)
-  // console.log('2',post.imgCategories)
+  const [token, setToken] = useState('');
 
   const navigation = useNavigation();
 
@@ -61,7 +55,7 @@ export default function RoomDetail({route}) {
 
   const renderItem = ({ item, index }) => (
     <View style={styles.imageItem}>
-      <Image source={{ uri: getImgRoomUrl(item.imgIdCategories[index]) }} style={styles.selectedImage} />
+      <Image source={{ uri: item }} style={styles.selectedImage} />
       <TouchableOpacity
         onPress={() => handleRemoveImage(index)}
         style={styles.removeButton}
@@ -70,9 +64,6 @@ export default function RoomDetail({route}) {
       </TouchableOpacity>
     </View>
   );
-  
-  console.log('ảnh:',post.imgIdCategories)
-  console.log('ảnh:',post.imgCategories)
 
   const handleUpdateRoom = async () => {
     if (token) {
@@ -85,11 +76,13 @@ export default function RoomDetail({route}) {
           person,
           area,
           bedType,
+          roomNumbers,
           description,
           price,
-          roomNumbers 
+          
         );
-
+        
+  
         if (response && response.status === 200) {
           Alert.alert("Lưu thành công!");
           navigation.navigate("CreateroomScreen");
@@ -103,19 +96,19 @@ export default function RoomDetail({route}) {
       }
     }
   };
+  
+  
 
   return (
     <ScrollView style={styles.container}>
-
+      <Text style={{marginTop:30,fontWeight:'bold',fontSize:20,textAlign:'center',color:'#136EA7'}}>Thông tin phòng</Text>
       <FlatList
-        style={{ top: 40 }}
+        style={{ top: 20 }}
         data={imgCategories}
         renderItem={renderItem}
-        keyExtractor={(post) => post.imgIdCategories.toString()}
+        keyExtractor={(item, index) => index.toString()}
         horizontal
       />
-      
-
 
       <TouchableOpacity onPress={handleImagePickRoom}>
         <Image source={require('../assets/add-img-icon.png')} style={styles.addImageIcon} />
@@ -127,7 +120,6 @@ export default function RoomDetail({route}) {
         value={categoryName}
         onChangeText={(text) => setCategoryName(text)}
       />
-
       <TextInput
         style={styles.input}
         placeholder="Số người"
@@ -173,7 +165,7 @@ export default function RoomDetail({route}) {
         onPress={handleUpdateRoom}
         style={styles.addButton}
       >
-        <Text style={styles.addButtonText}>Sửa thông tin phòng</Text>
+        <Text style={styles.addButtonText}>Lưu thông tin</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -219,8 +211,8 @@ const styles = StyleSheet.create({
     height: 100,
     bottom: 10,
     left: 130,
-    top: 50,
-    marginBottom: 40,
+    top: 10,
+    marginBottom: 10,
   },
   input: {
     height: 50,

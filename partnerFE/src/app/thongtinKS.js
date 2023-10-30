@@ -93,12 +93,12 @@ export default function ThongtinKS({ route }) {
     >
       
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontWeight: 'bold', color: '#687EFF', fontSize: 24, marginTop: 80 }}>
+        <Text style={{ fontWeight: 'bold', color: '#687EFF', fontSize: 24, marginTop: 50 }}>
           Thông tin khách sạn
         </Text>
 
         <FlatList
-        style={{ top: 40 }}
+        style={{ top: 10 }}
         data={imgProviders}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}

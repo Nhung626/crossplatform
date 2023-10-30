@@ -75,12 +75,13 @@ export default function QLphong() {
 
   function renderItem({ item }) {
     const roomImg = item.imgIdCategories;
+
     const firstImageId = roomImg && roomImg.length > 0 ? roomImg[0] : null;
     const imageSource = firstImageId
       ? { uri: `${getImgRoomUrl}?imageId=${firstImageId}` }
       : require('../assets/add-img-icon.png');
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('RoomDetails', { post: item })}>
+      <TouchableOpacity onPress={() => navigation.navigate('RoomDetail', { post: item })}>
         <ScrollView style={styles.roomItem}>
           <View style={styles.roomImage}>
             <Image
@@ -101,7 +102,6 @@ export default function QLphong() {
       </TouchableOpacity>
     );
   }
-
   return (
     <ImageBackground
       source={require('../assets/theme.png')}

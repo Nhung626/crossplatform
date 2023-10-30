@@ -8,6 +8,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 
 import { getProviderApi } from '../services/useAPI';
 import { getImgProviderUrl} from "../services/baseUrl";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Person() {
   const route = useRoute();
@@ -130,7 +131,11 @@ useEffect(() => {
                 : require('../assets/add-img-icon.png') }
             />
         <Text style={{fontSize:20,textAlign: 'center',marginTop:50,}}>Xin chào, {providerData.providerName}</Text>
-        <Text style={{ fontSize: 15, fontWeight: 'bold',textAlign: 'center',marginTop:10 }}>Đánh giá:</Text>
+
+        <View style={{flexDirection: 'row'}}> 
+        <Text style={{ fontSize: 15, fontWeight: 'bold',textAlign: 'center',marginTop:5 }}>Trung bình đánh giá: {providerData.star}</Text>
+        <Ionicons style={{marginLeft:2,top:4}} name="star-outline" size={15}/>
+        </View>
       </View>
 
       <View style={{ flex: 2 }}>
