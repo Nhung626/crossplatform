@@ -7,6 +7,7 @@ import com.booking.repository.PaymentRepository;
 import com.booking.repository.ReservarRepository;
 import com.booking.service.interfaces.PaymentService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -22,7 +23,8 @@ public class PaymentServiceImp implements PaymentService {
     private final PaymentRepository paymentRepository;
 
     private final ReservarRepository reservarRepository;
-
+    @Value("${ip_address}")
+    private String vnp_IpAddr;
     @Override
     public String getURLPayment(Long reservarId, long total) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
@@ -46,7 +48,7 @@ public class PaymentServiceImp implements PaymentService {
         vnp_Params.put("vnp_Locale", "vn");
 
         vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
-        vnp_Params.put("vnp_IpAddr", "192.168.0.241");
+        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

@@ -1,6 +1,7 @@
 package com.booking.payment;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,8 +12,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class Config {
+    @Value("${ip_address}")
+    private static String vnp_IpAddr;
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:3000/api/v1/payment/info";
+    public static String vnp_ReturnUrl = "http://"+ vnp_IpAddr +"/api/v1/payment/info";
     public static String vnp_TmnCode = "OUMT63I1";
     public static String vnp_HashSecret = "MSJPSJALSTXNIJWDLYVRUCNRVEEJUOCR";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
