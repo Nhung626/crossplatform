@@ -17,4 +17,5 @@ public class ProviderDto {
     private String providerPhone;
     private String address;
     private String description;
+    private float star;
 }

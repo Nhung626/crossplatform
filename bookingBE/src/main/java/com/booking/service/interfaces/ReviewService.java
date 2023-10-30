@@ -11,4 +11,5 @@ public interface ReviewService {
     void createReview(CreateReviewDto createReviewDto);
     List<ReviewDto> getCustomerReviews(Long customerId);
     List<ReviewDto> getProviderReviews(Long providerId);
+    float rateAgs(Long providerId);
 }

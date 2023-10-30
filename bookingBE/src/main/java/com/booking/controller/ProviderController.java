@@ -162,7 +162,9 @@ public class ProviderController {
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
     @GetMapping("/get-provider")
     public ResponseEntity<ProviderDto> getProvider(Principal principal) {
-        return ResponseEntity.ok(providerService.getProvider(getProviderId(principal)));
+        ProviderDto providerDto = providerService.getProvider(getProviderId(principal));
+        providerDto.setStar(reviewService.rateAgs(getProviderId(principal)));
+        return ResponseEntity.ok(providerDto);
     }
 
     @PreAuthorize("hasRole('ROLE_PROVIDER')")
