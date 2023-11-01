@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity, TextInput,Alert } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-// import config from '../utils/api-config.json';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { validateEmail, validatePassword } from '../services/validation';
 import { signUpApi } from "../services/useAPI";
 
-// const apiUrl = `${config.apiHost}:${config.apiPort}`;
 const CreateAccount = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState('');
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
@@ -23,7 +23,25 @@ const CreateAccount = () => {
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
   };
 
-  const handleCreateroomScreen = async () => {
+
+  const validateForm = () => {
+    if (!validateEmail(email)) {
+      alert('Email không hợp lệ');
+    } else if (!validatePassword(password)) {
+      alert('Mật khẩu phải từ 6 ký tự trở lên');
+    } else if (password !== confirmPassword) {
+      alert('Mật khẩu và xác nhận mật khẩu không khớp');
+    } else {
+      setError(''); // Xóa thông báo lỗi nếu đã có
+    }
+  };
+
+  const handleCreateAccount = async () => {
+    validateForm();
+    if (error) {
+      // Đã có lỗi, không thực hiện đăng ký
+      return;
+    }
     if (!email || !password) {
       alert("Vui lòng nhập tài khoản và mật khẩu.");
       return;
@@ -33,16 +51,14 @@ const CreateAccount = () => {
       return;
     }
     const response = await signUpApi(email, password);
-    console.log('2',response);
 
     if (response) {
-      Alert.alert("Đăng ký thành công!")
-      navigation.navigate('LoginScreen')
+      Alert.alert("Đăng ký thành công!");
+      navigation.navigate('LoginScreen');
     } else {
-      Alert.alert("Đăng kí không thành công");
+      Alert.alert("Đăng ký không thành công");
     }
   };
-
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -62,7 +78,7 @@ const CreateAccount = () => {
           value={email}
         />
       </View>
-      
+
       <Text style={styles.label}>Mật khẩu</Text>
       <View style={styles.inputBox}>
         <Icon name="lock" size={25} color="#CFD4E2" style={styles.icon} />
@@ -89,7 +105,9 @@ const CreateAccount = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.createAccountButton} onPress={handleCreateroomScreen}>
+      {/* <Text style={styles.errorText}>{error}</Text> */}
+
+      <TouchableOpacity style={styles.createAccountButton} onPress={handleCreateAccount}>
         <Text style={styles.createAccountButtonText}>Đăng ký tài khoản</Text>
       </TouchableOpacity>
 
@@ -161,11 +179,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-  errorText: {
-    color: 'red',
-    marginTop: 10,
-    textAlign: 'center',
-  },
+  // errorText: {
+  //   color: 'red',
+  //   marginTop: 10,
+  //   textAlign: 'center',
+  // },
   login: {
     fontWeight: 'bold',
     marginLeft: 10,

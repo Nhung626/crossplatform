@@ -93,7 +93,7 @@ export const signUpApi = async (email, password) => {
     
         imgProviders.forEach((img, index) => {
             formData.append('imgProviders', {
-                uri: img, // Điều này không đúng, hãy chỉ đính kèm URI
+                uri: img,
                 type: 'image/png',
                 name: `image_${index}.png`,
             });
@@ -184,37 +184,46 @@ export const providerAddRoom = async (
 
 export const updateRoom = async (
     token,
+    categoryId,
     imgCategories,
     categoryName,
-    categoryId,
     person,
     area,
     bedType,
-    roomNumbers,
     description,
-    price
-) => {
+    price,
+    roomNumbers  
+        ) => {
 
     const formData = new FormData();
 
+    if (imgCategories && Array.isArray(imgCategories)) {
     imgCategories.forEach((img, index) => {
+        if (img) {
         formData.append('imgCategories', {
-            uri: img, // Điều này không đúng, hãy chỉ đính kèm URI
+            uri: img,
             type: 'image/png',
             name: `image_${index}.png`,
         });
+        }
     });
+    } else {
+    console.error('imgCategories is not an array or is undefined');
+    }
+
     
+
+    formData.append('categoryId', categoryId.toString());
     formData.append('categoryName', categoryName);
-    formData.append('categoryId', categoryId);
     formData.append('person', person);
     formData.append('area', area);
     formData.append('bedType', bedType);
     formData.append('roomNumbers', roomNumbers);
     formData.append('description', description);     
     formData.append('price', price);
+
     console.log("formData nè", formData);
-    
+    // console.log("2222:", price);
 
     try {
         const response = await axios({
