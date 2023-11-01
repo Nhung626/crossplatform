@@ -11,10 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class Config {
-    @Value("${ip_address}")
-    private static String vnp_IpAddr;
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://"+ vnp_IpAddr +"/api/v1/payment/info";
+    public static String vnp_ReturnUrl = "/api/v1/payment/info";
     public static String vnp_TmnCode = "OUMT63I1";
     public static String vnp_HashSecret = "MSJPSJALSTXNIJWDLYVRUCNRVEEJUOCR";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
@@ -73,7 +71,7 @@ public class Config {
                 sb.append("&");
             }
         }
-        return hmacSHA512(vnp_HashSecret,sb.toString());
+        return hmacSHA512(vnp_HashSecret, sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {

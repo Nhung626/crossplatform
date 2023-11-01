@@ -6,7 +6,6 @@ import com.booking.payment.Config;
 import com.booking.repository.PaymentRepository;
 import com.booking.repository.ReservarRepository;
 import com.booking.service.interfaces.PaymentService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,7 @@ public class PaymentServiceImp implements PaymentService {
         long amount =  total * 100;
         String vnp_TxnRef = reservarId + Config.getRandomNumber(8);
         String vnp_TmnCode = Config.vnp_TmnCode;
+        String vnp_ReturnUrl = "http://"+ vnp_IpAddr + ":3000" +Config.vnp_ReturnUrl;
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -48,7 +48,7 @@ public class PaymentServiceImp implements PaymentService {
 
         vnp_Params.put("vnp_Locale", "vn");
 
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
