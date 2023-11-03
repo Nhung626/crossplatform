@@ -1,4 +1,4 @@
-export const BASE_URL = "http://192.168.1.4:3000/api/v1/";
+export const BASE_URL = "http://172.20.10.10:3000/api/v1/";
 // export const BASE_URL = "http://192.168.0.116:3000/api/v1/";
 // export const BASE_URL = "http://192.168.5.109:3000/api/v1/";
 // export const BASE_URL = "http://10.0.2.43:3000/api/v1/";

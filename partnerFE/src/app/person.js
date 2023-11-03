@@ -99,7 +99,7 @@ useEffect(() => {
   };
 
   const handleDanhGia =() =>{
-
+      navigation.navigate('MaterialTopTabNavigator',{token});
   };
 
   const handleExitAccount = () => {
@@ -146,10 +146,10 @@ useEffect(() => {
             <Text style={styles.text}>Quản lý tài khoản</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button3} onPress={handleDanhGia}>
+          {/* <TouchableOpacity style={styles.button3} onPress={handleDanhGia}>
             <Iconicons style={styles.personicon} name="star-outline" size={30} />
             <Text style={styles.text}>Đánh giá của khách hàng</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity style={styles.button2} onPress={handleExitAccount}>
             <Iconicons style={styles.personicon} name="exit-outline" size={30} />
@@ -182,12 +182,12 @@ const styles = {
     right: 108,
     marginBottom: 20,
   },
-  button3: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    right: 45,
-    marginBottom: 20,
-  },
+  // button3: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   right: 45,
+  //   marginBottom: 20,
+  // },
   text: {
     flexDirection: 'row',
     marginLeft: 10,
