@@ -1,17 +1,63 @@
-import React from 'react';
-import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
-import { Input, Icon } from 'react-native-elements';
+import React, { useState } from 'react';
+import { ScrollView, View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { validateEmail, validatePassword } from '../services/validation';
+import { signUpApi } from "../services/useAPI";
 
 const CreateAccount = () => {
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState('');
 
-const navigation = useNavigation();
-const handleCreatenameScreen =() =>{
-    navigation.navigate('CreatenameScreen');
-};
-const handleLoginScreen = () => {
-    // Chuyển hướng đến màn hình 'StartScreen'
-    navigation.navigate('LoginScreen');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+  };
+
+
+  const validateForm = () => {
+    if (!validateEmail(email)) {
+      alert('Email không hợp lệ');
+    } else if (!validatePassword(password)) {
+      alert('Mật khẩu phải từ 6 ký tự trở lên');
+    } else if (password !== confirmPassword) {
+      alert('Mật khẩu và xác nhận mật khẩu không khớp');
+    } else {
+      setError(''); // Xóa thông báo lỗi nếu đã có
+    }
+  };
+
+  const handleCreateAccount = async () => {
+    validateForm();
+    if (error) {
+      // Đã có lỗi, không thực hiện đăng ký
+      return;
+    }
+    if (!email || !password) {
+      alert("Vui lòng nhập tài khoản và mật khẩu.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert("Mật khẩu và xác nhận mật khẩu không khớp.");
+      return;
+    }
+    const response = await signUpApi(email, password);
+
+    if (response) {
+      Alert.alert("Đăng ký thành công!");
+      navigation.navigate('LoginScreen');
+    } else {
+      Alert.alert("Đăng ký không thành công");
+    }
   };
 
   return (
@@ -23,36 +69,56 @@ const handleLoginScreen = () => {
         Đăng chỗ nghỉ của bạn và để chúng tôi giúp bạn kết nối với hàng triệu khách hàng!
       </Text>
       <Text style={styles.label}>Email</Text>
-      <Input
-        leftIcon={
-          <Icon
-            name="email"
-            size={20}
-            color="#CFD4E2"
-            containerStyle={styles.icon}
-          />
-        }
-        inputContainerStyle={styles.inputContainer}
-        placeholder="Nhập địa chỉ email"
-        inputStyle={styles.input}
-      />
-      <TouchableOpacity style={styles.createAccountButton}>
-        <Text onPress={handleCreatenameScreen}
-        style={styles.createAccountButtonText}>
-        Tạo tài khoản</Text>
+      <View style={styles.inputBox}>
+        <Icon name="envelope" size={20} color="#CFD4E2" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nhập địa chỉ email"
+          onChangeText={(text) => setEmail(text)}
+          value={email}
+        />
+      </View>
+
+      <Text style={styles.label}>Mật khẩu</Text>
+      <View style={styles.inputBox}>
+        <Icon name="lock" size={25} color="#CFD4E2" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nhập mật khẩu"
+          fontSize="18"
+          secureTextEntry={true}
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+        />
+      </View>
+
+      <Text style={styles.label}>Nhập lại mật khẩu</Text>
+      <View style={styles.inputBox}>
+        <Icon name="lock" size={25} color="#CFD4E2" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="Nhập lại mật khẩu"
+          fontSize="18"
+          secureTextEntry={true}
+          onChangeText={(text) => setConfirmPassword(text)}
+          value={confirmPassword}
+        />
+      </View>
+
+      {/* <Text style={styles.errorText}>{error}</Text> */}
+
+      <TouchableOpacity style={styles.createAccountButton} onPress={handleCreateAccount}>
+        <Text style={styles.createAccountButtonText}>Đăng ký tài khoản</Text>
       </TouchableOpacity>
 
-        <View style={styles.login}>
-            
-              <View style={styles.cmt}>
+      <View style={styles.login}>
+        <View style={styles.cmt}>
           <Text>Bạn đã có tài khoản?</Text>
-          <TouchableOpacity onPress={handleLoginScreen} style={styles.link}>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.link}>
             <Text style={styles.textlink}>Đăng nhập ở đây</Text>
           </TouchableOpacity>
         </View>
-
-        </View>
-
+      </View>
     </ScrollView>
   );
 };
@@ -68,71 +134,73 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 25,
-    fontWeight: 'antialiased',
+    fontWeight: 'bold',
     marginBottom: 30,
   },
   text: {
     color: '#6D7376',
-    fontWeight: 'antialiased',
-    fontSize:16,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   label: {
-    marginTop: 24,
-    fontSize: 16,
-    fontWeight: 'antialiased',
-  },
-  inputContainer: {
-    width:'100%',
-    height: 50,
-    marginLeft:-7,
-    marginBottom: 5,
     marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom:10,
+  },
+  inputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#235D9F',
     borderWidth: 1,
-    borderRadius:5,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
+    borderRadius: 4,
+    marginBottom: 16,
+    width:'95%',
   },
   input: {
-    height: 40,
-    color: '#CFD4E2',
-    
+    height: 50,
   },
   icon: {
     marginRight: 10,
+    marginLeft:10,
   },
   createAccountButton: {
     marginTop: 5,
-    backgroundColor: '#DE5223',
+    backgroundColor: '#A0E9FF',
     borderRadius: 10,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    
   },
   createAccountButtonText: {
-    color: '#fff',
+    color: '#3876BF',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  login:{
-    fontWeight: 'antialiased',
-    marginLeft:10,
-    color:'#CFD4E2',
+  // errorText: {
+  //   color: 'red',
+  //   marginTop: 10,
+  //   textAlign: 'center',
+  // },
+  login: {
+    fontWeight: 'bold',
+    marginLeft: 10,
+    color: '#CFD4E2',
   },
   link: {
     color: '#53BCF8',
     marginLeft: 5,
   },
-  textlink:{
-   color: '#235D9F', 
-   fontWeight: 'bold'
+  textlink: {
+    color: '#235D9F',
+    fontWeight: 'bold',
   },
-  cmt:{
-    marginTop:30,
-    flexDirection:'row',
-    fontWeight: 'antialiased',
+  cmt: {
+    marginTop: 30,
+    flexDirection: 'row',
+    fontWeight: 'bold',
   },
 });
 

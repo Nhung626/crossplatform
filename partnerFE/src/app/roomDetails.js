@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet ,Alert,ImageBackground} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "@react-navigation/native";
-import { providerAddRoom, getToken } from "../services/useAPI";
+import { updateRoom, getToken } from "../services/useAPI";
 
 export default function Themphong({ route }) {
+  const { post } = route.params;
+
+  const [categoryId, setCategoryId] = useState(post.categoryId);
   const [imgCategories, setImgCategories] = useState([]);
-  const [categoryName, setCategoryName] = useState('');
-  const [person, setPerson] = useState('');
-  const [area, setArea] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState(''); // Thêm biến `price`
-  const [roomNumbers, setRoomNumbers] = useState('');
-  const [bedType, setBedType] = useState('');
+  const [categoryName, setCategoryName] = useState(post.categoryName);
+  const [person, setPerson] = useState(post.person);
+  const [area, setArea] = useState(post.area);
+  const [description, setDescription] = useState(post.description);
+  const [price, setPrice] = useState(post.price);
+  const [roomNumbers, setRoomNumbers] = useState(post.roomNumbers);
+  const [bedType, setBedType] = useState(post.bedType);
 
   const [token, setToken] = useState('');
-
+  // console.log('222',post.description)
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -35,7 +38,7 @@ export default function Themphong({ route }) {
     });
 
     if (result.canceled) {
-      // Xử lý khi người dùng hủy chọn ảnh
+
     } else if (result.error) {
       console.log('ImagePicker Error: ', result.error);
     } else {
@@ -60,24 +63,27 @@ export default function Themphong({ route }) {
         <Text style={styles.removeButtonText}>Xóa</Text>
       </TouchableOpacity>
     </View>
-  );
+    );
 
-  const handleAddRoom = async () => {
+  const handleUpdateRoom = async () => {
     if (token) {
       try {
-        const response = await providerAddRoom(
+        const response = await updateRoom(
           token,
+          categoryId,
           imgCategories,
           categoryName,
           person,
           area,
           bedType,
-          roomNumbers,
           description,
-          price
+          price,
+          roomNumbers  
+          
         );
-
-        if (response && response.status === 200) { // Kiểm tra response không null trước khi truy cập status
+        
+  
+        if (response && response.status === 200) {
           Alert.alert("Lưu thành công!");
           navigation.navigate("CreateroomScreen");
         } else {
@@ -90,12 +96,14 @@ export default function Themphong({ route }) {
       }
     }
   };
+  
+  
 
   return (
-    <ImageBackground source={require('../assets/theme.png')} style={{ width: '100%', height: '100%' }}>
     <ScrollView style={styles.container}>
+      <Text style={{marginTop:30,fontWeight:'bold',fontSize:20,textAlign:'center',color:'#136EA7'}}>Thông tin phòng</Text>
       <FlatList
-        style={{ top: 40 }}
+        style={{ top: 20 }}
         data={imgCategories}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
@@ -115,14 +123,14 @@ export default function Themphong({ route }) {
       <TextInput
         style={styles.input}
         placeholder="Số người"
-        value={person}
+        value={person.toString()}
         onChangeText={(text) => setPerson(text)}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
         placeholder="Diện tích (m2)"
-        value={area}
+        value={area.toString()}
         onChangeText={(text) => setArea(text)}
         keyboardType="numeric"
       />
@@ -135,7 +143,7 @@ export default function Themphong({ route }) {
       <TextInput
         style={styles.input}
         placeholder="Số phòng"
-        value={roomNumbers}
+        value={roomNumbers.toString()}
         onChangeText={(text) => setRoomNumbers(text)}
         keyboardType="numeric"
       />
@@ -148,16 +156,16 @@ export default function Themphong({ route }) {
       <TextInput
         style={styles.input}
         placeholder="Giá tiền (VND)"
-        value={price}
+        value={price.toString()}
         onChangeText={(text) => setPrice(text)}
         keyboardType="numeric"
       />
 
       <TouchableOpacity
-        onPress={handleAddRoom}
+        onPress={handleUpdateRoom}
         style={styles.addButton}
       >
-        <Text style={styles.addButtonText}>Thêm phòng</Text>
+        <Text style={styles.addButtonText}>Lưu thông tin</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -167,7 +175,6 @@ export default function Themphong({ route }) {
         <Text style={styles.backButtonText}>Trở lại</Text>
       </TouchableOpacity>
     </ScrollView>
-    </ImageBackground>
   );
 }
 
@@ -204,8 +211,8 @@ const styles = StyleSheet.create({
     height: 100,
     bottom: 10,
     left: 130,
-    top: 50,
-    marginBottom: 40,
+    top: 10,
+    marginBottom: 10,
   },
   input: {
     height: 50,
