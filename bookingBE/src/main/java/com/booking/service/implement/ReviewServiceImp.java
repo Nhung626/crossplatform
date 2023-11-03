@@ -71,7 +71,7 @@ public class ReviewServiceImp implements ReviewService {
     public float rateAgs(Long providerId) {
         List<Review> reviews = reviewRepository.findAll().stream().filter(data -> reservarRepository.findByReservarId(data.getReservarId()).getProvider().getProviderId() == providerId).toList();
         if (reviews.size() != 0) {
-            return reviews.stream().mapToInt(data -> data.getRate()).sum() / (reviews.size());
+            return (float) reviews.stream().mapToInt(Review::getRate).sum() / (reviews.size());
         }
         return 0;
     }
