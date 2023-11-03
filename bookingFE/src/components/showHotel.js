@@ -4,7 +4,7 @@ import { themeColor } from '../utils/theme'
 import * as Icon from "react-native-feather";
 import { useNavigation } from '@react-navigation/native';
 import { getImgCustomerUrl } from '../services/baseUrl';
-
+import { AirbnbRating, Rating } from 'react-native-ratings'
 
 
 export default function ShowHotel({
@@ -14,6 +14,7 @@ export default function ShowHotel({
     description,
     address,
     providerPhone,
+    star,
     start, end, person
 }) {
     const navigation = useNavigation();
@@ -29,6 +30,7 @@ export default function ShowHotel({
             start, end, person
         })
     }
+    console.log("star: ", star)
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={(handleNavigation)} >
@@ -38,11 +40,37 @@ export default function ShowHotel({
                     </View>
                     <View style={{ flex: 1 }}>
                         <View style={{ rowGap: 5 }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap' }}>{name}</Text>
+                            <Text style={{ fontWeight: 'bold', fontSize: 18, flexWrap: 'wrap', paddingLeft: 20 }}>{name}</Text>
+                            <View style={{ paddingLeft: 20 }}>
+                                {/* <View style={{ flexDirection: 'row' }}>
+                                    {[1, 2, 3, 4, 5].map((starIndex) => {
+                                        const filledStar = starIndex <= star;
+
+                                        return (
+                                            <Icon.Star
+                                                key={starIndex}
+                                                stroke={themeColor.bgColor}
+                                                height={30}
+                                                width={30}
+                                                strokeWidth={1}
+                                                fill={filledStar ? themeColor.bgColor : "white"}
+                                            />
+                                        );
+                                    })}
+                                </View> */}
+
+                                <AirbnbRating
+                                    type='star'
+                                    size={30}
+                                    defaultRating={star}
+                                    selectedColor={themeColor.bgColor}
+                                    showRating={false}
+                                />
+                            </View>
+
                             <View style={styles.boxText}>
                                 <Icon.Info color={'gray'} width={15} height={15} />
                                 <Text style={styles.textInfo}>{description}</Text>
-
                             </View>
 
                             <View style={styles.boxText}>

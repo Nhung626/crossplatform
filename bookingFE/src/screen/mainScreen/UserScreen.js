@@ -10,6 +10,9 @@ import { themeColor } from "../../utils/theme";
 export default function UserScreen({ navigation }) {
     const [fullName, setFullName] = useState("");
     const [imageUrl, setImageUrl] = useState();
+    const handleListReview = () => {
+        navigation.navigate(ScreenNames.LISTREVIEW)
+    }
 
     useEffect(() => {
 
@@ -87,7 +90,7 @@ export default function UserScreen({ navigation }) {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleListReview}>
                         <View style={styles.fix}>
                             <Ionicons style={styles.icon} name="star-outline" />
                             <Text style={styles.Text}>

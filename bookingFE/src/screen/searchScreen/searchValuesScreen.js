@@ -135,6 +135,7 @@ export default function SearchValuesScreen() {
                 description={item.description}
                 address={item.address}
                 providerPhone={item.providerPhone}
+                star={item.star}
                 start={start}
                 end={end}
                 token={token}

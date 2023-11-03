@@ -25,12 +25,14 @@ import InformationScreen from './src/screen/loginscreen/informationScreen';
 import ForgetPassword from './src/screen/loginscreen/forgetPassword';
 import NewPasswordScreen from './src/screen/loginscreen/newPassword';
 import Notice from './src/screen/loginscreen/notice';
-import InfoRoomScreen from './src/screen/searchScreen/infoRoomScreen';
+
 import ScreenNames from './src/utils/screenNames';
 import LoadingScreen from './src/screen/loginscreen/loadingScreen';
 import WebScreen from './src/screen/searchScreen/webScreen';
 import InfoHotelBooked from './src/screen/searchScreen/InfoHotelBooked';
 import ReviewScreen from './src/screen/searchScreen/ReviewScreen';
+import ListReview from './src/screen/mainScreen/ListReview';
+import InforRoomScreen from './src/screen/searchScreen/inforRoomScreen';
 
 const Stack = createNativeStackNavigator();
 const HidenHeader = {
@@ -39,8 +41,11 @@ const HidenHeader = {
 export default function Navigations() {
     return (
         <NavigationContainer>
-            <Stack.Navigator screenOptions={HidenHeader} initialRouteName={"Review"
-            }>
+            <Stack.Navigator screenOptions={HidenHeader} initialRouteName={ScreenNames.LOADING}
+
+            // {/* <Stack.Navigator screenOptions={HidenHeader} initialRouteName={ScreenNames.LISTREVIEW */
+
+            >
                 <Stack.Screen name="Notice" component={Notice} />
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="StartScreen" component={StartScreen} />
@@ -55,6 +60,9 @@ export default function Navigations() {
                 <Stack.Screen name='SaveScreen' component={SaveScreen} />
                 <Stack.Screen name='BookingScreen' component={BookingScreen} />
                 <Stack.Screen name='UserScreen' component={UserScreen} />
+                <Stack.Screen name={ScreenNames.LISTREVIEW} component={ListReview} />
+
+
                 <Stack.Screen name='Map' component={MapScreen} />
                 <Stack.Screen name='InforRoomScreen' component={inforRoomScreen} />
                 <Stack.Screen name="SearchValue" component={SearchValuesScreen} />
@@ -63,7 +71,7 @@ export default function Navigations() {
                 <Stack.Screen name="Slider" component={SlidersScreen} />
                 <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
                 <Stack.Screen name='CheckReservar' component={CheckReservar} />
-                <Stack.Screen name='InfoRoom' component={InfoRoomScreen} />
+                <Stack.Screen name='InfoRoom' component={InforRoomScreen} />
                 <Stack.Screen name='Web' component={WebScreen} />
                 <Stack.Screen name='Info Hotel Booked' component={InfoHotelBooked} />
 

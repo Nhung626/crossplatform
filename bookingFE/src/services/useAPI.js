@@ -5,6 +5,7 @@ import {
 } from "./baseUrl"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export const loginApi = async (email, password) => {
     try {
@@ -46,7 +47,7 @@ export const saveToken = async ({ token, id }) => {
 export const getToken = async () => {
     try {
         const token = await AsyncStorage.getItem("token");
-        console.log(" get được nè: ", token)
+        // console.log(" get được nè: ", token)
         return token;
     } catch (error) {
         console.error("Lỗi khi truy xuất token:", error);
@@ -77,7 +78,7 @@ export const signUpApi = async (email, password) => {
             },
         });
 
-        console.log(email, password);
+        // console.log(email, password);
 
         if (response.status === 200) {
             loginApi(email, password)
@@ -183,7 +184,7 @@ export const searchAPI = async (start, end, person, token) => {
 
         if (response.status === 200) {
             saveDayBooking({ start, end, person })
-            console.log('Data from API:', response.data);
+            // console.log('Data from API:', response.data);
             return response.data;
         } else {
             console.log('Error status:', response.status);
@@ -235,7 +236,7 @@ export const saveNight = async (night) => {
 export const getNight = async () => {
     try {
         const night = await AsyncStorage.getItem('night');
-        console.log("số đêm: ", night);
+        // console.log("số đêm: ", night);
         if (night) {
             return night
         }
@@ -298,7 +299,7 @@ export const delIdFavor = async (id) => {
 
             // Bước 3: Cập nhật danh sách mới vào AsyncStorage dưới dạng chuỗi JSON
             await AsyncStorage.setItem("idProvider", JSON.stringify(idArray));
-            console.log("danh sách yue thích: ", idArray)
+            // console.log("danh sách yue thích: ", idArray)
         }
     } catch (error) {
         console.error('Lỗi khi xóa ID khỏi danh sách idProvider: ', error);
@@ -425,7 +426,9 @@ export const orderAPI = async (category, roomCount, startDate, endDate, token) =
     }
 }
 
-export const getBookedAPI = async (token) => {
+export const getBookedAPI = async () => {
+    const token = await getToken();
+
     try {
         const response = await axios({
             method: "GET",
@@ -441,7 +444,9 @@ export const getBookedAPI = async (token) => {
         console.log("Lỗi: ", error)
     }
 }
-export const getCheckoutAPI = async (token) => {
+export const getCheckoutAPI = async () => {
+    const token = await getToken();
+
     try {
         const response = await axios({
             method: "GET",
@@ -457,7 +462,9 @@ export const getCheckoutAPI = async (token) => {
         console.log("Lỗi: ", error)
     }
 }
-export const getCancelAPI = async (token) => {
+export const getCancelAPI = async () => {
+    const token = await getToken();
+
     try {
         const response = await axios({
             method: "GET",
@@ -493,10 +500,10 @@ export const continuePaymentAPI = async (token, reservarID, total) => {
     }
 }
 
-export const getProviderAPI = async (token, providerId) => {
-
+export const getProviderAPI = async (providerId) => {
+    const token = await getToken()
     try {
-        const resporn = await axios({
+        const response = await axios({
             method: "GET",
             url: `${BASE_URL}customer/get-provider`,
             params: {
@@ -506,16 +513,17 @@ export const getProviderAPI = async (token, providerId) => {
                 Authorization: `Bearer ${token}`
             }
         })
-        if (resporn.status === 200) {
-            console.log(resporn.data)
-            return resporn.data
+        if (response.status === 200) {
+            // console.log(response.data)
+            return response.data
         }
     } catch (error) {
         console.log("Lỗi: ", error)
     }
 }
 
-export const getCategoryAPI = async (token, categoryId) => {
+export const getCategoryAPI = async (categoryId) => {
+    const token = await getToken();
 
     try {
         const response = await axios({
@@ -529,7 +537,7 @@ export const getCategoryAPI = async (token, categoryId) => {
             }
         })
         if (response.status === 200) {
-            console.log(response.data)
+            // console.log(response.data)
             return response.data
         }
     } catch (error) {
@@ -549,7 +557,7 @@ export const getAllCategory = async (token, providerId) => {
             }
         })
         if (response.status === 200) {
-            console.log("response data: ", response.data)
+            // console.log("response data: ", response.data)
             return response.data
         }
     } catch (error) {
@@ -558,7 +566,7 @@ export const getAllCategory = async (token, providerId) => {
 }
 export const getListFavoriteBySearch = async (start, end, person, token) => {
     try {
-        const resporn = await axios({
+        const response = await axios({
             method: "GET",
             url: `${BASE_URL}customer/favorite-provider`,
             params: {
@@ -570,10 +578,83 @@ export const getListFavoriteBySearch = async (start, end, person, token) => {
                 Authorization: `Bearer ${token}`
             }
         })
-        if (resporn.status === 200) {
-            return resporn.data;
+        if (response.status === 200) {
+            return response.data;
         }
     } catch (error) {
         console.log("Lỗi get favorite by search: ", error)
+    }
+}
+
+export const addReview = async (imgReview, rate, description, reservarId, token) => {
+    const formData = new FormData()
+    imgReview.forEach((img, index) => {
+        formData.append(`imgReview`, {
+            uri: img,
+            type: 'image/png',
+            name: `image-${index}.png`,
+        });
+    });
+    formData.append('rate', parseInt(rate));
+    formData.append('description', description);
+    formData.append('reservarId', parseInt(reservarId));
+    console.log("formDataa: ", formData)
+    try {
+        const response = await axios({
+            method: "POST",
+            url: `${BASE_URL}customer/add-review`,
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.status === 200) {
+            return response;
+        }
+
+    } catch (error) {
+        console.log("Log", error)
+    }
+}
+
+export const getListReview = async () => {
+    const token = await getToken();
+    try {
+        const response = await axios({
+            method: "GET",
+            url: `${BASE_URL}customer/list-reviews`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.status === 200) {
+            return response.data
+        }
+    } catch (error) {
+        console.log("Lỗi: ", error)
+        // console.log("token: ", token)
+    }
+}
+
+export const postCancleAPI = async (reservarId) => {
+    const token = await getToken();
+    const formData = new FormData();
+    formData.append("reservarId", reservarId)
+    try {
+        const response = await axios({
+            method: "POST",
+            url: `${BASE_URL}customer/cancel`,
+            data: formData,
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.status === 200) {
+            return response
+        }
+    } catch (error) {
+        console.log(error);
     }
 }

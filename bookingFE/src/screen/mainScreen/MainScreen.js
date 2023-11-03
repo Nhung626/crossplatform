@@ -11,7 +11,6 @@ import ScreenNames from "../../utils/screenNames";
 
 const Tab = createBottomTabNavigator();
 const screenOptions = {
-
   tabBarStyle: {
     position: "absolute",
     bottom: 0,
@@ -24,7 +23,7 @@ const screenOptions = {
 export default function MainScreen() {
   const route = useRoute()
   const { token } = route.params ?? {};
-  console.log(token)
+  // console.log(token)
   return (
     <Tab.Navigator screenOptions={screenOptions} initialRouteName={"HomeScreen"}>
 

@@ -1,12 +1,18 @@
 import { View, Text, StatusBar, ScrollView, StyleSheet, TextInput, TouchableOpacity, Image, ImageBackground, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { themeColor } from '../../utils/theme'
 import * as Icon from 'react-native-feather';
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { addReview, getCategory, getToken } from '../../services/useAPI';
+import ScreenNames from '../../utils/screenNames';
 
 
 export default function ReviewScreen() {
+    const navigation = useNavigation()
+    const route = useRoute();
+    const { reservarId, providerName, categoryId } = route.params ?? {};
     const [defaultRating, setDefaultRating] = useState(2);
     const [maxRating, setMaxRating] = useState([
         { star: 1, experience: 'Tệ' },
@@ -17,6 +23,22 @@ export default function ReviewScreen() {
     ]);
     const [imgReviews, setImgReviews] = useState([]);
     const [description, setDescription] = useState("");
+
+    const [nameRoom, setNameRoom] = useState();
+    console.log("category id: ", categoryId)
+    console.log("reservar review: ", reservarId)
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await getCategory(categoryId)
+            if (response) {
+                setNameRoom(response.categoryName)
+            }
+        }
+        fetchData();
+
+    }, [])
+
+
 
     const handlePickImg = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync();
@@ -44,6 +66,30 @@ export default function ReviewScreen() {
             }
         }
     };
+
+
+    const handleReview = async () => {
+        const token = await getToken();
+        console.log("data review truyền vào API: ", imgReviews, defaultRating, description, reservarId, token)
+        const response = await addReview(imgReviews, defaultRating, description, reservarId, token)
+        if (response) {
+            Alert.alert(
+                "Đánh giá thành công!",
+                null,
+                [
+                    {
+                        text: "OK",
+                        onPress: () => {
+                            setTimeout(() => {
+                                navigation.navigate(ScreenNames.HOME);
+                            }, 100); // Đợi 100ms trước khi điều hướng
+                        },
+                    },
+                ]
+            );
+        }
+
+    }
     const handleTakePhoto = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync();
 
@@ -141,8 +187,8 @@ export default function ReviewScreen() {
             }}>
 
                 <View style={styles.modalSearchContainer}>
-                    <Text style={styles.nameHotel}>Tên khách sạn</Text>
-                    <Text style={styles.nameRoom}>Tên phòng đã đặt</Text>
+                    <Text style={styles.nameHotel}>{providerName}</Text>
+                    <Text style={styles.nameRoom}>{nameRoom}</Text>
                 </View>
                 <View style={styles.reviewStar}>
                     <Text style={styles.textReview}>Chất lượng sản phẩm</Text>
@@ -241,7 +287,9 @@ export default function ReviewScreen() {
                 </View>
 
                 <View style={{ alignItems: 'center', marginTop: 10 }}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity
+                        onPress={handleReview}
+                        style={styles.button}>
                         <Text style={styles.textButton}>Đánh giá</Text>
                     </TouchableOpacity>
                 </View>

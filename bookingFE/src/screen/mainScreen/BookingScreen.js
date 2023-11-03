@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, useWindowDimensions, StatusBar, ScrollView, Image } from "react-native";
+import { Text, StyleSheet, View, useWindowDimensions, StatusBar, ScrollView, Image, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import * as React from 'react';
@@ -8,52 +8,56 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getBookedAPI, getCancelAPI, getCheckoutAPI, getToken } from "../../services/useAPI";
 import HotelBooked from "../../components/hotelBooked";
-import { isMoment } from "moment";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useCallback } from "react";
 
 const FirstRoute = () => {
   const [booked, setBooked] = useState();
+  const navigation = useNavigation()
   useEffect(() => {
-    const fetchData = async () => {
-      const token = await getToken();
-      const bookedData = await getBookedAPI(token);
+    navigation.addListener('focus', async () => {
+      const bookedData = await getBookedAPI();
 
       if (bookedData) {
         setBooked(bookedData);
       }
-    };
+    })
+    // const fetchData = async () => {
+    //   const token = await getToken();
+    //   const bookedData = await getBookedAPI(token);
 
-    fetchData();
+    //   if (bookedData) {
+    //     setBooked(bookedData);
+    //   }
+    // };
+
+    // fetchData();
   }, [])
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }} >
-      <ScrollView contentContainerStyle={{
-        paddingBottom: 90,
-      }}>
-        <View>
-          {Array.isArray(booked) ? (
-            booked.map((item) => (
-              <HotelBooked
-                key={item.reservarId}
-                reservarId={item.reservarId}
-                providerId={item.providerId}
-                providerName={item.providerName}
-                imgProvider={item.imgProvider}
-                rooms={item.rooms}
-                reservarDate={item.reservarDate}
-                total={item.total}
-                statePayment={item.statePayment}
-                startDate={item.startDate}
-                endDate={item.endDate}
-                categoryId={item.categoryId}
-                stateReservar={item.stateReservar}
-
-              />
-            ))
-          ) : (
-            <Text> Không có dữ liệu booked</Text>
-          )}
-        </View>
-      </ScrollView>
+      <FlatList
+        data={booked}
+        keyExtractor={(item) => item.reservarId.toString()}
+        renderItem={({ item }) => (
+          <HotelBooked
+            reservarId={item.reservarId}
+            providerId={item.providerId}
+            providerName={item.providerName}
+            imgProvider={item.imgProvider}
+            rooms={item.rooms}
+            reservarDate={item.reservarDate}
+            total={item.total}
+            statePayment={item.statePayment}
+            startDate={item.startDate}
+            endDate={item.endDate}
+            categoryId={item.categoryId}
+            stateReservar={item.stateReservar}
+          />
+        )}
+        ListEmptyComponent={() => <Text>Không có dữ liệu booked</Text>}
+        contentContainerStyle={{ paddingBottom: 90 }}
+      />
 
     </View>
   );
@@ -61,53 +65,49 @@ const FirstRoute = () => {
 
 const SecondRoute = () => {
   const [checkout, setCheckout] = useState();
+  const navigation = useNavigation();
   useEffect(() => {
-    const fetchData = async () => {
-      const token = await getToken();
-      const checkoutData = await getCheckoutAPI(token);
-
+    navigation.addListener('focus', async () => {
+      const checkoutData = await getCheckoutAPI();
       if (checkoutData) {
         setCheckout(checkoutData)
       }
-    }
-    fetchData()
+    })
+    // const fetchData = async () => {
+    //   const token = await getToken();
+    //   const checkoutData = await getCheckoutAPI(token);
+
+    //   if (checkoutData) {
+    //     setCheckout(checkoutData)
+    //   }
+    // }
+    // fetchData()
   }, [])
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }} >
-      <ScrollView contentContainerStyle={{
-        paddingBottom: 90,
-      }}>
-        <View>
-          {Array.isArray(checkout) && checkout.length > 0 ? (
-            checkout.map((item) => (
-              <HotelBooked
-                key={item.reservarId}
-                reservarId={item.reservarId}
-                providerId={item.providerId}
-                providerName={item.providerName}
-                imgProvider={item.imgProvider}
-                rooms={item.rooms}
-                reservarDate={item.reservarDate}
-                total={item.total}
-                statePayment={item.statePayment}
-                startDate={item.startDate}
-                endDate={item.endDate}
-                categoryId={item.categoryId}
-                stateReservar={item.stateReservar}
-
-              />
-            ))
-          ) : (
-            <View
-              style={{ alignItems: 'center', flex: 1, margin: 20 }}>
-              <Text style={{ fontSize: 20, fontWeight: '500', margin: 20 }}>Chưa có danh sách đã đặt!</Text>
-              <Image
-                source={require('../../assets/images/icons/meme.png')}
-                style={{ height: 144, width: 144, resizeMode: 'cover' }} />
-            </View>
-          )}
-        </View>
-      </ScrollView>
+      <FlatList
+        data={checkout}
+        keyExtractor={(item) => item.reservarId.toString()}
+        renderItem={({ item }) => (
+          <HotelBooked
+            reservarId={item.reservarId}
+            providerId={item.providerId}
+            providerName={item.providerName}
+            imgProvider={item.imgProvider}
+            rooms={item.rooms}
+            reservarDate={item.reservarDate}
+            total={item.total}
+            statePayment={item.statePayment}
+            startDate={item.startDate}
+            endDate={item.endDate}
+            categoryId={item.categoryId}
+            stateReservar={item.stateReservar}
+          />
+        )}
+        ListEmptyComponent={() => <Text>Không có dữ liệu booked</Text>}
+        contentContainerStyle={{ paddingBottom: 90 }}
+      />
 
     </View>
   );
@@ -117,47 +117,50 @@ const SecondRoute = () => {
 
 const ThirdRoute = () => {
   const [cancel, setCancel] = useState();
+  const navigation = useNavigation();
   useEffect(() => {
-    const fetchData = async () => {
-      const token = await getToken();
-      const cancelData = await getCancelAPI(token);
+    navigation.addListener('focus', async () => {
+      const cancelData = await getCancelAPI();
 
       if (cancelData) {
         setCancel(cancelData)
       }
-    }
-    fetchData()
+    })
+    // const fetchData = async () => {
+    //   const token = await getToken();
+    //   const cancelData = await getCancelAPI(token);
+
+    //   if (cancelData) {
+    //     setCancel(cancelData)
+    //   }
+    // }
+    // fetchData()
   }, [])
+
   return (
     <View style={{ flex: 1, backgroundColor: '#fff' }} >
-      <ScrollView contentContainerStyle={{
-        paddingBottom: 90,
-      }}>
-        <View>
-          {Array.isArray(cancel) ? (
-            cancel.map((item) => (
-              <HotelBooked
-                key={item.reservarId}
-                reservarId={item.reservarId}
-                providerId={item.providerId}
-                providerName={item.providerName}
-                imgProvider={item.imgProvider}
-                rooms={item.rooms}
-                reservarDate={item.reservarDate}
-                total={item.total}
-                statePayment={item.statePayment}
-                startDate={item.startDate}
-                endDate={item.endDate}
-                categoryId={item.categoryId}
-                stateReservar={item.stateReservar}
-
-              />
-            ))
-          ) : (
-            <Text> Không có dữ liệu booked</Text>
-          )}
-        </View>
-      </ScrollView>
+      <FlatList
+        data={cancel}
+        keyExtractor={(item) => item.reservarId.toString()}
+        renderItem={({ item }) => (
+          <HotelBooked
+            reservarId={item.reservarId}
+            providerId={item.providerId}
+            providerName={item.providerName}
+            imgProvider={item.imgProvider}
+            rooms={item.rooms}
+            reservarDate={item.reservarDate}
+            total={item.total}
+            statePayment={item.statePayment}
+            startDate={item.startDate}
+            endDate={item.endDate}
+            categoryId={item.categoryId}
+            stateReservar={item.stateReservar}
+          />
+        )}
+        ListEmptyComponent={() => <Text>Không có dữ liệu booked</Text>}
+        contentContainerStyle={{ paddingBottom: 90 }}
+      />
 
     </View>
   );
@@ -186,8 +189,6 @@ export default function BookingScreen() {
       <View style={styles.header}>
         <Text style={styles.headerText}>Trạng thái</Text>
       </View>
-
-
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}

@@ -35,7 +35,27 @@ export default function SaveScreen() {
   // console.log("dữ liệu: ", calendarData, numOfPeopleData)
 
   useEffect(() => {
-    const fetchdata = async () => {
+    // const fetchdata = async () => {
+    //   const token = await getToken();
+    //   if (calendarData.countNight && numOfPeopleData.peopleCount) {
+    //     console.log("dữ liệu: ", calendarData, numOfPeopleData)
+    //     const responseData = await getListFavoriteBySearch(calendarData.start, calendarData.end, numOfPeopleData.peopleCount, token);
+    //     if (responseData) {
+    //       setData(responseData)
+    //     }
+    //   }
+    //   else {
+    //     const response = await getFavorite(token)
+    //     if (response) {
+    //       setData(response)
+    //     }
+    //     else {
+    //       console.log("không có data!")
+    //     }
+    //   }
+    // }
+    // fetchdata();
+    navigation.addListener('focus', async () => {
       const token = await getToken();
       if (calendarData.countNight && numOfPeopleData.peopleCount) {
         console.log("dữ liệu: ", calendarData, numOfPeopleData)
@@ -53,13 +73,11 @@ export default function SaveScreen() {
           console.log("không có data!")
         }
       }
-    }
-    fetchdata();
+    })
 
 
-
-  }, [calendarData, numOfPeopleData])
-  console.log("calendar, people: ", calendarData.start, calendarData.end, numOfPeopleData.peopleCount)
+  }, [])
+  // console.log("calendar, people: ", calendarData.start, calendarData.end, numOfPeopleData.peopleCount)
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style='light' backgroundColor={themeColor.bgColor} />
@@ -134,6 +152,7 @@ export default function SaveScreen() {
                 description={item.description}
                 address={item.address}
                 providerPhone={item.providerPhone}
+                star={item.star}
                 start={calendarData.start}
                 end={calendarData.end}
                 person={numOfPeopleData.peopleCount}
