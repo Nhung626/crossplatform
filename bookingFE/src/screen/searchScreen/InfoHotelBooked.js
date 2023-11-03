@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, StatusBar, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { continuePaymentAPI, getCategoryAPI, getProviderAPI, getToken } from '../../services/useAPI';
+import { continuePaymentAPI, getCategoryAPI, getProviderAPI, getToken, postCancleAPI } from '../../services/useAPI';
 import { themeColor } from '../../utils/theme';
 import * as Icon from "react-native-feather";
 import { getImgCustomerUrl } from '../../services/baseUrl';
@@ -10,7 +10,8 @@ import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 
 export default function InfoHotelBooked() {
-    const { params: { reservarId,
+    const { params: {
+        reservarId,
         providerId,
         providerName,
         rooms,
@@ -33,7 +34,7 @@ export default function InfoHotelBooked() {
     // const [address, setAddress] = useState()
     const handlePayment = async () => {
         const token = await getToken();
-        console.log("Dữ liệu truyền vào API: ", token, reservarId, total)
+        //console.log("Dữ liệu truyền vào API: ", token, reservarId, total)
         const response = await continuePaymentAPI(token, reservarId, total);
         if (response) {
             navigation.navigate("Web", { url: response })
@@ -44,19 +45,19 @@ export default function InfoHotelBooked() {
         }
     }
 
+    console.log("reservarId", reservarId)
+
     useEffect(() => {
         const fetchData = async () => {
-            const token = await getToken();
-            const provider = await getProviderAPI(token, providerId);
-            const category = await getCategoryAPI(token, categoryId)
+            // const token = await getToken();
+            const provider = await getProviderAPI(providerId);
+            const category = await getCategoryAPI(categoryId)
             if (provider && category) {
                 setProvider(provider);
                 setIdImgProvider(provider.imgIdProviders);
                 setCategory(category)
                 setImageRoom(category.imgIdCategories)
-                // setProviderName(resporn.providerName);
-                // setDescription(resporn.description);
-                // setAddress(resporn.address);
+
             }
         }
         fetchData()
@@ -65,8 +66,23 @@ export default function InfoHotelBooked() {
         const { width } = event.nativeEvent.layout;
         setContainerWidth(width);
     };
+    const handleCancel = async () => {
+        const response = await postCancleAPI(reservarId);
+        if (response) {
+            Alert.alert(
+                "Đã hủy phòng thành công!", null,
+                [{
+                    text: "OK",
+                    onPress: () => {
+                        navigation.navigate("HomeScreen")
+                    }
+                }]
+            )
+        }
+    }
+
     const screenWidth = Dimensions.get("window").width;
-    console.log("resporn data: ", category)
+    // console.log("resporn data: ", category)
     return (
         <SafeAreaView style={{ backgroundColor: "#F0f0f0" }}>
             <StatusBar style='light' backgroundColor={themeColor.btColor} />
@@ -181,18 +197,53 @@ export default function InfoHotelBooked() {
                                 </Text>
                             </View>
                             <View style={styles.buttonState}>
-                                {statePayment === "Success" ? (
-                                    <View
-                                        style={styles.success}>
-                                        <Text style={{ color: '#FFFFFF' }}>Đã thanh toán!</Text>
-                                    </View>
-                                ) : (
-                                    <TouchableOpacity
-                                        style={styles.buttonUnsuccess}
-                                        onPress={handlePayment}>
-                                        <Text style={{ color: '#FFFFFF' }}>Chưa thanh toán!</Text>
-                                    </TouchableOpacity>
-                                )}
+                                {stateReservar === "CANCELED"
+                                    ? (
+                                        <View style={styles.success}>
+                                            <Text style={{ color: '#ffffff' }}> Đã hủy </Text>
+                                        </View>)
+                                    : stateReservar === "BOOKED" | stateReservar === "CHECK_IN" ?
+                                        (statePayment === "Success"
+                                            ? (stateReservar === "CHECK_IN"
+                                                ? (<View
+                                                    style={styles.success}>
+                                                    <Text style={{ color: '#FFFFFF' }}>Đã check in!</Text>
+                                                </View>)
+                                                : (<View
+                                                    style={styles.success}>
+                                                    <Text style={{ color: '#FFFFFF' }}>Đã thanh toán!</Text>
+                                                </View>))
+
+                                            : (
+                                                <View>
+                                                    <TouchableOpacity
+                                                        style={styles.buttonUnsuccess}
+                                                        onPress={handlePayment}>
+                                                        <Text style={{ color: '#FFFFFF' }}>Chưa thanh toán!</Text>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        style={styles.buttonCancel}
+                                                        onPress={handleCancel}>
+                                                        <Text style={{ color: '#FFFFFF' }}>Hủy chuyến!</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            ))
+                                        : (stateReservar === "REVIEW" ? (
+                                            <View
+                                                style={styles.success}>
+                                                <Text style={{ color: '#FFFFFF' }}>Đã đánh giá!</Text>
+                                            </View>
+                                        )
+                                            : (
+                                                <TouchableOpacity
+                                                    style={styles.buttonUnsuccess}
+                                                    onPress={() => navigation.navigate("Review", { reservarId: reservarId })}>
+                                                    <Text style={{ color: '#FFFFFF' }}>Đánh giá ngay!</Text>
+                                                </TouchableOpacity>
+
+                                            )
+
+                                        )}
                             </View>
                         </View>
                     </View>
@@ -371,5 +422,12 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         justifyContent: 'flex-end',
         alignItems: 'flex-end'
+    },
+    buttonCancel: {
+        paddingVertical: 10,
+        backgroundColor: "#FFA500",
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 10
     }
 })

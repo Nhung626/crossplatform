@@ -6,7 +6,7 @@ import * as Icon from "react-native-feather";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { getImgCustomerUrl } from '../../services/baseUrl';
 import ShowRoom from '../../components/showRoom';
-import { addFavoriteAPI, deleteFavorite, getAllCategory, getAllRoomAPI, getIdFavor, getToken } from '../../services/useAPI';
+import { addFavoriteAPI, deleteFavorite, getAllCategory, getAllRoomAPI, getIdFavor, getProviderAPI, getToken } from '../../services/useAPI';
 
 export default function HotelScreen() {
     const { params: {
@@ -21,10 +21,16 @@ export default function HotelScreen() {
 
     const [data, setData] = useState("");
     const [favorite, setFavorite] = useState(false);
+    const [provider, setProvider] = useState([]);
+    const [imgProvider, setImgProvider] = useState();
 
     useEffect(() => {
         const fetchDataFromAPI = async () => {
+            const providerData = await getProviderAPI(id)
+
             const token = await getToken();
+            setProvider(providerData);
+            setImgProvider(providerData.imgIdProviders)
             if (start, end, person) {
                 const response = await getAllRoomAPI(id, start, end, person, token);
                 setData(response)
@@ -43,7 +49,7 @@ export default function HotelScreen() {
         };
         fetchDataFromAPI();
     }, []);
-    console.log("data: ", data, id, start, end, person)
+    // console.log("data: ", data, id, start, end, person)
     const handleFavorite = async () => {
         const token = await getToken()
         try {
@@ -60,7 +66,7 @@ export default function HotelScreen() {
         }
     }
     const heartColor = favorite ? themeColor.bgColor : 'white';
-
+    console.log("hotel: ", imgProvider, id)
     const screenWidth = Dimensions.get("window").width;
     return (
         <SafeAreaView style={{ backgroundColor: "#f0f0f0" }}>
@@ -74,17 +80,18 @@ export default function HotelScreen() {
                     contentContainerStyle={styles.contentContainer}
 
                 >
-                    {imageHotel.map((imageId, index) => (
-                        <Image
-                            key={index}
-                            style={{
-                                width: screenWidth, // Điều chỉnh kích thước theo nhu cầu của bạn
-                                height: 400,
-                                resizeMode: 'cover',
-                            }}
-                            source={{ uri: `${getImgCustomerUrl}?imageId=${imageId}` }}
-                        />
-                    ))}
+                    {imgProvider ? (
+                        imgProvider.map((imageId, index) => (
+                            <Image
+                                key={index}
+                                style={{
+                                    width: screenWidth, // Điều chỉnh kích thước theo nhu cầu của bạn
+                                    height: 400,
+                                    resizeMode: 'cover',
+                                }}
+                                source={{ uri: `${getImgCustomerUrl}?imageId=${imageId}` }}
+                            />
+                        ))) : (<></>)}
                 </ScrollView>
                 <View style={styles.container}>
 
@@ -103,14 +110,17 @@ export default function HotelScreen() {
                                 flex: 1,
                                 alignItems: 'center'
                             }}>
-                                <Text style={{
-                                    flex: 1,
-                                    fontWeight: 'bold',
-                                    fontSize: 24,
-                                    flexWrap: 'wrap',
-                                    paddingBottom: 10,
-                                    textAlign: 'left',
-                                }}>{name} </Text>
+                                <Text
+                                    style={{
+                                        flex: 1,
+                                        fontWeight: 'bold',
+                                        fontSize: 24,
+                                        flexWrap: 'wrap',
+                                        paddingBottom: 10,
+                                        textAlign: 'left',
+                                    }}>
+                                    {provider.providerName}
+                                </Text>
                                 <TouchableOpacity onPress={handleFavorite} >
                                     <Icon.Heart
                                         height={30}
@@ -129,7 +139,7 @@ export default function HotelScreen() {
                                     stroke={"grey"}
                                     style={{ justifyContent: "flex-start", flex: 1 }} />
 
-                                <Text style={{ flexWrap: 'wrap', textAlign: 'left', flex: 1 }}>{description}</Text>
+                                <Text style={{ flexWrap: 'wrap', textAlign: 'left', flex: 1 }}>{provider.description}</Text>
                             </View>
 
 
@@ -141,7 +151,7 @@ export default function HotelScreen() {
                             <Text style={{ fontWeight: 'bold', fontSize: 20, marginVertical: 10 }}> Vị trí chỗ nghỉ</Text>
                             <View style={{ flexDirection: 'row', columnGap: 10, marginHorizontal: 10 }}>
                                 <Icon.MapPin stroke={'grey'} height={24} width={24} />
-                                <Text>{address}</Text>
+                                <Text>{provider.address}</Text>
                             </View>
 
                         </View>

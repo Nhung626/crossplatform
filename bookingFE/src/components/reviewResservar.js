@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function InfoRoomScreen() {
+export default function reviewResservar() {
     return (
         <View>
-            <Text>InfoRoomScreen</Text>
+            <Text>reviewResservar</Text>
         </View>
     )
 }

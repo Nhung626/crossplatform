@@ -11,7 +11,7 @@ const WebScreen = () => {
     const { url } = route.params ?? {};
     const navigation = useNavigation();
     const [falseCount, setFalseCount] = useState(0);
-
+    console.log(url)
     const handleNavigationStateChange = (navState) => {
         // Kiểm tra xem người dùng có thể quay lại trang trước đó trong WebView hay không
         const canGoForwardNow = navState.loading;
@@ -22,8 +22,8 @@ const WebScreen = () => {
 
             if (falseCount >= 2) {
                 Alert.alert(
-                    'Thanh toán thành công!!',
-                    'Nhấn OK để trở về màn hình chính',
+                    'Thanh toán thành công!!! Nhấn OK để trở về màn hình chính',
+                    null,
                     [
                         {
                             text: 'Hủy',
@@ -31,8 +31,11 @@ const WebScreen = () => {
                         },
                         {
                             text: 'OK',
+
                             onPress: () => {
-                                navigation.navigate("MainScreen")
+                                setTimeout(() => {
+                                    navigation.navigate("MainScreen")
+                                }, 500);
                             },
                         },
                     ]
@@ -45,7 +48,7 @@ const WebScreen = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <WebView
                 source={{ uri: url }}
-            // onNavigationStateChange={handleNavigationStateChange}
+                onNavigationStateChange={handleNavigationStateChange}
 
             />
         </SafeAreaView>

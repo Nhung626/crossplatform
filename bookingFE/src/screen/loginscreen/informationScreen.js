@@ -20,6 +20,7 @@ import moment from "moment";
 import * as ImagePicker from 'expo-image-picker';
 import { updateCustomer } from "../../services/userServices";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ScreenNames from "../../utils/screenNames";
 
 
 export default function InformationScreen() {
@@ -53,7 +54,7 @@ export default function InformationScreen() {
       customerCode,
       dateOfBirth)
     if (update) {
-      navigation.navigate("MainScreen")
+      navigation.navigate(ScreenNames.HOME)
 
     }
   };

@@ -37,7 +37,7 @@ export default function SearchModal() {
         }
         getTokenId();
 
-    }, [])
+    }, [calendarData, numOfPeopleData])
 
     const handleSearch = () => {
 
@@ -50,13 +50,13 @@ export default function SearchModal() {
             token: token
         })
     }
-    console.log("data tìm kiếm: ", calendarData, numOfPeopleData)
+    // console.log("data tìm kiếm: ", calendarData, numOfPeopleData)
     return (
         <View style={{ borderWidth: 2, borderColor: themeColor.bgColor, borderRadius: 6, marginHorizontal: 10 }}>
             <TouchableOpacity style={styles.searchContainer}
                 onPress={() => navigation.navigate('Map')}>
                 <Icon.Search height={20} width={20} stroke={'black'} style={{ marginLeft: 10 }} />
-                <Text style={styles.searchText}> Xung quanh vị trí hiện tại</Text>
+                <Text style={styles.searchText}> Tìm kiếm quanh đây</Text>
             </TouchableOpacity >
             <TouchableOpacity style={styles.searchContainer}
                 onPress={() => setCalendarModalVisible(true)}>
@@ -97,7 +97,7 @@ export default function SearchModal() {
                             <Text> {numOfPeopleData.peopleCount} Người</Text>
                         </>
                     ) : (
-                        'Chọn phòng và khách'
+                        'Chọn số người'
                     )}
                 </Text>
             </TouchableOpacity>

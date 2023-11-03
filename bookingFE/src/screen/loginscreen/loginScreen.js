@@ -30,7 +30,7 @@ const LoginScreen = () => {
         <Text style={styles.header}> Đăng nhập để dễ dàng truy cập thông tin chuyến đi </Text>
 
         <View style={{ marginTop: 20 }}>
-          <TouchableOpacity style={styles.button}>
+          {/* <TouchableOpacity style={styles.button}>
             <View style={styles.buttonContent}>
               <Image source={require('../../assets/images/icons/google.png')} resizeMode={'cover'} style={styles.iconStyle} />
               <Text style={styles.text}>Tiếp tục bằng tài khoản Google</Text>
@@ -51,6 +51,29 @@ const LoginScreen = () => {
             style={styles.buttonEmail}
           >
             <Text style={styles.textEmail}>Tiếp tục với Email</Text>
+          </TouchableOpacity> */}
+
+          <TouchableOpacity style={styles.button2}>
+            <View style={styles.buttonContent2}>
+              <Image source={require('../../assets/images/icons/google.png')} resizeMode={'cover'} style={styles.iconStyle} />
+              <Text style={styles.text}>Tiếp tục bằng tài khoản Google</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button2}>
+            <View style={styles.buttonContent2}>
+              <Image source={require('../../assets/images/icons/facebook.png')} resizeMode={'cover'} style={{ height: 24, width: 24 }} />
+              <Text style={styles.text}>
+                Tiếp tục bằng tài khoản Facebook
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleStartScreen}
+            style={styles.buttonEmail2}
+          >
+            <Text style={styles.textEmail2}>Tiếp tục với Email</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
