@@ -5,11 +5,11 @@ import { themeColor } from '../../utils/theme'
 import * as Icon from 'react-native-feather'
 import { useNavigation } from '@react-navigation/native'
 import MapView, { Marker } from 'react-native-maps';
-import { featured } from '../../constains'
+// import { featured } from '../../constains'
 
 export default function MapScreen() {
     const navigation = useNavigation();
-    const hotels = featured.find(item => item.id === 1);
+    // const hotels = featured.find(item => item.id === 1);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
 
@@ -17,8 +17,8 @@ export default function MapScreen() {
             <MapView
                 style={{ width: '100%', height: '98%', top: '4.5%', position: 'absolute' }}
                 initialRegion={{
-                    latitude: hotels.lat,
-                    longitude: hotels.lng,
+                    latitude: 21.003503734789398,
+                    longitude: 105.84335286367691,
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01
                 }}
@@ -26,10 +26,10 @@ export default function MapScreen() {
             >
                 <Marker
                     coordinate={{
-                        latitude: hotels.lat,
-                        longitude: hotels.lng
+                        latitude: 21.003503734789398,
+                        longitude: 105.84335286367691,
                     }}
-                    title={hotels.name}
+                    title={"Đại học Xây Dựng Hà Nội"}
                     pinColor={themeColor.btColor}
                 ></Marker>
 
