@@ -58,7 +58,7 @@ export default function SaveScreen() {
     navigation.addListener('focus', async () => {
       const token = await getToken();
       if (calendarData.countNight && numOfPeopleData.peopleCount) {
-        console.log("dữ liệu: ", calendarData, numOfPeopleData)
+        // console.log("dữ liệu: ", calendarData, numOfPeopleData)
         const responseData = await getListFavoriteBySearch(calendarData.start, calendarData.end, numOfPeopleData.peopleCount, token);
         if (responseData) {
           setData(responseData)

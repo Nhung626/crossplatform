@@ -1,7 +1,7 @@
 import { Text, StyleSheet, StatusBar, View, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from '@expo/vector-icons'
-import { Logout, getCustomerApi, getToken } from "../../services/useAPI";
+import { Logout, getCustomerApi } from "../../services/useAPI";
 import { useEffect, useState } from "react";
 import { getImgCustomerUrl } from "../../services/baseUrl";
 import ScreenNames from "../../utils/screenNames";
@@ -19,10 +19,9 @@ export default function UserScreen({ navigation }) {
         navigation.addListener('focus', async () => {
 
             try {
-                const token = await getToken();
-                const response = await getCustomerApi(token);
+                const response = await getCustomerApi();
                 if (response) {
-                    console.log(response)
+                    // console.log(response)
                     setFullName(response.fullName);
                     setImageUrl(getImgCustomerUrl.concat(`?imageId=${response.avatarId}`))
                 } else {
@@ -99,7 +98,7 @@ export default function UserScreen({ navigation }) {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => navigation.navigate('SaveScreen')}>
+                    <TouchableOpacity onPress={() => navigation.navigate(ScreenNames.SAVE)}>
                         <View style={styles.fix}>
                             <Ionicons style={styles.icon} name="heart-circle-outline" />
                             <Text style={styles.Text}>
@@ -127,7 +126,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        backgroundColor: '#29b4ca',
+        backgroundColor: themeColor.bgColor,
         height: '35%',
         justifyContent: "center",
         alignItems: "center",

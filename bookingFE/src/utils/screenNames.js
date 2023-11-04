@@ -20,6 +20,9 @@ const ScreenNames = {
     HOTELFAVORITE: "Favorite",
 
     LISTREVIEW: "List Review",
+    BOOKED: 'booked',
+    CHECKOUT: 'checkout',
+    CANCEL: 'cancel'
 };
 
 export default ScreenNames;
