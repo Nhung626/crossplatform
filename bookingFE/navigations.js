@@ -27,7 +27,7 @@ import NewPasswordScreen from './src/screen/loginscreen/newPassword';
 import Notice from './src/screen/loginscreen/notice';
 
 import ScreenNames from './src/utils/screenNames';
-import LoadingScreen from './src/screen/loginscreen/loadingScreen';
+import LoadingScreen from './src/screen/loginscreen/LoadingScreen';
 import WebScreen from './src/screen/searchScreen/webScreen';
 import InfoHotelBooked from './src/screen/searchScreen/InfoHotelBooked';
 import ReviewScreen from './src/screen/searchScreen/ReviewScreen';

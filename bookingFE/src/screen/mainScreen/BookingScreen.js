@@ -211,30 +211,6 @@ import Cancel from "./bookingScreens/cancel";
 //     style={{ backgroundColor: '#0891b2' }}
 //   />
 // );
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   header: {
-//     backgroundColor: themeColor.bgColor,
-//     height: 60,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   headerText: {
-//     flex: 10,
-//     color: '#fff',
-//     fontSize: 24,
-//     marginVertical: 10
-//   },
-//   iconhelp: {
-//     flex: 1.5,
-//     fontSize: 32,
-//     color: '#fff',
-//     marginBottom: 10,
-//     marginRight: 20,
-//   },
-// })
 
 
 export default function BookingScreen() {
@@ -251,11 +227,41 @@ export default function BookingScreen() {
     third: Cancel,
   });
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-      initialLayout={{ width: layout.width }}
-    />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Trạng thái</Text>
+      </View>
+      <TabView
+        navigationState={{ index, routes }}
+        onIndexChange={setIndex}
+        renderScene={renderScene}
+        initialLayout={{ width: layout.width }}
+      />
+    </SafeAreaView>
+
   )
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    backgroundColor: themeColor.bgColor,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    flex: 10,
+    color: '#fff',
+    fontSize: 24,
+    marginVertical: 10
+  },
+  iconhelp: {
+    flex: 1.5,
+    fontSize: 32,
+    color: '#fff',
+    marginBottom: 10,
+    marginRight: 20,
+  },
+})
