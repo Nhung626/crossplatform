@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import React, { useState } from 'react'
-import { categories } from '../constains'
+// import { categories } from '../constains'
 import { themeColor } from '../utils/theme'
 
 export default function SortHotel() {
@@ -8,7 +8,33 @@ export default function SortHotel() {
   const handleCategoryPress = (categoryId) => {
     setActiveCategory((prev) => (prev === categoryId ? null : categoryId));
   };
+  const categories = [
+    {
+      id: 1,
+      name: 'Phổ biến nhất',
+    },
+    {
+      id: 2,
+      name: 'Giá thấp nhất',
+    },
+    {
+      id: 3,
+      name: 'Giá cao nhất',
+    },
+    {
+      id: 4,
+      name: 'Xếp hạng cao nhất',
+    },
 
+    {
+      id: 5,
+      name: 'Xếp hạng thấp nhất',
+    },
+    {
+      id: 6,
+      name: 'Gần nhất',
+    },
+  ]
   return (
     <ScrollView
       horizontal
