@@ -33,6 +33,9 @@ import InfoHotelBooked from './src/screen/searchScreen/InfoHotelBooked';
 import ReviewScreen from './src/screen/searchScreen/ReviewScreen';
 import ListReview from './src/screen/mainScreen/ListReview';
 import InforRoomScreen from './src/screen/searchScreen/inforRoomScreen';
+import booked from './src/screen/mainScreen/bookingScreens/booked';
+import checkout from './src/screen/mainScreen/bookingScreens/checkout';
+import cancel from './src/screen/mainScreen/bookingScreens/cancel';
 
 const Stack = createNativeStackNavigator();
 const HidenHeader = {
@@ -74,7 +77,9 @@ export default function Navigations() {
                 <Stack.Screen name='InfoRoom' component={InforRoomScreen} />
                 <Stack.Screen name='Web' component={WebScreen} />
                 <Stack.Screen name='Info Hotel Booked' component={InfoHotelBooked} />
-
+                <Stack.Screen name={ScreenNames.BOOKED} component={booked} />
+                <Stack.Screen name={ScreenNames.CHECKOUT} component={checkout} />
+                <Stack.Screen name={ScreenNames.CANCEL} component={cancel} />
 
                 <Stack.Screen name='Review' component={ReviewScreen} />
 

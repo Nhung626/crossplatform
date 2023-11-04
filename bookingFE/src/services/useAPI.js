@@ -107,7 +107,8 @@ export const Logout = async () => {
 
 
 
-export const getCustomerApi = async (token) => {
+export const getCustomerApi = async () => {
+    const token = await getToken();
     try {
         const response = await axios({
             method: "GET",
@@ -428,7 +429,7 @@ export const orderAPI = async (category, roomCount, startDate, endDate, token) =
 
 export const getBookedAPI = async () => {
     const token = await getToken();
-
+    // console.log("token booked: ", token)
     try {
         const response = await axios({
             method: "GET",
